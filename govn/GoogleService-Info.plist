@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>985902931000-10givga11guknprtt37mlj0ljnhkr21o.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.985902931000-10givga11guknprtt37mlj0ljnhkr21o</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>985902931000-162vp2ocqigdkjr92omf9pnsppubhabu.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAel5ls9s0XTOahsAExHbN1rHb1nxOh0yQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>985902931000</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.govn.dim.govn</string>
+	<key>PROJECT_ID</key>
+	<string>notification-fa6ec</string>
+	<key>STORAGE_BUCKET</key>
+	<string>notification-fa6ec.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:985902931000:ios:ebf4570cd653d4660f1acd</string>
+	<key>DATABASE_URL</key>
+	<string>https://notification-fa6ec.firebaseio.com</string>
+</dict>
+</plist>

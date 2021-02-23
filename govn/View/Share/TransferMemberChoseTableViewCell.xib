@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TransferMemberChoseTableViewCell" rowHeight="102" id="KGk-i7-Jjw" customClass="TransferMemberChoseTableViewCell" customModule="govn" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="423" height="102"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="423" height="102"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dUC-82-C8c">
+                        <rect key="frame" x="15" y="35" width="32" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="32" id="nB2-ss-ndk"/>
+                            <constraint firstAttribute="width" secondItem="dUC-82-C8c" secondAttribute="height" multiplier="1:1" id="xTm-9i-2QS"/>
+                        </constraints>
+                        <state key="normal" image="big_unselect.png"/>
+                        <connections>
+                            <action selector="choseAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="JtS-WG-Fe9"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Atc-RW-NlH">
+                        <rect key="frame" x="57" y="31.5" width="311" height="19.5"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="idE-cb-BUm" userLabel="PhoneL">
+                        <rect key="frame" x="57" y="54" width="311" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_remit.png" translatesAutoresizingMaskIntoConstraints="NO" id="wwk-9E-t8m">
+                        <rect key="frame" x="368" y="33.5" width="35" height="35"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="35" id="sgr-Ux-wFC"/>
+                            <constraint firstAttribute="width" secondItem="wwk-9E-t8m" secondAttribute="height" multiplier="1:1" id="yEd-8w-aGb"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="Atc-RW-NlH" firstAttribute="leading" secondItem="dUC-82-C8c" secondAttribute="trailing" constant="10" id="5l1-8T-XYm"/>
+                    <constraint firstItem="dUC-82-C8c" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="JAK-3u-SqJ"/>
+                    <constraint firstAttribute="trailing" secondItem="Atc-RW-NlH" secondAttribute="trailing" constant="55" id="REU-js-XVW"/>
+                    <constraint firstItem="idE-cb-BUm" firstAttribute="leading" secondItem="Atc-RW-NlH" secondAttribute="leading" id="YM4-Xr-5Y1"/>
+                    <constraint firstItem="dUC-82-C8c" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="gSI-vM-CYW"/>
+                    <constraint firstItem="idE-cb-BUm" firstAttribute="top" secondItem="Atc-RW-NlH" secondAttribute="bottom" constant="3" id="iDO-Mz-ccK"/>
+                    <constraint firstItem="idE-cb-BUm" firstAttribute="trailing" secondItem="Atc-RW-NlH" secondAttribute="trailing" id="lrm-WT-3Rd"/>
+                    <constraint firstItem="wwk-9E-t8m" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="mBj-He-AKN"/>
+                    <constraint firstItem="Atc-RW-NlH" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-10" id="nTm-13-Gqa"/>
+                    <constraint firstAttribute="trailing" secondItem="wwk-9E-t8m" secondAttribute="trailing" constant="20" id="umg-Gk-vSP"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="choseBtn" destination="dUC-82-C8c" id="6jT-ee-l0i"/>
+                <outlet property="nameL" destination="Atc-RW-NlH" id="HO7-v4-ELO"/>
+                <outlet property="phoneL" destination="idE-cb-BUm" id="S1A-M0-Feg"/>
+                <outlet property="styleImgV" destination="wwk-9E-t8m" id="VIa-qr-h1T"/>
+            </connections>
+            <point key="canvasLocation" x="206.52173913043481" y="117.1875"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="big_unselect.png" width="32" height="32"/>
+        <image name="icon_remit.png" width="26" height="26"/>
+    </resources>
+</document>

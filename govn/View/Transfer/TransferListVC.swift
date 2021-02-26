@@ -51,7 +51,6 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         let serchBankobj = UtilityTool().searchBankObj(BankCode: cellData.bank_code!)
         
         cell.barTitleL.text = NSLocalizedString("Transfer State " + cellOrderCheckData.order_status, comment: "")
-        cell.midL.text = NSLocalizedString("Transfer State Mid Text Title", comment: "")
         
         let colorIdx = Int(cellOrderCheckData.order_status)! - 1
         if colorIdx >= 0, colorIdx <= 4 {
@@ -59,10 +58,52 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         }
         
         cell.failV.isHidden = true
-        cell.downV.isHidden = false
+        cell.failType2V.isHidden = true
+        cell.downV.isHidden = true
+        cell.downType2V.isHidden = true
         cell.upV.isHidden = false
         cell.pureTextV.isHidden = false
         cell.midL.isHidden = false
+        
+        if cellOrderCheckData.order_status != "5" {
+            if cellData.recipient_type == "1" {
+                cell.downV.isHidden = false
+                cell.downType2V.isHidden = true
+                cell.midL.text = NSLocalizedString("Transfer State Mid Text Title", comment: "")
+                
+                if cellOrderCheckData.order_status != "5" {
+                    let imgurl = serchBankobj.bank_photo!
+                    let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
+                    cell.downIconIgV.kf.setImage(with: urlhaed)
+                }
+                
+                cell.downNameL.text = cellData.recipient_name
+                cell.downIDL.text = cellData.to_acc
+                cell.downValueL.text = "VND " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                cell.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
+                
+            } else {
+                cell.downV.isHidden = true
+                cell.downType2V.isHidden = false
+                
+                if cellData.recipient_type == "2" {
+                    cell.midL.text = NSLocalizedString("Transfer State Mid Text Title", comment: "")
+                } else if cellData.recipient_type == "3" {
+                    
+                }
+                
+                cell.downType2L1.text = ""
+                let str = cellData.recipient_name + "  " + "ID: " + cellData.recipient_id
+                let attributedString = NSMutableAttributedString(string: str);
+                attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 14), range: NSMakeRange(0, cellData.recipient_name.count));
+                cell.downType2L1.attributedText = attributedString
+                
+                cell.downType2L2.text = cellData.phone
+                cell.downType2L3.text = cellData.address
+                cell.downType2L4.text = "TWD " + cellData.total.stringToIntDecimalString()
+                cell.downType2L5.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
+            }
+        }
         
         cell.upIconIgV.image = UIImage.init()
         cell.setTransferState(Stae: cellOrderCheckData.order_status)
@@ -107,16 +148,13 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 }*/
             }
             
-            let imgurl = serchBankobj.bank_photo!
-            let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
-            cell.downIconIgV.kf.setImage(with: urlhaed)
-            
         } else if cellOrderCheckData.order_status == "5" {
             cell.barNumberV.isHidden = true
             cell.barTimeL.isHidden = false
             
             cell.failV.isHidden = false
             cell.downV.isHidden = true
+            cell.downType2V.isHidden = true
             cell.upV.isHidden = true
             cell.pureTextV.isHidden = true
             cell.midL.isHidden = true
@@ -128,10 +166,28 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
             let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
             cell.failIconIgV.kf.setImage(with: urlhaed)
             
-            cell.failNameL.text = cellData.recipient_name
-            cell.failIDL.text = cellData.to_acc
-            cell.failValueL.text = "IDR " + cellData.transfer_amount_idr.stringToIntDecimalString()
-            cell.failNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
+            if cellData.recipient_type == "1" {
+                cell.failType2V.isHidden = true
+                
+                cell.failNameL.text = cellData.recipient_name
+                cell.failIDL.text = cellData.to_acc
+                cell.failValueL.text = "IDR " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                cell.failNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
+                
+            } else {
+                cell.failType2V.isHidden = false
+                
+                cell.failType2L1.text = ""
+                let str = cellData.recipient_name + "  " + "ID: " + cellData.recipient_id
+                let attributedString = NSMutableAttributedString(string: str);
+                attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 14), range: NSMakeRange(0, cellData.recipient_name.count));
+                cell.failType2L1.attributedText = attributedString
+                
+                cell.failType2L2.text = cellData.phone
+                cell.failType2L3.text = cellData.address
+                cell.failType2L4.text = "TWD " + cellData.total.stringToIntDecimalString()
+                cell.failType2L5.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
+            }
             
         } else {
             cell.barNumberV.isHidden = true
@@ -158,19 +214,10 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 cell.upIDL.text = ""
             }
             
-            let imgurl = serchBankobj.bank_photo!
-            let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
-            cell.downIconIgV.kf.setImage(with: urlhaed)
-            
             cell.upValueL.text = "NTD " + cellData.total.stringToIntDecimalString()
             cell.upNoteL.text = cellData.payment_info
             
         }
-        
-        cell.downNameL.text = cellData.recipient_name
-        cell.downIDL.text = cellData.to_acc
-        cell.downValueL.text = "IDR " + cellData.transfer_amount_idr.stringToIntDecimalString()
-        cell.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
         
         cell.backgroundColor = .clear
         cell.selectionStyle = .none

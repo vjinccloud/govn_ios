@@ -28,6 +28,9 @@ class TransferStateObj: NSObject {
     var recipient_id:String! = ""
     var mini_mart_id:String! = ""
     var lm_time_fail:String! = ""
+    var recipient_type:String! = "" //1: 銀行轉帳(To Bank Account), 2:櫃台, 3:送到家
+    var address:String! = ""
+    var phone:String! = ""
     
     public func setValueByOrder(Order orderNum:Int, Value valueStr:String) {
         
@@ -69,7 +72,13 @@ class TransferStateObj: NSObject {
             mini_mart_id = valueStr
         } else if orderNum == 18 {
             lm_time_fail = valueStr
-        } 
+        } else if orderNum == 19 {
+            recipient_type = valueStr
+        } else if orderNum == 20 {
+            address = valueStr
+        } else if orderNum == 21 {
+            phone = valueStr
+        }
     }
     
     public func printSelf() {

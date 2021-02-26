@@ -292,7 +292,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
         AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
-            .responseString(encoding: String.Encoding.utf8)  { response in
+            .responseString(encoding: String.Encoding.utf8)  { [self] response in
                 AppDelegate.shared().removeLoadingView()
                 
                 guard response.result.error == nil else {
@@ -317,6 +317,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                             storyboardId = "TransactionInfoConfirmVCSmall"
                         }
                         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
+                        nextVC!.topBarSelectIdx = topBarSelectIdx
                         self.navigationController?.pushViewController(nextVC!, animated: true)
                     } else {
                         self.navigationController?.popViewController(animated: true)

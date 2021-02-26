@@ -139,7 +139,8 @@ class TransactionPayVC: UIViewController {
     func goExpiredVC() {
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransactionExipredVC") as? TransactionExipredVC
         nextVC?.parentVC = self
-        nextVC?.payment_info = payment_info
+        nextVC?.payment_info = upIntoL.text!
+        nextVC?.chosedStyle = chosedStyle
         nextVC?.transferStateObj = transferStateObj
         nextVC?.orderCheckStateObj = orderCheckStateObj
         self.navigationController?.pushViewController(nextVC!, animated: true)
@@ -201,7 +202,19 @@ class TransactionPayVC: UIViewController {
         // Do any additional setup after loading the view.
         AppDelegate.shared().hideTopButton()
         backL.text = NSLocalizedString("Transfer PayStep Title", comment: "")
-        upIntoL.text = NSLocalizedString("Transfer PayStep Up Intro", comment: "")
+        
+        var storeStr = ""
+        if chosedStyle == StoreType.sevenEleven {
+            storeStr = "7-11"
+        } else if chosedStyle == StoreType.familymart {
+            storeStr = "FamilyMart"
+        } else if chosedStyle == StoreType.ok {
+            storeStr = "OK"
+        } else if chosedStyle == StoreType.hiLife {
+            storeStr = "HiLife"
+        }
+        
+        upIntoL.text = NSLocalizedString("Transfer PayStep Up Intro", comment: "") + storeStr + NSLocalizedString("Transfer PayStep Up Intro2", comment: "")
         warnL.text = NSLocalizedString("Transfer PayStep Warn", comment: "")
         paymentInfoL.text = payment_info
         totalTWDL.text = "Total TWD \(transferStateObj.total.stringToIntDecimalString())"

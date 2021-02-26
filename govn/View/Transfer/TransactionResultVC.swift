@@ -119,10 +119,12 @@ class TransactionResultVC: UIViewController {
             self.downIconIgV.kf.setImage(with: urlhaed)
             
             self.downNameL.text = transferStateObj.recipient_name
-            self.downIDL.text = transferStateObj.to_acc
+            self.downIDL.text = "ID: " + transferStateObj.recipient_id
             
-            self.downValueL.text = "IDR " + transferStateObj.transfer_amount_idr.stringToIntDecimalString()
-            self.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + transferStateObj.kurs_value
+            //self.downValueL.text = "IDR " + transferStateObj.transfer_amount_idr.stringToIntDecimalString()
+            self.downValueL.text = transferStateObj.phone
+            //self.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + transferStateObj.kurs_value
+            self.downNoteL.text = transferStateObj.address
             
             /*
             let expireTimeStr = orderCheckStateObj.lm_time_expire!

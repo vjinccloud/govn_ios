@@ -42,12 +42,26 @@ class TransferStateType1TableViewCell: UITableViewCell {
     @IBOutlet weak var downValueL: UILabel!
     @IBOutlet weak var downNoteL: UILabel!
     
+    @IBOutlet weak var downType2V: UIView!
+    @IBOutlet weak var downType2L1: UILabel!
+    @IBOutlet weak var downType2L2: UILabel!
+    @IBOutlet weak var downType2L3: UILabel!
+    @IBOutlet weak var downType2L4: UILabel!
+    @IBOutlet weak var downType2L5: UILabel!
+    
     @IBOutlet weak var failV: UIView!
     @IBOutlet weak var failIconIgV: UIImageView!
     @IBOutlet weak var failNameL: UILabel!
     @IBOutlet weak var failIDL: UILabel!
     @IBOutlet weak var failValueL: UILabel!
     @IBOutlet weak var failNoteL: UILabel!
+    
+    @IBOutlet weak var failType2V: UIView!
+    @IBOutlet weak var failType2L1: UILabel!
+    @IBOutlet weak var failType2L2: UILabel!
+    @IBOutlet weak var failType2L3: UILabel!
+    @IBOutlet weak var failType2L4: UILabel!
+    @IBOutlet weak var failType2L5: UILabel!
     
     @IBOutlet weak var plotWholeLineV: UIView!
     @IBOutlet weak var plotBar1V: UIView!

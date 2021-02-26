@@ -46,6 +46,8 @@ class TransactionInfoConfirmVC: UIViewController {
     @IBOutlet weak var dtdPhoneL: UILabel!
     @IBOutlet weak var dtdAdrL: UILabel!
     
+    var topBarSelectIdx = 0
+    
     //MARK: - API
     public func callMemberData() {
         let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
@@ -124,7 +126,7 @@ class TransactionInfoConfirmVC: UIViewController {
         nameL.adjustsFontSizeToFitWidth = true
         nameL.textAlignment = .center
         nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
-        nextBtn.setTitle(NSLocalizedString("send", comment: ""), for: .normal)
+        nextBtn.setTitle(NSLocalizedString("SUBMIT", comment: ""), for: .normal)
         
         backgV.layer.cornerRadius = 5
         backL.text = NSLocalizedString("Transfer Confirm Title", comment: "")
@@ -143,6 +145,7 @@ class TransactionInfoConfirmVC: UIViewController {
         
         nameL.text = obj.recipientObj.recipient_name
         
+        var provinceName = ""
         if AppDelegate.shared().transactionObj.recipient_type == 3 {
             bankAndCPView.isHidden = true
             dtdView.isHidden = false
@@ -160,6 +163,7 @@ class TransactionInfoConfirmVC: UIViewController {
                 if ori == str {
                     choseProvinceIdx = i
                     address += AppDelegate.shared().provinceData[i].province_name
+                    provinceName = AppDelegate.shared().provinceData[i].province_name
                     break
                 }
             }
@@ -173,13 +177,13 @@ class TransactionInfoConfirmVC: UIViewController {
                 }
             }
             dtdAdrL.text = address + " " + obj.recipientObj.address
-            
         } else {
             bankAndCPView.isHidden = false
             dtdView.isHidden = true
             bandcIDL.text = obj.recipientObj.id_card_no
             bandcPhoneL.text = obj.recipientObj.phone_no
             bandcAccL.text = obj.recipientObj.bank_acc
+            
             midVHeight.constant = 190
             Dlog("obj.recipientObj.bank_code = \(obj.recipientObj.bank_code!)")
             var serchBankobj = UtilityTool().searchBankObj(BankName: obj.recipientObj.bank_name!)

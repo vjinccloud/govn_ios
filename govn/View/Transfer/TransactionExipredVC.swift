@@ -24,7 +24,7 @@ class TransactionExipredVC: UIViewController {
     var transferStateObj:TransferStateObj!
     var orderCheckStateObj:TransferOrderCheckObj!
     var payment_info:String = ""
-    
+    var chosedStyle:StoreType!
     var parentVC:TransactionPayVC!
     
     //MARK: - Button-Action
@@ -43,18 +43,30 @@ class TransactionExipredVC: UIViewController {
 
         // Do any additional setup after loading the view.
         backL.text = ""
-        warnL.text = NSLocalizedString("Transfer Expired Step Warn1", comment: "")
+        warnL.text = payment_info
         warn2L.text = NSLocalizedString("Transfer Expired Step Warn2", comment: "")
         warnTL.text = NSLocalizedString("Transfer Expired Step Warn Title", comment: "")
         
-        twdL.text = "Total TWD \(transferStateObj.total.stringToIntDecimalString())"
+        twdL.text = "TWD \(transferStateObj.total.stringToIntDecimalString())"
         reloadBtn.setTitle(NSLocalizedString("Transfer Expired Step Btn Title", comment: "") + "    ", for: .normal)
         reloadBtn.layer.cornerRadius = reloadBtn.frame.size.height/2
         
+        //應該是超商logo
+        if chosedStyle == StoreType.sevenEleven {
+            iconImgV.image = UIImage.init(named: "711.png")
+        } else if chosedStyle == StoreType.familymart {
+            iconImgV.image = UIImage.init(named: "fanilymart.png")
+        } else if chosedStyle == StoreType.ok {
+            iconImgV.image = UIImage.init(named: "okmart.png")
+        } else if chosedStyle == StoreType.hiLife {
+            iconImgV.image = UIImage.init(named: "hilife.png")
+        }
+        /*
         let serchBankobj = UtilityTool().searchBankObj(BankCode: transferStateObj.bank_code!)
         let imgurl = serchBankobj.bank_photo!
         let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
         iconImgV.kf.setImage(with: urlhaed)
+        */
     }
 
     /*

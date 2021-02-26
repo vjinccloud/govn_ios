@@ -555,11 +555,29 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             return true
         }
         
-        let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        var isEmpty = false
+        var newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        if newString == "" {
+            isEmpty = true
+            newString = "1"
+        }
         if textField == upTextField {
             justCalculateValue(UseStyle: 0, NweString: newString)
         } else if textField == downTextField {
             justCalculateValue(UseStyle: 1, NweString: newString)
+        }
+        
+        if isEmpty {
+            Dlog("isEmpty 1")
+            if textField == upTextField {
+                upTextField.text = "1"
+                upTextField.selectAll(nil)
+                return false
+            } else if textField == downTextField {
+                downTextField.text = "1"
+                downTextField.selectAll(nil)
+                return false
+            }
         }
 
         /*

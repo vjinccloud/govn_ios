@@ -230,6 +230,7 @@ class AddRecipientBankVC: UIViewController, UITextFieldDelegate, UITableViewDele
                             storyboardId = "TransactionInfoConfirmVCSmall"
                         }
                         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
+                        nextVC!.topBarSelectIdx = self.topBarSelectIdx
                         self.navigationController?.pushViewController(nextVC!, animated: true)
                     } else {
                         self.navigationController?.popViewController(animated: true)

@@ -153,6 +153,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                 storyboardId = "TransactionInfoConfirmVCSmall"
             }
             let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
+            nextVC!.topBarSelectIdx = topBarSelectIdx
             self.navigationController?.pushViewController(nextVC!, animated: true)
             
         } else {

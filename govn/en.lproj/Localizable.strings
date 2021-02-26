@@ -120,6 +120,8 @@
 "Register Self Photo Confrim B" = "SUBMIT";
 "Register Self Photo Retake B" = "RETAKE";
 
+"SUBMIT" = "SUBMIT";
+
 "Register Sign Confrim" = "SUBMIT";
 "Register Sign Retake" = "CLEAR";
 "Register Sign Confirmed" = "Your signature\nHas Been Confirmed";
@@ -222,6 +224,9 @@
 "Transfer State Pure Text Title" = "Please make a payment";
 "Transfer State 1 KODE PIN" = "PIN code";
 "Transfer State Mid Text Title" = "To Bank Account:";
+"Transfer State Mid Text Title2" = "Cash Pick-up:";
+"Transfer State Mid Text Title3" = "Delivery to Home:";
+
 "Transfer State Plot Text L1" = "Created";
 "Transfer State Plot Text L2" = "Paid";
 "Transfer State Plot Text L3" = "Process";
@@ -249,12 +254,13 @@
 
 "Transfer Result Title" = "Your PIN Code";
 "Transfer Result Bar Title" = "PENDING";
-"Transfer Result Store Title" = "Silahkan pilih mini market";
+"Transfer Result Store Title" = "Choose Convinient Store";
 "Transfer Result Go Map Title" = "Find The Nearest Convinient Store";
-"Transfer Result Pay Title" = "LANGSUNG KE KASIR";
+"Transfer Result Pay Title" = "GO TO CASHIER";
 
 "Transfer PayStep Title" = "Kode Pin Anda";
-"Transfer PayStep Up Intro" = "Please go to the nearest 7-11\nand make a payment";
+"Transfer PayStep Up Intro" = "Please go to the nearest ";
+"Transfer PayStep Up Intro2" = "\nand make a payment";
 "Transfer PayStep Min Title" = "Minute";
 "Transfer PayStep Sec Title" = "Second";
 "Transfer PayStep Warn" = "The barcode will expires after 10 minutes\nYou can request again barcode by pressing\nbutton above";
@@ -262,8 +268,8 @@
 "Transfer PayStep Btn Reload" = "REQUEST AGAIN BARCODE";
 
 "Transfer Expired Step Warn1" = "Silahkan melakukan\npembayaran dikasir sebesar";
-"Transfer Expired Step Warn2" = "Barcode pembayaran Anda\ntelah habis masa berlaku";
-"Transfer Expired Step Warn Title" = "Mohon Maaf";
+"Transfer Expired Step Warn2" = "Your barcode already expired";
+"Transfer Expired Step Warn Title" = "Sorry";
 "Transfer Expired Step Btn Title" = "REQUEST AGAIN BARCODE";
 
 "Top Bar L1" = "To Bank Account";

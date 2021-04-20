@@ -333,7 +333,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         pass = pred.evaluate(with: words)
         
         if !pass {
-            errorL.text = NSLocalizedString("Register Name ARC", comment: "")
+            errorL.text = NSLocalizedString("Enter Error Only English", comment: "")
             errorView.isHidden = false
             
             return false
@@ -433,7 +433,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     public func setArcCodeString(Code code:String) {
         noArcView.isHidden = true
         hasArcView.isHidden = false
-        arcCodeL.text = code
+        arcCodeL.text = code.uppercased()
         checkNextBtnState(CheckText: true)
     }
     
@@ -490,7 +490,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         accountTextfield.keyboardType = .asciiCapable
         passTextField.keyboardType = .asciiCapable
         rePassTextField.keyboardType = .asciiCapable
-        
+        arcTextfield.autocapitalizationType = .allCharacters
         accountTextfield.delegate = self
         phoneTextfield.delegate = self
         passTextField.delegate = self
@@ -540,6 +540,9 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     }
     
     func setArcText(Text text:String) {
+        if text.count>0 {
+            hasSharedCode = true
+        }
         arcTextfield.text = text
         arcTextfield.font = UIFont.systemFont(ofSize: 20)
     }

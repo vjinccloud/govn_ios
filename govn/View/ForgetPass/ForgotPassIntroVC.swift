@@ -36,7 +36,7 @@ class ForgotPassIntroVC: UIViewController {
         nextBtn.setTitle(NSLocalizedString("start scan", comment: ""), for: .normal)
         nextBtn.layer.cornerRadius = nextBtn.frame.height/2
         topL.text = NSLocalizedString("top for forgoet sec", comment: "")
-        bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
+        bottomL.text = NSLocalizedString("bottom for forgoet sec2", comment: "")
     }
     
 

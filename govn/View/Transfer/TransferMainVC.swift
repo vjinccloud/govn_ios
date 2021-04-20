@@ -51,6 +51,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     var choseTag = 0
     var pickerView:UIPickerView!
     var pickBackView:UIView!
+    var kursValueShow:Double = 0
     
     var topBarSelectIdx = 0
     
@@ -116,17 +117,27 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         if topBarSelectIdx == 0 {
             return
         }
+        
+        serviceCharge = Int(AppDelegate.shared().memberData["service_charge"]!)!
+        
         initCondition()
         initTopBar()
+        
+        checkAndCalculateValue(UseStyle:0, NweString: "")
     }
     
     @IBAction func topBarBtn2Action(_ sender: Any) {
         if topBarSelectIdx == 1 {
             return
         }
+        
+        serviceCharge = Int(AppDelegate.shared().memberData["service_charge_2"]!)!
+        
         initCondition()
         topBarSelectIdx = 1
         initTopBar()
+        
+        checkAndCalculateValue(UseStyle:0, NweString: "")
     }
     
     @IBAction func topBarBtn3Action(_ sender: Any) {
@@ -134,9 +145,13 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             return
         }
         
+        serviceCharge = Int(AppDelegate.shared().memberData["service_charge_3"]!)!
+        
         initCondition()
         topBarSelectIdx = 2
         initTopBar()
+        
+        checkAndCalculateValue(UseStyle:0, NweString: "")
     }
     
     @IBAction func changeMoneyTypeAction(_ sender: Any) {
@@ -198,6 +213,11 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         upTextField.text = "1"
         checkAndCalculateValue(UseStyle: 0, NweString: "")
         
+        if choseMoneyType == 1 {
+            upTextField.text = "\(kursValueShow)"
+            downTextField.text = "1"
+        }
+        
     }
     
     //MARK: - Utility
@@ -206,10 +226,10 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         pickBackView = UIView(frame: CGRect(x: 0, y: (tempWindow?.frame.height)!, width: view.frame.width, height: 260))
         
         // Toolbar
-        let btnDone = UIBarButtonItem(title: "  確定  ", style: .plain, target: self, action: #selector(finishSelect))
+        let btnDone = UIBarButtonItem(title: "  OK  ", style: .plain, target: self, action: #selector(finishSelect))
         //UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(finishSelect))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let cancelButton = UIBarButtonItem(title: "  取消  ", style: .plain, target: self, action: #selector(closePicker))
+        let cancelButton = UIBarButtonItem(title: "  Cancel  ", style: .plain, target: self, action: #selector(closePicker))
         
         let barAccessory = UIToolbar(frame: CGRect(x: 0, y: 0, width: pickBackView.frame.width, height: 44))
         barAccessory.barStyle = .default
@@ -230,12 +250,21 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     
     func setUpKursValue() {
         if choseMoneyType == 1 {
-            kursValue = Double(AppDelegate.shared().memberData["usd_kurs_value"]!)!
+            kursValueShow = Double(AppDelegate.shared().memberData["usd_kurs_value"]!)!
+            kursValue = 1/Double(AppDelegate.shared().memberData["usd_kurs_value"]!)!
         } else {
+            kursValueShow = Double(AppDelegate.shared().memberData["usd_kurs_value"]!)!
             kursValue = Double(AppDelegate.shared().memberData["kurs_value"]!)!
         }
         
-        serviceCharge = Int(AppDelegate.shared().memberData["service_charge"]!)!
+        if topBarSelectIdx == 0 {
+            serviceCharge = Int(AppDelegate.shared().memberData["service_charge"]!)!
+        } else if topBarSelectIdx == 1 {
+            serviceCharge = Int(AppDelegate.shared().memberData["service_charge_2"]!)!
+        } else if topBarSelectIdx == 2 {
+            serviceCharge = Int(AppDelegate.shared().memberData["service_charge_3"]!)!
+        }
+        
     }
     
     func justCalculateValue(UseStyle style:Int, NweString newString:String) {
@@ -291,7 +320,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 upTextField.text = "1"
                 upValue = 1
             }
-            downValue = Int(ceil(Double(upValue!) * kursValue))
+            downValue = Int(ceil(Double(upValue ?? 1) * kursValue))
             if downValue! < 1 {
                 downValue! = 1
             }
@@ -344,8 +373,10 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             pointLeftL.text = "-\(decresedCharge)"
         }
         
-        totalChage = upValue! + serviceCharge - decresedCharge
+        totalChage = (upValue ?? 1) + serviceCharge - decresedCharge
         totalNTDL.text = "\(totalChage)".stringToIntDecimalString()
+        
+        Dlog("totalChage=\(totalChage), serviceCharge=\(serviceCharge), decresedCharge=\(decresedCharge)")
     }
     
     //MARK: - Button Action
@@ -356,7 +387,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             decresedCharge = 0
         } else {
             
-            decresedCharge += decresedChargeUnit
+            decresedCharge = value
             if decresedCharge > value {
                 decresedCharge = 0
             }
@@ -433,7 +464,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     
     //取得省份資料
     func getProvinceData(NeedNExt next:Bool) {
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "mode":"json"]
         
         let headers: HTTPHeaders = [:]
         closeAll()
@@ -456,11 +487,12 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 }
                 //AppDelegate.shared().apiBackContentStr
                 let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
-                Dlog("responseStr = \(responseStr ?? "")")
-                
+                Dlog("province responseStr = \(responseStr ?? "")")
+                    
                 AppDelegate.shared().recipientListObjs = []
                 AppDelegate.shared().recipientShownListObjs = []
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+               
                 if result == ResponseState.ok {
                     AppDelegate.shared().hasProvinceData = true
                     if next {

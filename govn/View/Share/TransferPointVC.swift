@@ -129,6 +129,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         let todoEndpoint: String = API_TransferPointFirstStep;
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        AppDelegate.shared().transferStepOneListObj = []
         
         AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
@@ -148,7 +149,8 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "\(mode)")
                 if result == ResponseState.ok {
                     if mode == 1 {
-                        self.checkTransferFirstStep(Mode: 2)
+                        //self.checkTransferFirstStep(Mode: 2)
+                        self.transferSecondStep()
                         return
                     }
                     
@@ -170,8 +172,12 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     
     public func transferSecondStep() {
         var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "remit_point":pointTextfield.text!]
+        if AppDelegate.shared().transferStepOneListObj.count == 0 {
+            return
+        }
         
-        let data = AppDelegate.shared().transferFriendListObj[chosedIndx]
+        let data = AppDelegate.shared().transferStepOneListObj[0]
+        //AppDelegate.shared().transferFriendListObj[chosedIndx]
         if data.memberStyle == .normal {
             parameters["mode"] = 1
             parameters["friend_id"] = Int(data.idStr)

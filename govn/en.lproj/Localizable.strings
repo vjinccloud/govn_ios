@@ -12,6 +12,7 @@
 "shopping" = "SHOPPING"; //商城
 "agree" = "AGREE"; //同意/確認
 "cancel" = "CANCEL"; //取消
+"cancelForError" = "Close"; //取消2
 "login" = "Log In"; //登入
 "recover passcode" = "Forget Password"; //密碼回復
 "register" = "Sign Up"; //註冊
@@ -39,33 +40,39 @@
 "passcode" = "Password"; //密碼
 "scan again" = "RE-SCAN"; //再次掃描
 "scan format wrong" = "Wrong"; //掃描格式錯誤
-"API Timeout" = "網路不穩或伺服器忙線中";
-"SMS Code Wrong" = "驗證碼錯誤";
+"API Timeout" = "The network is unstable and busy";//======也請幫我翻譯英文
+"SMS Code Wrong" = "Verification code error";//======也請幫我翻譯英文
 "Please Enter Number" = "Please Enter Number";
 "submit Upper" = "SUBMIT";
 
-"Register Error Empty" = "請輸入欄位文字";
-"Register Error Tel" = "手機格式錯誤";
-"Register Error Name" = "名字只能輸入英文或空格";
-"Register Error ARC" = "ARC格式錯誤";
-"Register Error Pass" = "密碼需超過四位數";
-"Register Error Pass Not match" = "Password didn't match, please enter again";
-"Register Member Exist" = "會員已存在";
-"Camera Request Agreement" = "需要同意相機權限才能進行掃描功能";
-"Camera Photo Request Agreement" = "需要同意相機權限才能進行拍照功能";
-"Photo too big" = "圖片過大，請重新選擇";
+//這邊要新翻譯
+"Input Error Address" = "The address can only be entered in English";
+"Point Transfer Add Recipient Accounnt Name" = "Account Name.";
 
-"Floating Title" = "Layanan Konsumen";
-"telephone" = "Telepon";
+"Register Error Empty" = "Please fill in the blank";//======也請幫我翻譯英文
+"Register Error Tel" = "Phone number format error";//======也請幫我翻譯英文
+"Register Error Name" = "The name can only be entered in English";//======也請幫我翻譯英文
+"Register Error ARC" = "ARC format error";//======也請幫我翻譯英文
+"Register Error Pass" = "Password must exceed four digits";//======也請幫我翻譯英文
+"Register Error Pass Not match" = "Password didn't match, please enter again";
+"Register Member Exist" = "Account already exists";//======也請幫我翻譯英文
+"Camera Request Agreement" = "Allow camera to scan";//======也請幫我翻譯英文
+"Camera Photo Request Agreement" = "Allow camera to take picture";//======也請幫我翻譯英文
+"Photo too big" = "The image is too large, please choose another";//======也請幫我翻譯英文
+
+"Floating Title" = "Customer Service";//======也請幫我翻譯英文
+"telephone" = "Hotline";//======也請幫我翻譯英文
 "line" = "Line";
 "messenger" = "Messenger";
 
 //忘記密碼
-"remmber me" = "Simpan Kata Sandi";
+"remmber me" = "Remember Password";//======也請幫我翻譯英文
 "top for forgoet main" = "Please prepare your ARC";//忘記密碼首頁的說明
 "intro for forgoet main" = "Scan or input your ARC here";
 "top for forgoet sec" = "How to Scan\nARC Barcide Number";
 "bottom for forgoet sec" = "Make sure the entire barcode\nare in the specified box";
+"bottom for forgoet sec2" = "Make sure the entire ARC\nare in the specified box";
+"bottom for forgoet sec3" = "Make sure the entire ARC\nare in the specified box";
 "bottom for sign sec" = "Write your name according to your ARC";
 "top for forget arc scan" = "How to Scan\nARC Barcide Number";
 "top for forget result has phone" = "Your ARC ?Number is";
@@ -80,14 +87,14 @@
 "TFFRHP Enter Top" = "We have sent the code\nto your number\n";
 "TFFRHP Enter Send Again" = "Resend Code";
 
-"TFFRHP Change Title" = "Masukkan kata sandi yang baru";
+"TFFRHP Change Title" = "Enter new password";//======也請幫我翻譯英文
 "TFFRHP Change placehold2" = "Re-type Password";
-"TFFRHP Change warn" = "*Masukan kata sandi minimal 4 angka";
-"TFFRHP Change warn2" = "*Ulangi kata sandi";
+"TFFRHP Change warn" = "*Password must be at least 4 digits or letters";//======也請幫我翻譯英文
+"TFFRHP Change warn2" = "*Re-enter password";//======也請幫我翻譯英文
 
 //註冊
-"Main Register Alert Title" = "Izin Akses\nData Perangkat";
-"Main Register Alert Content" = "Demi meningkatkan layanan aplikasi, kami memperbaharui Kebijakan Privasi dan memerlukan izin Anda terhadap akses data perangkat";
+"Main Register Alert Title" = "Device Data \nAccess Permission";
+"Main Register Alert Content" = "In order to improve application services, we are updating the Privacy Policy and require your permission to access device data";
 "Register Agreement Title" = "TERMS AND CONDITIONS";
 
 "Register Intro Top Title" = "Complete Your Data";
@@ -110,13 +117,13 @@
 "Register Share Input Div" = "OR";
 "Register Share Input Below" = "Enter your friend's member ID below";
 
-"Register Share Scan Top" = "Cara mengscan barcode\nmember ID teman Anda";
-"Register Share Scan Bottom" = "Pastikan seluruh barcode\nberada dalam kotak yang ditentukan";
+"Register Share Scan Top" = "How to scan your \nfriend's member ID barcode";
+"Register Share Scan Bottom" = "Make sure all barcodes \nare in the specified boxes";
 
 "Register Self Photo Confrim" = "Use";
 "Register Self Photo Retake" = "Re-take";
-"Register Sign Confirmed" = "Your signature\nHas Been Confirmed";
 "Selfie Face Reminder" = "Make sure your face is visible\nwhen taking a selfie";
+"Selfie Face Reminder2" = "Make sure your face is visible\nwhen taking a selfie";
 "Register Self Photo Confrim B" = "SUBMIT";
 "Register Self Photo Retake B" = "RETAKE";
 
@@ -140,12 +147,13 @@
 "Register ID Photo Title Passport" = "Take a Selfie";
 
 "Register ID Face And ID Intro" = "Take a Selfie";
+"Register ID Face And ID Intro2" = "Take a Selfie";
 
-"Register ID Make Signature Top" = "Tulis nama sesuai dengan Nama yang tertera di ARC";
+"Register ID Make Signature Top" = "Write the name according to the Name listed in the ARC";
 
-"Register Input Foto Select Title" = "Pilih Foto";
-"Register Input Foto Select Camera" = "Ambil Foto Dari Kamera";
-"Register Input Foto Select Gallery" = "Pilih Dari Galeri";
+"Register Input Foto Select Title" = "Select Photos";
+"Register Input Foto Select Camera" = "Take Photo From Camera";
+"Register Input Foto Select Gallery" = "Select From Gallery";
 
 "Profile Main Title" = "Your Profile";
 "Profile Main Point" = "Your Point";
@@ -188,23 +196,23 @@
 "Input Bank Person Address Field2" = "District";
 "Input Bank Person Address Field3" = "Address";
 
-"Point Transfer Title" = "TRANSFER POIN";
+"Point Transfer Title" = "TRANSFER POINT";
 "Point Transfer Input Title" = "Transfer to";
 "Point Transfer Input Phone Place Holder" = "Input Recepient's Phone No.";
 "Point Transfer Input Point Place Holder" = "Total Points Transfered";
-"Point Transfer Alert Title" = "GAGAL";
+"Point Transfer Alert Title" = "FAILED";//======也請幫我翻譯英文
 
-"Point Transfer Alert No Member Title" = "Mohon Maaf";
-"Point Transfer Alert No Member Content" = "nomor yang Anda masukkan\ntidak terdaftar\n\nSilahkan periksa kembali";
+"Point Transfer Alert No Member Title" = "Sorry";//======也請幫我翻譯英文
+"Point Transfer Alert No Member Content" = "The number you entered \nhas not registered. \nPlease check again";//======也請幫我翻譯英文
 
-"Point Transfer Alert Point Lack Title" = "Mohon Maaf";
-"Point Transfer Alert Point Lack Content" = "Jumlah poin yang Anda masukkan melebihi jumlah poin saat ini";
+"Point Transfer Alert Point Lack Title" = "Sorry";//======也請幫我翻譯英文
+"Point Transfer Alert Point Lack Content" = "The amount of points you entered exceeds the amount of points available";//======也請幫我翻譯英文
 
 "Point Transfer Step2 Title" = "Transfer to";
-"Point Transfer Step2 Successed Title" = "BERHASIL";
-"Point Transfer Step2 Successed SubTitle" = "Terima Kasih";
-"Point Transfer Step2 Successed Content A" = "Anda telah berhasil\nmengirimkan ";
-"Point Transfer Step2 Successed Content B" = " Poin";
+"Point Transfer Step2 Successed Title" = "SUCCESSFUL";//======也請幫我翻譯英文
+"Point Transfer Step2 Successed SubTitle" = "Thank you";//======也請幫我翻譯英文
+"Point Transfer Step2 Successed Content A" = "You have submitted\nsuccessfully";//======也請幫我翻譯英文
+"Point Transfer Step2 Successed Content B" = " Point";
 "Point Transfer Add Recipient Next" = "CHECK";
 "Point Transfer Add Recipient Code PlaceHolder" = "";
 "Point Transfer Add Recipient Accounnt PlaceHolder" = "";
@@ -248,8 +256,6 @@
 "Transfer Confirm UsePoint Title" = "Discount";
 "Transfer Confirm Total Title" = "Total";
 
-"Transfer Agreement Title" = "Pernyataan";
-
 "Transfer Result Exceed" = "Total payment can not ecxeed NTD";
 
 "Transfer Result Title" = "Your PIN Code";
@@ -258,7 +264,7 @@
 "Transfer Result Go Map Title" = "Find The Nearest Convinient Store";
 "Transfer Result Pay Title" = "GO TO CASHIER";
 
-"Transfer PayStep Title" = "Kode Pin Anda";
+"Transfer PayStep Title" = "Your Pincode";
 "Transfer PayStep Up Intro" = "Please go to the nearest ";
 "Transfer PayStep Up Intro2" = "\nand make a payment";
 "Transfer PayStep Min Title" = "Minute";
@@ -267,7 +273,6 @@
 "Transfer PayStep Btn Enlarge" = "ZOOM BARCODE";
 "Transfer PayStep Btn Reload" = "REQUEST AGAIN BARCODE";
 
-"Transfer Expired Step Warn1" = "Silahkan melakukan\npembayaran dikasir sebesar";
 "Transfer Expired Step Warn2" = "Your barcode already expired";
 "Transfer Expired Step Warn Title" = "Sorry";
 "Transfer Expired Step Btn Title" = "REQUEST AGAIN BARCODE";
@@ -276,6 +281,33 @@
 "Top Bar L2" = "Cash Pick-up";
 "Top Bar L3" = "Deliver to Home";
 
-"Share Add Poin" = "Add Poin";
-"Share Poin Transfer" = "Poin Transfer";
-"Share Poin History" = "Poin History";
+"Share Add Poin" = "Add Point";
+"Share Poin Transfer" = "Point Transfer";
+"Share Poin History" = "Point History";
+
+"Enter Error Only English" = "The name can only be entered in English";
+"Total NTD" = "Total NTD";
+"Enter Account Special Error Title" = "Please check Bank Account again !";
+"Enter Account Special Error Msg" = "Sorry, we can't verify this bank account. Make sure you entered the right number. If it is correct, then enter Beneficiary Name";
+
+"Arc Change Same Time" = "The photo on the front and back of the residence card \ n and the signature must be updated at the same time";
+"Self Photo Change Same Time" = "Silahkan Perbaharui Semua Data Photo Paspor dan Tanda Tangan";
+"scanning" = "Scanning...";
+"MID" = "MID";
+
+"reason_show1" = "app download bonus";
+"reason_show2" = "app share bonus";
+"reason_show3" = "app create invoice bonus";
+"reason_show4" = "redeem point for free service charge";
+"reason_show5" = "manual";
+"reason_show6" = "bonus for each 100 remit transactions";
+"reason_show7" = "bonus for each 50 friends invited";
+"reason_show8" = "birthday bonus";
+"reason_show9" = "special occassion bonus";
+"reason_show10" = "create invoice";
+"reason_show11" = "scrap invoice";
+"reason_show12" = "roulette";
+"reason_show13" = "transfer point to remit system member";
+"reason_show14" = "transfer point to web shop member";
+
+"transtate CP DTD ID" = "ID";

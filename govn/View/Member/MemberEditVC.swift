@@ -49,6 +49,7 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
     @IBOutlet weak var thirdView: UIView!
     @IBOutlet weak var forthView: UIView!
     @IBOutlet weak var signView: UIView!
+    @IBOutlet weak var signL: UILabel!
     
     var meImg:UIImage!
     
@@ -65,10 +66,19 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
     
     //MARK: - API
     func showMustAllChangedAlert(Type type:Int) {
+        /*
         if type == 0 { //ARC
             AppDelegate.shared().showAlertWithWindow(self, Message: "ARC證照前後圖片與簽名須同時變更")
         } else { //ID
             AppDelegate.shared().showAlertWithWindow(self, Message: "護照與持照圖片需同時變更")
+        }*/
+        
+        if type == 0 { //ARC ARC證照前後圖片與簽名須同時變更
+            let msg = NSLocalizedString("Arc Change Same Time" , comment: "")
+            AppDelegate.shared().showAlertWithWindow(self, Message: msg)
+        } else { //ID 護照與持照圖片需同時變更
+            let msg = NSLocalizedString("Self Photo Change Same Time" , comment: "")
+            AppDelegate.shared().showAlertWithWindow(self, Message: msg)
         }
     }
     
@@ -147,11 +157,12 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
             "Content-type": "multipart/form-data"
         ]
         
+        /*
         if passportImg == nil {
             //passportImg = forthImgV.image
             showMustAllChangedAlert(Type: 1)
             return
-        }
+        }*/
         
         if faceImg == nil {
             //faceImg = thirdImgV.image
@@ -166,7 +177,8 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
             
             multipartFormData.append(AppDelegate.shared().sessionToken.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "token")
             
-            multipartFormData.append(self.passportImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "id_card", fileName: "id_card.jpg", mimeType: "image/jpg")
+            /*
+            multipartFormData.append(self.passportImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "id_card", fileName: "id_card.jpg", mimeType: "image/jpg")*/
             multipartFormData.append(self.faceImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "self", fileName: "self.jpg", mimeType: "image/jpg")
             
         }, usingThreshold: UInt64.init(), to: todoEndpoint, method: .post, headers: headers) { (result) in
@@ -413,14 +425,15 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
             hasUpdateID = true
             faceImg = img
             thirdImgV.image = img
-        } else if type == PhotoIDType.passportFromEdit {
+        } /*else if type == PhotoIDType.passportFromEdit {
             hasUpdateID = true
             passportImg = img
             forthImgV.image = img
-        } else if type == PhotoIDType.signFromEdit {
+        }*/ else if type == PhotoIDType.signFromEdit {
             hasUpdateARC = true
             signImage = img
             signImgV.image = UIImage.init(named: "note-2.png")
+            signL.isHidden = false
         }
         
     }
@@ -436,7 +449,7 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
     
     public func setArcCodeString(Code code:String) {
         hasArcView.isHidden = false
-        arcCodeL.text = code
+        arcCodeL.text = code.uppercased()
     }
     
     //因為要跟註冊共用，如果使用共通元件，須先隱藏
@@ -462,14 +475,15 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
         firstPhotoTitleL.text = NSLocalizedString("Register ID Photo First", comment: "")
         secPhotoTitleL.text = NSLocalizedString("Register ID Photo Sec", comment: "")
         thirdPhotoTitleL.text = NSLocalizedString("Register ID Self First", comment: "")
-        forthPhotoTitleL.text = NSLocalizedString("Register ID Self Sec", comment: "")
+        //forthPhotoTitleL.text = NSLocalizedString("Register ID Self Sec", comment: "")
         signTitleL.text = NSLocalizedString("Register ID Self Sign", comment: "")
         
         firstView.layer.borderWidth = 0.5
         firstView.layer.borderColor = UIColor.white.cgColor
         firstView.layer.cornerRadius = 5
         firstView.clipsToBounds = true
-        
+        signL.text = NSLocalizedString("Register Sign Confirmed", comment: "")
+        signL.isHidden = true
         secView.layer.borderWidth = 0.5
         secView.layer.borderColor = UIColor.white.cgColor
         secView.layer.cornerRadius = 5
@@ -525,9 +539,11 @@ class MemberEditVC: UIViewController, UITextFieldDelegate,UIImagePickerControlle
         urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
         thirdImgV.kf.setImage(with: urlhaed)
         
+        /*
         imgurl = ServerURL + AppDelegate.shared().memberData["id_card_photo"]!
         urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
         forthImgV.kf.setImage(with: urlhaed)
+        */
         
         imgurl = ServerURL + AppDelegate.shared().memberData["signature_photo"]!
         urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)

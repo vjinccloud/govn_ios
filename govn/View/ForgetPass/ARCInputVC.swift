@@ -196,7 +196,7 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
         titleL.text = NSLocalizedString("Please input Your ARC number", comment: "")
         
         textBackV.layer.cornerRadius = textBackV.frame.height/2
-        allCodeTextField.keyboardType = .numberPad
+        allCodeTextField.keyboardType = .asciiCapable
         
         /*
         codeT1.backgroundColor = Color_Main_DarkGray

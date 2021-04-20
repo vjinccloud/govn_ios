@@ -188,7 +188,7 @@ class ShareMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     func initData() {
         nameL.text = AppDelegate.shared().memberData["member_name"]
         pointBtn.setTitle("  " + AppDelegate.shared().memberData["remit_point"]!, for: .normal)
-        midL.text = "MID : " + AppDelegate.shared().memberData["member_id"]!
+        midL.text = NSLocalizedString("MID", comment: "") + " : " + AppDelegate.shared().memberData["member_id"]!
         
         let image = generateQRCode(from: AppDelegate.shared().memberData["member_id"]!)
         qrCodeImgV.image = image

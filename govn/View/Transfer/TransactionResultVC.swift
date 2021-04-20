@@ -16,6 +16,7 @@ class TransactionResultVC: UIViewController {
     @IBOutlet weak var backL: UILabel!
     @IBOutlet weak var paymentInfoL: UILabel!
     @IBOutlet weak var totalTWDL: UILabel!
+    @IBOutlet weak var payBtnWidth: NSLayoutConstraint!
     
     @IBOutlet weak var topScrollView: UIScrollView!
     
@@ -110,13 +111,19 @@ class TransactionResultVC: UIViewController {
                 paymentInfoL.text = payment_info.getSubString(Start: 0, EndNotInclude: 3) + " " + payment_info.getSubString(Start: 3, EndNotInclude: 9) + " " + payment_info.getSubString(Start: 9, EndNotInclude: 14)
             }
             
-            totalTWDL.text = "Total TWD \(transferStateObj.total ?? "0")"
+            totalTWDL.text = NSLocalizedString("Total NTD", comment: "") + " \(transferStateObj.total ?? "0")"
             barTitleL.text = NSLocalizedString("Transfer State " + orderCheckStateObj.order_status, comment: "")
-            let serchBankobj = UtilityTool().searchBankObj(BankCode: transferStateObj.bank_code!)
             
-            let imgurl = serchBankobj.bank_photo!
-            let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
-            self.downIconIgV.kf.setImage(with: urlhaed)
+            if transferStateObj.recipient_type == "3" {
+                self.downIconIgV.image = UIImage.init(named: "dtd_default")
+            } else {
+                orderCheckStateObj.printSelf()
+                let serchBankobj = UtilityTool().searchBankObj(BankCode: transferStateObj.bank_code!)
+                
+                let imgurl = serchBankobj.bank_photo!
+                let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
+                self.downIconIgV.kf.setImage(with: urlhaed)
+            }
             
             self.downNameL.text = transferStateObj.recipient_name
             self.downIDL.text = "ID: " + transferStateObj.recipient_id
@@ -125,7 +132,7 @@ class TransactionResultVC: UIViewController {
             self.downValueL.text = transferStateObj.phone
             //self.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + transferStateObj.kurs_value
             self.downNoteL.text = transferStateObj.address
-            
+            self.downNoteL.numberOfLines = 2
             /*
             let expireTimeStr = orderCheckStateObj.lm_time_expire!
             let serverTimeStr = orderCheckStateObj.server_time!
@@ -246,7 +253,9 @@ class TransactionResultVC: UIViewController {
     
     @IBAction func openHiLifeIntroAction(_ sender: Any) {
         chosedStyle = .hiLife
-        showBottomBtnAndTeachPic(StoreStyle: .hiLife)
+        //showBottomBtnAndTeachPic(StoreStyle: .hiLife)
+        //直接條碼頁
+        getBarCode()
     }
     
     @IBAction func openMapAction(_ sender: Any) {
@@ -268,6 +277,12 @@ class TransactionResultVC: UIViewController {
         storeTitleL.text = NSLocalizedString("Transfer Result Store Title", comment: "")
         goMapL.text = NSLocalizedString("Transfer Result Go Map Title", comment: "")
         goPayL.text = NSLocalizedString("Transfer Result Pay Title", comment: "")
+        
+        if goPayL.text == "GO TO CASHIER" {
+            payBtnWidth.constant = 170
+        } else {
+            payBtnWidth.constant = 270
+        }
         
         payV.isHidden = true
         teachView.isHidden = true

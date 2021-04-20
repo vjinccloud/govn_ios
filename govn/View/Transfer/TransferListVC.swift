@@ -87,20 +87,23 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 cell.downType2V.isHidden = false
                 
                 if cellData.recipient_type == "2" {
-                    cell.midL.text = NSLocalizedString("Transfer State Mid Text Title", comment: "")
+                    cell.midL.text = NSLocalizedString("Transfer State Mid Text Title2", comment: "")
                 } else if cellData.recipient_type == "3" {
-                    
+                    cell.midL.text = NSLocalizedString("Transfer State Mid Text Title3", comment: "")
                 }
                 
                 cell.downType2L1.text = ""
-                let str = cellData.recipient_name + "  " + "ID: " + cellData.recipient_id
+                let str = cellData.recipient_name + "  " + NSLocalizedString("transtate CP DTD ID", comment: "") + ": " + cellData.recipient_id
                 let attributedString = NSMutableAttributedString(string: str);
                 attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 14), range: NSMakeRange(0, cellData.recipient_name.count));
                 cell.downType2L1.attributedText = attributedString
                 
                 cell.downType2L2.text = cellData.phone
-                cell.downType2L3.text = cellData.address
-                cell.downType2L4.text = "TWD " + cellData.total.stringToIntDecimalString()
+                cell.downType2L3.text = cellData.address//計算越南盾
+                let totalvnd = Int((cellData.kurs_value as NSString).floatValue * (cellData.transfer_amount_idr as NSString).floatValue)
+                let totalstr = "\(totalvnd)"
+                
+                cell.downType2L4.text = "VND " + totalstr.stringToIntDecimalString()
                 cell.downType2L5.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
             }
         }

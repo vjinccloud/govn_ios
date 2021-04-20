@@ -270,7 +270,11 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         AppDelegate.shared().tempRecipientObj.district_id = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[choseDistrictIdx].district_id
         AppDelegate.shared().tempRecipientObj.address = field3.text
         
-        if AppDelegate.shared().transactionObj.recipient_type == 2, AppDelegate.shared().tempTransferChoseMode {
+        AppDelegate.shared().wholeAddress = AppDelegate.shared().provinceData[choseProvinceIdx].province_name! + " " + AppDelegate.shared().provinceData[choseProvinceIdx].allZone[choseDistrictIdx].district_name! + " " + field3.text!
+        
+        //if AppDelegate.shared().transactionObj.recipient_type == 2, AppDelegate.shared().tempTransferChoseMode
+        
+        if AppDelegate.shared().transactionObj.recipient_type == 2 {
             //CP最後要多選銀行
             let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddRecipientBankVC") as? AddRecipientBankVC
             nextVC!.canSelectForTransfer = self.canSelectForTransfer
@@ -304,7 +308,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                 }
                 
                 let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
-                Dlog("responseStr = \(responseStr ?? "")")
+                Dlog("todoEndpoint=\(todoEndpoint), responseStr = \(responseStr ?? "")")
                 
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
                 if result == ResponseState.ok {
@@ -320,7 +324,17 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                         nextVC!.topBarSelectIdx = topBarSelectIdx
                         self.navigationController?.pushViewController(nextVC!, animated: true)
                     } else {
-                        self.navigationController?.popViewController(animated: true)
+                        //回到list頁面
+                        guard let viewControllers = self.navigationController?.viewControllers else {
+                            return
+                        }
+                        
+                        for firstViewController in viewControllers {
+                            if firstViewController is RecipientListVC {
+                                self.navigationController?.popToViewController(firstViewController, animated: true)
+                                break
+                            }
+                        }
                     }
                     
                 } else if result == ResponseState.failed {
@@ -331,6 +345,19 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
     
     //MARK: - Button-Action
     @IBAction func nextAction(_ sender: Any) {
+        //地址只能填英數字加上 / -
+        var pass = true
+        var words = field3.text
+        words = words?.replacingOccurrences(of: "/", with: "")
+        words = words?.replacingOccurrences(of: "-", with: "")
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+        pass = pred.evaluate(with: words)
+        
+        if !pass {
+            AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Input Error Address", comment: ""))
+            return
+        }
+        
         addRecipientStep2()
     }
     
@@ -363,11 +390,12 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         //accountTextfield.inputAccessoryView = generateToolBar()
         
         relationTypeAry = []
-        relationTypeAry.append("FAMILY")
-        relationTypeAry.append("FRIEND")
-        relationTypeAry.append("SELF")
-        relationTypeAry.append("OTHERS")
-        
+        //"Relation Type 1"
+        relationTypeAry.append(NSLocalizedString("Relation Type 1", comment: ""))
+        relationTypeAry.append(NSLocalizedString("Relation Type 2", comment: ""))
+        relationTypeAry.append(NSLocalizedString("Relation Type 3", comment: ""))
+        relationTypeAry.append(NSLocalizedString("Relation Type 4", comment: ""))
+
         field1.keyboardType = .default
         field2.keyboardType = .asciiCapable
         field3.keyboardType = .default

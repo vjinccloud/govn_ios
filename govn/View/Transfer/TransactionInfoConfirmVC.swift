@@ -108,8 +108,17 @@ class TransactionInfoConfirmVC: UIViewController {
     //MARK: - View-Life
     func recalculateTargetMoneyAndGoNext() {
         let obj = AppDelegate.shared().transactionObj
-        let kursValue = Double(AppDelegate.shared().memberData["kurs_value"]!)!
-        AppDelegate.shared().transactionObj.targetValue = Int(ceil(Double(obj.ntdValue) * kursValue))
+        var kursValue = Double(AppDelegate.shared().memberData["kurs_value"]!)!
+        if AppDelegate.shared().transactionObj.currency! == "USD" {
+            kursValue = 1/Double(AppDelegate.shared().memberData["usd_kurs_value"]!)!
+        } else {
+            kursValue = Double(AppDelegate.shared().memberData["kurs_value"]!)!
+        }
+        
+        let downValue = Int(ceil(Double(AppDelegate.shared().transactionObj.ntdValue) * kursValue))
+        AppDelegate.shared().transactionObj.targetValue = downValue
+        
+        //AppDelegate.shared().transactionObj.targetValue = Int(ceil(Double(obj.ntdValue) * kursValue))
         
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransactionAgreeMentVC") as? TransactionAgreeMentVC
         self.navigationController?.pushViewController(nextVC!, animated: true)
@@ -194,6 +203,7 @@ class TransactionInfoConfirmVC: UIViewController {
             }
             
             let imgurl = serchBankobj.bank_photo!
+            Dlog("serchBankobj.bank_photo! = \(serchBankobj.bank_photo!)")
             let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
             bandcIconImgV.kf.setImage(with: urlhaed)
         }

@@ -78,7 +78,13 @@ class RegisterIDAndSelfPhotoStep2VC: UIViewController {
 
         // Do any additional setup after loading the view.
         backL.text = NSLocalizedString("back", comment: "")
-        bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
+        //bottomL.text = NSLocalizedString("bottom for forgoet sec3", comment: "")
+        bottomL.text = ""
+        if takePhotoType == .faceAndId || takePhotoType == .faceAndIdFromEdit {
+            bottomL.text = NSLocalizedString("bottom for forgoet sec3", comment: "")
+        } else {
+            bottomL.text = ""
+        }
         nextBtn.setTitle(NSLocalizedString("Register Self Photo Confrim", comment: ""), for: .normal)
         cancelBtn.setTitle(NSLocalizedString("Register Self Photo Retake", comment: ""), for: .normal)
         

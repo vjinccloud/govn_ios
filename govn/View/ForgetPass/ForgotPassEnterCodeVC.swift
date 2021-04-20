@@ -148,7 +148,7 @@ class ForgotPassEnterCodeVC: UIViewController, UITextFieldDelegate {
         sendAgainBtn.layer.borderWidth = 0.5
         sendAgainBtn.layer.borderColor = UIColor.darkGray.cgColor
         titleL.text = NSLocalizedString("TFFRHP Enter Title", comment: "")
-        topL.text = NSLocalizedString("TFFRHP Enter Top", comment: "") + AppDelegate.shared().forgotPassTempPhone
+        topL.text = NSLocalizedString("TFFRHP Enter Top", comment: "") + " " + AppDelegate.shared().forgotPassTempPhone
         
         allCodeTextField.backgroundColor = Color_Main_DarkGray
         allCodeTextField.keyboardType = .numberPad

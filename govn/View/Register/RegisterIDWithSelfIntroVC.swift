@@ -122,19 +122,19 @@ class RegisterIDWithSelfIntroVC: UIViewController, UIImagePickerControllerDelega
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        backL.text = NSLocalizedString("Register ID Face And ID Intro", comment: "")
+        backL.text = NSLocalizedString("Register ID Face And ID Intro2", comment: "")
         
         nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
         nextBtn.setTitle(NSLocalizedString("Register ID Photo Intro", comment: ""), for: .normal)
-        bottomL.text = NSLocalizedString("Selfie Face Reminder", comment: "")
+        bottomL.text = NSLocalizedString("Selfie Face Reminder2", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if takePhotoType == PhotoIDType.faceAndId || takePhotoType == PhotoIDType.faceAndIdFromEdit {
-            bottomImgV.image = UIImage.init(named: "man_with_id_2.png")
-            backL.text = NSLocalizedString("Register ID Face And ID Intro", comment: "")
+            //bottomImgV.image = UIImage.init(named: "man_with_id_2.png")
+            backL.text = NSLocalizedString("Register ID Photo Title Passport", comment: "")
         }
     }
 

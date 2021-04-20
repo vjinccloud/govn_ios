@@ -78,6 +78,6 @@ class RecipientObj: NSObject {
     }
     
     public func printSelf() {
-        Dlog("recipient_id(\(recipient_id ?? "")), recipient_name(\(recipient_name ?? "")), bank_acc(\(bank_acc ?? "")), bank_name(\(bank_name ?? "")), is_hidden(\(is_hidden ?? ""))")
+        Dlog("recipient_id(\(recipient_id ?? "")), recipient_name(\(recipient_name ?? "")), bank_acc(\(bank_acc ?? "")), bank_name(\(bank_name ?? "")), is_hidden(\(is_hidden ?? "")), id_card_no(\(id_card_no ?? "")), phone_no(\(phone_no ?? "")))")
     }
 }

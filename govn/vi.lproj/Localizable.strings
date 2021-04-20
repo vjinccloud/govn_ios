@@ -1,0 +1,309 @@
+/*
+  Localizable.strings
+  indogo
+
+  Created by mac on 2020/7/11.
+  Copyright © 2020 DIM. All rights reserved.
+*/
+
+"leading space" = ""; //用來分隔的神秘空白字元
+"leading sub space" = ""; //用來分隔的神秘空白字元(次)
+
+"remit" = "CHUYỂN TIỀN"; //匯款
+"shopping" = "MUA SẮM "; //商城
+"agree" = "ĐỒNG Ý "; //同意/確認
+"cancel" = "HỦY"; //取消
+"cancelForError" = "ĐÓNG"; //取消2 =========
+"login" = "Đăng nhập"; //登入 // 更改
+"recover passcode" = "Quên mật khẩu"; //密碼回復
+"register" = "Đăng Ký "; //註冊
+"register Upper" = "ĐĂNG KÝ"; //註冊
+"remember passcode" = "Ghi nhớ mật khẩu"; //記住密碼
+"start" = "BẮT ĐẦU"; //拍照
+"pic scan" = "BẮT ĐẦU QUÉT MÃ"; //拍照/掃描
+"start scan" = "BẮT ĐẦU"; //拍照/掃描
+"scan failed" = "Quét thất bại"; //掃描失敗
+"or" = "Hoặc";
+"re scan" = "Quét lại"; //重新掃描
+"Incorrect ARC Number" = "Số ARC không chính xác ";
+"Please input Your ARC number correctly" = "Vui lòng nhập đúng số thẻ cư trú của bạn"; //更改
+"input arc number" = "Nhập số thẻ cư trú của bạn"; //手動輸入  //更改
+"Please input Your ARC number" = "Nhập số thẻ cư trú của bạn"; //手動輸入提示 //更改
+"back" = "Quay lại"; //返回(改成不顯示)
+"back Show" = "Quay lại"; //返回
+"send" = "GỬI"; //送出
+"ok" = "TIẾP TỤC"; //繼續
+"JustOK" = "TIẾP TỤC"; //繼續
+"API DecodeFail" = "Máy chủ đang bận, vui lòng thử lại sau"; //伺服器忙線中，請稍候再試
+
+"account" = "Số thẻ cư trú"; //帳號
+"passcode" = "Mật khẩu "; //密碼:
+"scan again" = "QUÉT LẠI"; //再次掃描:
+"scan format wrong" = "Mã quét không đúng định dạng"; //掃描格式錯誤:
+"API Timeout" = "Mạng không ổn định và đang bận";// The network is unstable and busy
+"SMS Code Wrong" = "Lỗi mã xác minh";//Verification code error
+"Please Enter Number" = "Vui lòng nhập số điện thoại của bạn";
+"submit Upper" = "GỬI";
+
+"Input Error Address" = "Vui lòng ghi tiếng Việt không dấu";
+"Point Transfer Add Recipient Accounnt Name" = "Họ tên tài khoản";
+
+"Register Error Empty" = "Vui lòng điền đầy đủ thông tin";//======也請幫我翻譯英文: /Please fill in the blank
+"Register Error Tel" = "Số điện thoại không đúng định dạng";//======也請幫我翻譯英文: /Phone number format error
+"Register Error Name" = "Vui lòng nhập Họ tên không có dấu";//======也請幫我翻譯英文:/ The name can only be entered in English
+"Register Error ARC" = "Số thẻ cư trú không đúng định dạng";//======也請幫我翻譯英文:/ ARC format error //更改
+"Register Error Pass" = "Mật khẩu phải hơn 4 ký tự";//======也請幫我翻譯英文: /Password must exceed four digits
+"Register Error Pass Not match" = "Mật khẩu không trùng khớp, vui lòng nhập lại";
+"Register Member Exist" = "Tài khoản đã tồn tại";//======也請幫我翻譯英文:/ Account already exists
+"Camera Request Agreement" = "Cho phép ứng dụng sử dụng camera để quét mã";//======也請幫我翻譯英文: / Allow camera to scan
+"Camera Photo Request Agreement" = "Cho phép ứng dụng sử dụng camera để chụp ảnh";//======也請幫我翻譯英文: / Allow camera to take picture
+"Photo too big" = "Ảnh quá lớn, vui lòng chọn lại";//======也請幫我翻譯英文:/ The image is too large, please choose another
+
+"Floating Title" = "Liên hệ chúng tôi";//======也請幫我翻譯英文:/ Customer Service //更改
+"telephone" = "Hotline";//======也請幫我翻譯英文: Hotline/ Hotline
+"line" = "Line";
+"messenger" = "Messenger";
+
+//忘記密碼
+"remmber me" = "Ghi nhớ mật khẩu";//======也請幫我翻譯英文:/ Remember Password
+"top for forgoet main" = "Vui lòng chuẩn bị thẻ cư trú";//忘記密碼首頁的說明/ //更改
+"intro for forgoet main" = "Quét hoặc nhập số thẻ cư trú của bạn vào đây"; //更改
+"top for forgoet sec" = "Hướng dẫn quét mã thẻ cư trú"; //更改
+"bottom for forgoet sec" = "Mã vạch phải nằm trong khung chỉ định";
+"bottom for forgoet sec2" = "Đảm bảo toàn bộ thẻ cư trú được đặt trong khung";
+"bottom for forgoet sec3" = "Đảm bảo mặt bạn và thẻ cư trú rõ nét";
+"bottom for sign sec" = "Ký tên như Họ tên trên thẻ cư trú"; //更改
+"top for forget arc scan" = "Hướng dẫn quét mã thẻ cư trú"; //更改
+"top for forget result has phone" = "Số thẻ cú trú của bạn là"; //更改
+"TFFRHP Msg Title" = "Chú ý";
+"TFFRHP Msg Top" = "Vui lòng đảm bảo Số điện thoại của bạn\ncòn hoạt động";
+"TFFRHP Msg End" = "Chúng tôi sẽ gửi mã xác nhận có 4 ký tự đến Số điện thoại của bạn";
+"TFFRHP Msg Register Title" = "Rất tiếc";
+"TFFRHP Msg Register Top" = "Số thẻ cư trú của bạn vẫn chưa đăng ký. Vui lòng đăng ký"; //更改
+
+"TFFRHP Enter Title" = "Nhập mã xác nhận";
+"TFFRHP Enter Top" = "Chúng tôi đã gửi mã xác nhận đến\nSố điện thoại"; // 更改
+"TFFRHP Enter Send Again" = "Gửi lại mã";
+"TFFRHP Change Title" = "Nhập mật khẩu mới";//======也請幫我翻譯英文:/ Enter new password
+"TFFRHP Change placehold2" = "Nhập lại mật khẩu";
+"TFFRHP Change warn" = "*Mật khẩu phải có ít nhất 4 chữ số";//======也請幫我翻譯英文:/Password must be at least 4 digits or letters
+"TFFRHP Change warn2" = "*Nhập lại mật khẩu";//======也請幫我翻譯英文:/ Re-enter password
+
+//註冊
+"Main Register Alert Title" = "Quyền truy cập\nData thiết bị";
+"Main Register Alert Content" = "Để cải thiện dịch vụ ứng dụng, chúng tôi đang cập nhật Chính sách quyền riêng tư và yêu cầu bạn cho phép để truy cập vào dữ liệu thiết bị";
+"Register Agreement Title" = "ĐIỀU KHOẢN VÀ ĐIỀU LỆ";
+
+"Register Intro Top Title" = "Vui lòng hoàn tất thông tin đăng ký";
+"Register Intro Top" = "Chỉ cần vài phút để đăng ký";
+"Register Intro Bottom" = "Vui lòng chuẩn bị thẻ cư trú của bạn"; //更改
+
+"Register Input Foto" = "Ảnh đại diện";
+"Register Input Name" = "Họ tên";
+"Register Input Phone" = "Số điện thoại";
+"Register Input Pass" = "Mật khẩu";
+"Register Input rePass" = "Nhập lại mật khẩu";
+"Register Input ARC Placehold" = "Bạn có mã giới thiệu không ?";
+"Register Input Scan Label" = "Quét mã thẻ cư trú";  //更改
+
+//註冊輸入分享碼and Scan
+"Register Share Input Title" = "Nhập mã giới thiệu";
+"Register Share Input Top" = "Quét mã thành viên của người giới thiệu";
+"Register Share Input Scan" = "ĐANG QUÉT";
+"Register Share Input Msg" = "Khi quét mã thành viên của người giới thiệu, bạn và người giới thiệu đều được nhận 200 điểm";
+"Register Share Input Div" = "HOẶC";
+"Register Share Input Below" = "Nhập mã hội viên của\nngười giới thiệu ở bên dưới";
+"Register Share Scan Top" = "Cách quét mã ID của người giới thiệu";
+"Register Share Scan Bottom" = "Đảm bảo mã vạch nằm trong khung chỉ định";
+
+"Register Self Photo Confrim" = "Chọn ảnh này";
+"Register Self Photo Retake" = "Chụp lại";
+"Selfie Face Reminder" = "Vui lòng đặt thẻ cư trú vào khung trên";  //更改
+"Selfie Face Reminder2" = "Cách chụp ảnh với thẻ cư trú";
+//"Chụp ảnh bản thân đang cầm trên tay thẻ cư trú";  //更改
+"Register Self Photo Confrim B" = "XÁC NHẬN"; //更改
+"Register Self Photo Retake B" = "CHỤP LẠI";
+
+"SUBMIT" = "GỬI";
+
+"Register Sign Confrim" = "GỬI";
+"Register Sign Retake" = "XÓA";
+"Register Sign Confirmed" = "Chữ ký của bạn\nđã được xác nhận";
+"Register ID Photo First" = "Ảnh mặt trước thẻ cư trú"; //更改
+"Register ID Photo Sec" = "Ảnh mặt sau thẻ cư trú"; //更改
+
+"Register ID Photo Intro" = "BẮT ĐẦU";
+
+"Register ID Photo Title Front" = "Chụp ảnh mặt trước thẻ cư trú";
+"Register ID Photo Title Back" = "Chụp ảnh mặt sau thẻ cư trú";
+
+"Register ID Self First" = "Chụp ảnh với thẻ cư trú "; //更改
+"Register ID Self Sec" = "Hộ chiếu";
+"Register ID Self Sign" = "Chữ ký";
+"Register ID Photo Title Passport" = "Chụp ảnh cầm hộ chiếu";
+
+"Register ID Face And ID Intro" = "Chụp ảnh";
+"Register ID Face And ID Intro2" = "Cách chụp ảnh với thẻ cư trú";
+"Register ID Make Signature Top" = "Nhập Họ tên như trên thẻ cư trú của bạn"; //更改
+
+"Register Input Foto Select Title" = "Chọn ảnh";
+"Register Input Foto Select Camera" = "Chụp ảnh";
+"Register Input Foto Select Gallery" = "Chọn ảnh từ album";
+
+"Profile Main Title" = "Thông tin cá nhân";
+"Profile Main Point" = "Điểm thưởng";
+"Profile Main Reciter" = "Người nhận";
+"Profile Main Transaction" = "Lịch sử giao dịch";
+"Profile Main Call" = "Liên hệ GOVN";
+"Profile Main About" = "Về chúng tôi";
+"Profile Main Terms" = "Điều khoản và Điều lệ";
+"Profile Main Faq" = "Câu hỏi thường gặp";
+"Profile Main Logout" = "Đăng xuất";
+
+"Notice Main Title" = "THÔNG BÁO";
+
+"Notice Type 0" = "ĐIỂM THƯỞNG";
+"Notice Type 1" = "GIAO DỊCH KHÔNG THÀNH CÔNG";
+"Notice Type 2" = "";
+"Notice Type 3" = "CẬP NHẬT THÔNG TIN";
+
+"History Point Cell 1" = "Ngày";
+"History Point Cell 2" = "Loại";
+"History Point Cell 3" = "Tổng";
+"History Point Cell 4" = "Còn lại";
+
+"Relation Type 1" = "GIA ĐÌNH";
+"Relation Type 2" = "BẠN BÈ";
+"Relation Type 3" = "BẢN THÂN";
+"Relation Type 4" = "KHÁC";
+
+"Input Bank Person Info Field1" = "Họ tên";
+"Input Bank Person Info Field2" = "Số CMND";
+"Input Bank Person Info Field3" = "Số điện thoại";
+"Input Bank Person Info Field4" = "Mối quan hệ";
+
+"Person List Chose Field1" = "Họ tên";
+"Person List Chose Field2" = "Số CMND";
+"Person List Chose Field3" = "Số điện thoại";
+"Person List Chose Field4" = "Địa chỉ";
+
+"Input Bank Person Address Field1" = "Tỉnh thành";
+"Input Bank Person Address Field2" = "Quận huyện";
+"Input Bank Person Address Field3" = "Địa chỉ";
+
+"Point Transfer Title" = "Chuyển điểm";
+"Point Transfer Input Title" = "Chuyển đến";
+"Point Transfer Input Phone Place Holder" = "Nhập Số điện thoại của Người nhận điểm thưởng";
+"Point Transfer Input Point Place Holder" = "Tổng số điểm chuyển";
+"Point Transfer Alert Title" = "THẤT BẠI";//======也請幫我翻譯英文;/ FAILED
+
+"Point Transfer Alert No Member Title" = "Rất tiếc";//======也請幫我翻譯英文:/ Sorry
+"Point Transfer Alert No Member Content" = "Số điện thoại bạn nhập chưa đăng ký tại GOVN. Vui lòng kiểm tra lại";//======也請幫我翻譯英文:/ The number you entered has not registered. Please check again
+"Point Transfer Alert Point Lack Title" = "Rất tiếc";//======也請幫我翻譯英文:/ Sorry
+"Point Transfer Alert Point Lack Content" = "Số điểm bạn đã nhập vượt quá số điểm hiện có của bạn";//======也請幫我翻譯英文:/The amount of points you entered exceeds the amount of points available
+
+"Point Transfer Step2 Title" = "Chuyển đến";
+"Point Transfer Step2 Successed Title" = "THÀNH CÔNG";//======也請幫我翻譯英文:/ SUCCESSFUL
+"Point Transfer Step2 Successed SubTitle" = "Cám ơn";//======也請幫我翻譯英文:/ Thank you
+"Point Transfer Step2 Successed Content A" = "Bạn đã yêu cầu thành công";//======也請幫我翻譯英文:/ You have submitted successfully
+"Point Transfer Step2 Successed Content B" = "Điểm thưởng";
+"Point Transfer Add Recipient Next" = "KIỂM TRA";
+"Point Transfer Add Recipient Code PlaceHolder" = "";
+"Point Transfer Add Recipient Accounnt PlaceHolder" = "";
+"Point Transfer Add Recipient Code Select" = "Chọn tên Ngân hàng";
+"Point Transfer Add Recipient Accounnt Select" = "Số tài khoản";
+ 
+"Member Use Agreement Title" = "Điều khoản và Điều lệ";
+
+"Do you mean this person" = "Bạn muốn chọn người này ?";
+
+"Transfer State 1" = "CHƯA NẠP TIỀN"; // 更改
+"Transfer State 2" = "ĐÃ NẠP TIỀN"; // 更改
+"Transfer State 3" = "ĐANG XỬ LÝ"; // 更改
+"Transfer State 4" = "HOÀN TẤT"; // 更改
+"Transfer State 5" = "THẤT BẠI";
+
+"Transfer State Pure Text Title" = "Vui lòng thanh toán";
+"Transfer State 1 KODE PIN" = "Mã PIN";
+"Transfer State Mid Text Title" = "Đến Số tài khoản Ngân hàng.";
+"Transfer State Mid Text Title2" = "Nhận tại quầy:";
+"Transfer State Mid Text Title3" = "Giao tận nhà:";
+
+"Transfer State Plot Text L1" = "Chưa nạp"; // 更改
+"Transfer State Plot Text L2" = "Đã nạp"; // 更改
+"Transfer State Plot Text L3" = "Đang xử lý"; // 更改
+"Transfer State Plot Text L4" = "Hoàn tất"; // 更改
+"Transfer State Down Time Title" = "Thời gian";//
+"Transfer State Down Kurs Value Title" = "Tỷ giá"; //更改
+
+"Transfer Head Title" = "Lựa chọn phương thức giao dịch"; // 更改
+"Transfer Main Box Up Title" = "Số tiền chuyển";// 更改
+"Transfer Main Box Down Title" = "Tỷ giá";
+"Transfer Main Charge Title" = "Phí giao dịch";
+"Transfer Main Use Point Title" = "Trừ điểm thưởng";// 更改
+"Transfer Main Total Money" = "Tổng NTD";
+"Transfer Main Total Point Title" = "Đổi điểm thưởng";
+
+"Transfer Confirm Title" = "Xác nhận thông tin"; // 更改
+"Transfer Confirm TWD Title" = "Số tiền gửi"; // 更改
+"Transfer Confirm Fee Title" = "Phí giao dịch";
+"Transfer Confirm UsePoint Title" = "Trừ điểm thưởng"; // 更改
+"Transfer Confirm Total Title" = "Tổng"; 
+
+"Transfer Agreement Title" = "Thông báo";
+
+"Transfer Result Exceed" = "Tổng số tiền không thể vượt quá NTD";
+
+"Transfer Result Title" = "Mã PIN"; // 更改
+"Transfer Result Bar Title" = "CHƯA NẠP TIỀN"; // 更改
+"Transfer Result Store Title" = "Chọn cửa hàng tiện lợi";
+"Transfer Result Go Map Title" = "Tìm cửa hàng tiện lợi gần nhất"; // 更改
+"Transfer Result Pay Title" = "THANH TOÁN BẰNG MÃ VẠCH"; // 更改
+
+"Transfer PayStep Title" = "MÃ PIN";
+"Transfer PayStep Up Intro" = "Vui lòng đến cửa hàng ";
+"Transfer PayStep Up Intro2" = " gần nhất\nđể thanh toán"; // 更改
+"Transfer PayStep Min Title" = "phút";
+"Transfer PayStep Sec Title" = "giây";
+"Transfer PayStep Warn" = "Mã vạch sẽ hết hạn sau 10 phút \ Bạn có thể lấy lại\nmã vạch bằng cách nhấn nút ở trên"; // 更改
+"Transfer PayStep Btn Enlarge" = "PHÓNG TO MÃ VẠCH";
+"Transfer PayStep Btn Reload" = "LẤY LẠI MÃ VẠCH";
+
+"Transfer Expired Step Warn2" = "Mã vạch của bạn đã hết hạn";
+"Transfer Expired Step Warn Title" = "Rất tiếc";
+"Transfer Expired Step Btn Title" = "LẤY LẠI MÃ VẠCH";
+
+"Top Bar L1" = "Tài khoản Ngân hàng";
+"Top Bar L2" = "Nhận tại quầy";
+"Top Bar L3" = "Giao tận nhà";
+ 
+"Share Add Poin" = "Cộng điểm"; // 更改
+"Share Poin Transfer" = "Chuyển điểm thưởng"; // 更改
+"Share Poin History" = "Lịch sử hoạt động";  // 更改
+
+"Enter Error Only English" = "Vui lòng nhập Họ tên không dấu";
+"Total NTD" = "Tổng NTD";
+"Enter Account Special Error Title" = "Vui lòng kiểm tra lại Số tài khoản !";
+"Enter Account Special Error Msg" = "Chúng tôi không xác nhận được số tài khoản này. Bạn có chắc số tài khoản này đúng không?Nếu có, vui lòng nhập Họ tên chủ tài khoản ! ";
+
+"Arc Change Same Time" = "Ảnh chụp mặt trước và sau của thẻ cư trú \nphải được cập nhật cùng lúc với Chữ ký";
+"Self Photo Change Same Time" = "Silahkan Perbaharui Semua Data Photo Paspor dan Tanda Tangan";
+"scanning" = "Đang quét...";
+"MID" = "Mã thành viên";
+
+"reason_show1" = "Tặng điểm khi tải APP";
+"reason_show2" = "Tặng điểm khi chia sẻ APP";
+"reason_show3" = "Tặng điểm khi giao dịch";
+"reason_show4" = "Đổi điểm thưởng";
+"reason_show5" = "Đặc biệt";
+"reason_show6" = "Tặng điểm khi đạt 100 giao dịch";
+"reason_show7" = "Tặng điểm khi mời 50 bạn";
+"reason_show8" = "Tặng điểm sinh nhật";
+"reason_show9" = "Tặng điểm vào dịp đặc biệt";
+"reason_show10" = "Tạo đơn";
+"reason_show11" = "Hủy đơn";
+"reason_show12" = "roulette";
+"reason_show13" = "Chuyển điểm cho tài khoản khác";
+"reason_show14" = "transfer point to web shop member";
+
+"transtate CP DTD ID" = "CMND";

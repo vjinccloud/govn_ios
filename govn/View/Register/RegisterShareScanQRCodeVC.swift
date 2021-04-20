@@ -174,6 +174,7 @@ class RegisterShareScanQRCodeVC: UIViewController, UINavigationControllerDelegat
         backBtn.setTitle(NSLocalizedString("back Show", comment: ""), for: .normal)
         topL.text = NSLocalizedString("Register Share Scan Top", comment: "")
         bottomL.text = NSLocalizedString("Register Share Scan Bottom", comment: "")
+        scanL.text = NSLocalizedString("scanning", comment: "")
         scanL.isHidden = true
     }
     

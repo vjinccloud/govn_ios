@@ -90,6 +90,7 @@ extension String {
         
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.locale = Locale(identifier: "en_US")
         formatter.positiveFormat = "#,##0"
         //let formattedStr: String = formatter.string(from: NSNumber(value: Double(num)))!
         let formattedStr: String = formatter.string(for: num)!

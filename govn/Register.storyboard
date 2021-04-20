@@ -416,7 +416,7 @@ berada dalam kotak yang ditentukan</string>
                                                             <constraint firstAttribute="height" constant="44" id="FDt-Q7-BsL"/>
                                                         </constraints>
                                                     </button>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone.png" translatesAutoresizingMaskIntoConstraints="NO" id="KhL-Ve-tqG">
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone2.png" translatesAutoresizingMaskIntoConstraints="NO" id="KhL-Ve-tqG">
                                                         <rect key="frame" x="56" y="18" width="26" height="26"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="26" id="SDe-Fb-48s"/>
@@ -967,10 +967,10 @@ SEKARANG</string>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5BD-ZP-im7">
-                                                                <rect key="frame" x="40" y="59" width="334" height="21"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5BD-ZP-im7">
+                                                                <rect key="frame" x="40" y="40" width="334" height="40"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="21" id="8dH-dX-CLT"/>
+                                                                    <constraint firstAttribute="height" constant="40" id="8dH-dX-CLT"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3187,7 +3187,7 @@ berada dalam kotak yang ditentukan</string>
         <image name="next-1.png" width="24" height="24"/>
         <image name="next.png" width="24" height="24"/>
         <image name="noview_b.png" width="24" height="24"/>
-        <image name="phone.png" width="32" height="32"/>
+        <image name="phone2.png" width="24" height="24"/>
         <image name="previous.png" width="24" height="24"/>
         <image name="profile_pic_change_button.png" width="24" height="24"/>
         <image name="profile_picture.png" width="109" height="109"/>

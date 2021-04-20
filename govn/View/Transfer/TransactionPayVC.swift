@@ -215,13 +215,15 @@ class TransactionPayVC: UIViewController {
         }
         
         upIntoL.text = NSLocalizedString("Transfer PayStep Up Intro", comment: "") + storeStr + NSLocalizedString("Transfer PayStep Up Intro2", comment: "")
+        upIntoL.textAlignment = .center
         warnL.text = NSLocalizedString("Transfer PayStep Warn", comment: "")
         paymentInfoL.text = payment_info
-        totalTWDL.text = "Total TWD \(transferStateObj.total.stringToIntDecimalString())"
+        totalTWDL.text = NSLocalizedString("Total NTD", comment: "") + " \(transferStateObj.total.stringToIntDecimalString())"
         minDownL.text = NSLocalizedString("Transfer PayStep Min Title", comment: "")
         secDownL.text = NSLocalizedString("Transfer PayStep Sec Title", comment: "")
         enlargeBtn.setTitle(NSLocalizedString("Transfer PayStep Btn Enlarge", comment: ""), for: .normal)
         reloadL.text = NSLocalizedString("Transfer PayStep Btn Reload", comment: "")
+        reloadL.textAlignment = .center
         barL1.isHidden = true
         barL2.isHidden = true
         barL3.isHidden = true

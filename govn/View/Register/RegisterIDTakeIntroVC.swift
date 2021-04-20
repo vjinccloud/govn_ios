@@ -57,7 +57,7 @@ class RegisterIDTakeIntroVC: UIViewController {
         // Do any additional setup after loading the view.
         backL.text = NSLocalizedString("back", comment: "")
         backL.adjustsFontSizeToFitWidth = true
-        bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
+        bottomL.text = NSLocalizedString("bottom for forgoet sec2", comment: "")
         
         nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
         nextBtn.setTitle(NSLocalizedString("start", comment: ""), for: .normal)
@@ -70,6 +70,7 @@ class RegisterIDTakeIntroVC: UIViewController {
             backL.text = NSLocalizedString("Register ID Photo Title Front", comment: "")
         } else if takePhotoType == PhotoIDType.back || takePhotoType == PhotoIDType.backFromEdit {
             bottomImgV.image = UIImage.init(named: "id_back.png")
+            bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
             backL.text = NSLocalizedString("Register ID Photo Title Back", comment: "")
         } else if takePhotoType == PhotoIDType.passport || takePhotoType == PhotoIDType.passportFromEdit {
             bottomImgV.image = UIImage.init(named: "visa.png")

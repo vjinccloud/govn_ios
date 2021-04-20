@@ -470,10 +470,14 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
             return
         }
         
-        if self.view.frame.size.width < 380 {
+        //寬度少於380，或長寬比接近3:4
+        let ratio = self.view.frame.size.width/self.view.frame.size.height
+        Dlog("ratioratio=\(ratio) \(self.view.frame.size.width) \(self.view.frame.size.height)")
+        
+        if self.view.frame.size.width < 380 || (ratio<0.57 && ratio>0.56)  {
             AppDelegate.shared().deviceSmall = true
             let bnumber = Bundle.main.buildNumber
-            remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: "") + " " + bnumber + "(small)", for: .normal)
+            remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: "") + " " + bnumber + "", for: .normal)
         }
         
         loadOnce = true

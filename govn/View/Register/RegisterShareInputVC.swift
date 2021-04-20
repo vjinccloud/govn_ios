@@ -116,7 +116,7 @@ class RegisterShareInputVC: UIViewController, UITextFieldDelegate {
         
         inputTextField.delegate = self
         inputTextField.keyboardType = .numberPad
-        inputTextField.attributedPlaceholder = NSAttributedString(string: "MID", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        //inputTextField.attributedPlaceholder = NSAttributedString(string: "MID", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
     }
 
     /*

@@ -57,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var noteListObjs:[NoticeObj] = []
     var historyListObj:[PointHistorySingleObj] = []
     var transferFriendListObj:[TransferMemberObj] = []
+    var transferStepOneListObj:[TransferMemberObj] = []
     var recipientListObjs:[RecipientObj] = []
     var recipientShownListObjs:[RecipientObj] = []
     var transferStateListObjs:[TransferStateObj] = []
@@ -73,6 +74,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var bottomMenu:BottomMenuView!
     var hasBottomMenu = false
     var bottomPadding:CGFloat!
+    
+    var wholeAddress = ""
     
     var defautBottomMenuType:BottomMenuType = .transaction
     var nowBottomMenuType:BottomMenuType = .transaction
@@ -118,6 +121,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         //addTopButton()
+        //檢查版本
+        //checkAppStoreVersion()
         
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -383,7 +388,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         titelL.textColor = .white
         
         let divs:CGFloat = (alertViewBg.frame.size.width - 3*85)/4
-        let ary:[String] = ["phone-1.png","line.png","messenger.png"]
+        let ary:[String] = ["service_phone.png","line.png","messenger.png"] //phone-1.png
         let strAry:[String] = [NSLocalizedString("telephone", comment: ""),NSLocalizedString("line", comment: ""),NSLocalizedString("messenger", comment: "")]
         for i in 0..<3 {
             let x = divs + (divs + 85) * CGFloat(i)
@@ -413,10 +418,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     @objc func callPhone() {
         removeFloatingContainer()
-        
+        /*
         let phone = "0287928773"
         let cleanPhoneNumber = phone.components(separatedBy: CharacterSet.decimalDigits.inverted).joined(separator: "")
         let urlString:String = "tel://\(cleanPhoneNumber)"
+
+        if let phoneCallURL = URL(string: urlString) {
+            if (UIApplication.shared.canOpenURL(phoneCallURL)) {
+                UIApplication.shared.open(phoneCallURL, options: [:], completionHandler: nil)
+            }
+        }*/
+        
+        let phone = "0227955959"
+        let extensionNum = "2211"
+        let cleanPhoneNumber = phone.components(separatedBy: CharacterSet.decimalDigits.inverted).joined(separator: "")
+        let urlString:String = "tel://\(cleanPhoneNumber),\(extensionNum)"
 
         if let phoneCallURL = URL(string: urlString) {
             if (UIApplication.shared.canOpenURL(phoneCallURL)) {
@@ -428,7 +444,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     @objc func callLine() {
         removeFloatingContainer()
         
-        let urlString:String = "https://line.me/ti/p/%40indogo"
+        let urlString:String = "https://line.me/R/ti/p/%40vbo9560f"
 
         if let openURL = URL(string: urlString) {
             if (UIApplication.shared.canOpenURL(openURL)) {
@@ -440,7 +456,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     @objc func callMessenger() {
         removeFloatingContainer()
         
-        let urlString:String = "https://www.messenger.com/t/IndoGO.twn"
+        let urlString:String = "https://m.me/govndailoan"
 
         if let openURL = URL(string: urlString) {
             if (UIApplication.shared.canOpenURL(openURL)) {
@@ -477,7 +493,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
                     // got an error in getting the data, need to handle it
                     print("error calling on \(todoEndpoint)")
                     print(response.result.error!)
-                    AppDelegate.shared().showAlertView(Message: NSLocalizedString("API Timeout", comment: ""))
+                    //AppDelegate.shared().showAlertView(Message: NSLocalizedString("API Timeout", comment: ""))
+                    AppDelegate.shared().showAlertView(Message: NSLocalizedString("API Timeout", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
                     return
                 }
                 
@@ -548,6 +565,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
                     self.getBankList()
                 }
         }
+    }
+    
+    func checkAppStoreVersion() {
+        let bundleId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
+        Alamofire.request("https://itunes.apple.com/lookup?bundleId=\(bundleId)").responseJSON { response in
+          if let json = response.result.value as? NSDictionary, let results = json["results"] as? NSArray, let entry = results.firstObject as? NSDictionary, let appStoreVersion = entry["version"] as? String{
+            Dlog("appStoreVersion = \(appStoreVersion)")
+            let appVersionInApp = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)!
+            
+            if appStoreVersion != appVersionInApp {
+                let alert = UIAlertController(title: "", message: NSLocalizedString("Please Update App", comment: ""), preferredStyle: .alert)
+                let action1 = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler:{(_)-> Void in
+                    self.getToAppStore()
+                    exit(0)
+                })
+                alert.addAction(action1)
+                let window = UIApplication.shared.keyWindow
+                window?.rootViewController!.present(alert ,animated: true,completion: nil)
+            }
+          }
+        }
+    }
+    
+    func getToAppStore() {
+        let appId = "1528460525" // Replace with your appId
+        let appURL = URL.init(string: "itms-apps://itunes.apple.com/app/id" + appId + "?mt=8") //Replace cn for your current country
+        UIApplication.shared.open(appURL!, options:[.universalLinksOnly : false]) { (success) in
+
+        }
+        
     }
     
     //MARK: - login
@@ -899,14 +946,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     }
     
     //跳出alert
+    /*
     func showAlertWithWindow (_ onVC:UIViewController, Message msg:String) {
-        /*
-        let vc = UIAlertController(title: "", message: msg, preferredStyle: .alert)
-        vc.addAction(UIAlertAction(title: "確定", style: .default, handler: { action in
-            
-        }))
-        onVC.present(vc, animated: true, completion: nil)
-        */
         showAlertView(Message: msg)
     }
     
@@ -955,6 +996,118 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         btn.addTarget(self, action: #selector(removeAlert), for: .touchUpInside)
         //btn.setTitle(NSLocalizedString("cancel", comment: ""), for: .normal)
         btn.setTitle(NSLocalizedString("JustOK", comment: ""), for: .normal)
+        btn.setTitleColor(Color_Main_Red, for: .normal)
+        alertViewBg.addSubview(btn)
+    }*/
+    
+    func showAlertWithWindow (_ onVC:UIViewController, Message msg:String) {
+        showAlertView(Message: msg, ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
+    }
+    
+    //跳出alert
+    func showNormalAlertWithWindow (_ onVC:UIViewController, Message msg:String) {
+        showAlertView(Message: msg, ConfrimStr: NSLocalizedString("cancel", comment: ""))
+    }
+    
+    //自定義 alert
+    func showAlertView (Message msg:String, ConfrimStr cancelstr:String) {
+        if msg == "" {
+            return
+        }
+        
+        let window = UIApplication.shared.keyWindow
+        
+        alertViewContainer = UIView(frame: CGRect.init(x: 0, y: 0, width: window!.bounds.width, height: window!.bounds.height))
+        window!.addSubview(alertViewContainer);
+        alertViewContainer.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7)
+        
+        //決定字串高度
+        let strL = UILabel.init(frame: CGRect.init(x: 0, y: 0, width: window!.bounds.width - 100, height: 10))
+        strL.text = msg
+        strL.font = UIFont.systemFont(ofSize: 14)
+        let height = strL.requiredHeight
+        let boxHeight = 110 + height
+        
+        let alertViewBg = UIView.init(frame: CGRect.init(x: 25, y: window!.bounds.height/2 - 20 - boxHeight/2, width: window!.bounds.width - 50, height: boxHeight))
+        alertViewContainer.addSubview(alertViewBg)
+        
+        alertViewBg.backgroundColor = .white
+        alertViewBg.layer.cornerRadius = 10
+        alertViewBg.clipsToBounds = true
+        
+        //頂部紅色條
+        let topView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: alertViewBg.frame.size.width, height: 30))
+        topView.backgroundColor = Color_Main_Red
+        alertViewBg.addSubview(topView)
+        
+        //字
+        strL.frame = CGRect.init(x: 25, y: 45, width: alertViewBg.frame.size.width - 50, height: height)
+        strL.textAlignment = .center
+        strL.numberOfLines = 0
+        alertViewBg.addSubview(strL)
+        
+        //按鈕
+        let btn = UIButton.init(frame: CGRect.init(x: alertViewBg.frame.size.width * 0.2, y: boxHeight - 50, width: alertViewBg.frame.size.width * 0.6, height: 35))
+        btn.layer.cornerRadius = btn.frame.size.height/2
+        btn.layer.borderColor = Color_Main_Red.cgColor
+        btn.layer.borderWidth = 0.5
+        btn.addTarget(self, action: #selector(removeAlert), for: .touchUpInside)
+        btn.setTitle(cancelstr, for: .normal)
+        btn.setTitleColor(Color_Main_Red, for: .normal)
+        alertViewBg.addSubview(btn)
+    }
+    
+    //自定義 alert
+    func showAlertViewWithTitle (Title title:String, Message msg:String, ConfrimStr cancelstr:String) {
+        if msg == "" {
+            return
+        }
+        
+        let window = UIApplication.shared.keyWindow
+        
+        alertViewContainer = UIView(frame: CGRect.init(x: 0, y: 0, width: window!.bounds.width, height: window!.bounds.height))
+        window!.addSubview(alertViewContainer);
+        alertViewContainer.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7)
+        
+        //決定字串高度
+        let strL = UILabel.init(frame: CGRect.init(x: 0, y: 0, width: window!.bounds.width - 100, height: 10))
+        strL.text = msg
+        strL.font = UIFont.systemFont(ofSize: 14)
+        let height = strL.requiredHeight
+        let boxHeight = 130 + height
+        
+        let alertViewBg = UIView.init(frame: CGRect.init(x: 25, y: window!.bounds.height/2 - 20 - boxHeight/2, width: window!.bounds.width - 50, height: boxHeight))
+        alertViewContainer.addSubview(alertViewBg)
+        
+        alertViewBg.backgroundColor = .white
+        alertViewBg.layer.cornerRadius = 10
+        alertViewBg.clipsToBounds = true
+        
+        //頂部紅色條
+        let topView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: alertViewBg.frame.size.width, height: 50))
+        topView.backgroundColor = Color_Main_Red
+        alertViewBg.addSubview(topView)
+        
+        let strTL = UILabel.init(frame: CGRect.init(x: 5, y: 5, width: alertViewBg.frame.size.width - 10, height: 50))
+        strTL.text = title
+        strTL.textColor = .white
+        strTL.textAlignment = .center
+        strTL.font = UIFont.boldSystemFont(ofSize: 16)
+        topView.addSubview(strTL)
+        
+        //字
+        strL.frame = CGRect.init(x: 25, y: 65, width: alertViewBg.frame.size.width - 50, height: height)
+        strL.textAlignment = .center
+        strL.numberOfLines = 0
+        alertViewBg.addSubview(strL)
+        
+        //按鈕
+        let btn = UIButton.init(frame: CGRect.init(x: alertViewBg.frame.size.width * 0.2, y: boxHeight - 50, width: alertViewBg.frame.size.width * 0.6, height: 35))
+        btn.layer.cornerRadius = btn.frame.size.height/2
+        btn.layer.borderColor = Color_Main_Red.cgColor
+        btn.layer.borderWidth = 0.5
+        btn.addTarget(self, action: #selector(removeAlert), for: .touchUpInside)
+        btn.setTitle(cancelstr, for: .normal)
         btn.setTitleColor(Color_Main_Red, for: .normal)
         alertViewBg.addSubview(btn)
     }

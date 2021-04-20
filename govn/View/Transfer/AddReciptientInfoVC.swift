@@ -36,6 +36,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     @IBOutlet weak var field3: UITextField!
     @IBOutlet weak var field4: UITextField!
     var canSelectForTransfer = false
+    var canEditName = true
     @IBOutlet weak var nextBtn: UIButton!
     var tempBankCode = ""
     var canEdit = true
@@ -57,6 +58,9 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     var pickerView:UIPickerView!
     var pickBackView:UIView!
     var relationTypeAry:[String] = []
+    var relationEngTypeAry:[String] = []
+    
+    var loadOnce = false
     
     //MARK: - TopBar
     func initTopBar() {
@@ -145,6 +149,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cellData = tempSearchRecipientList[indexPath.row]
+        Dlog("cellData = \(cellData.description)")
         canEdit = false
         field1.text = cellData.recipient_name
         field2.text = cellData.id_card_no
@@ -161,12 +166,15 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
             }
         }
         
+        hideTextAction(hideTextBtn!)
+        
         field1.isEnabled = false
         field2.isEnabled = false
         field1.resignFirstResponder()
         
         field1.isUserInteractionEnabled = false
         field2.isUserInteractionEnabled = false
+        
     }
     
     //MARK: - Utility
@@ -260,6 +268,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     func textFieldDidBeginEditing(_ textField: UITextField) {
         hideTextBtn.isHidden = false
         if textField == field1 {
+            //hideTextBtn.isHidden = false
             //topScrollView.contentOffset = CGPoint.init(x: 0, y: allV1.frame.origin.y)
         } else if textField == field2 {
             topScrollView.contentOffset = CGPoint.init(x: 0, y: allV2.frame.origin.y)
@@ -284,7 +293,71 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
         if textField == field1 {
-            searchRecipient(Text: newString)
+            var pass = true
+            let words = newString
+            let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+            pass = pred.evaluate(with: words)
+            
+            if let char = string.cString(using: String.Encoding.utf8) {
+                    let isBackSpace = strcmp(char, "\\b")
+                    if (isBackSpace == -92) {
+                        print("Backspace was pressed")
+                        pass = true
+                    }
+            }
+            
+            if !pass {
+                return false
+            }
+            
+            if newString != "" {
+                searchRecipient(Text: newString)
+            }
+            
+        } else if textField == field2 {
+            
+            var pass = true
+            let words = newString
+            let pred = NSPredicate(format:"SELF MATCHES %@", "[0-9]+")
+            pass = pred.evaluate(with: words)
+            
+            if let char = string.cString(using: String.Encoding.utf8) {
+                    let isBackSpace = strcmp(char, "\\b")
+                    if (isBackSpace == -92) {
+                        print("Backspace was pressed")
+                        pass = true
+                    }
+            }
+            
+            if !pass {
+                return false
+            }
+            
+            let text = field2.text
+            let textLength = text!.count + string.count - range.length
+            return textLength <= 12
+        } else if textField == field3 {
+            
+            var pass = true
+            let words = newString
+            let pred = NSPredicate(format:"SELF MATCHES %@", "[0-9]+")
+            pass = pred.evaluate(with: words)
+            
+            if let char = string.cString(using: String.Encoding.utf8) {
+                    let isBackSpace = strcmp(char, "\\b")
+                    if (isBackSpace == -92) {
+                        print("Backspace was pressed")
+                        pass = true
+                    }
+            }
+            
+            if !pass {
+                return false
+            }
+            
+            let text = field3.text
+            let textLength = text!.count + string.count - range.length
+            return textLength <= 10
         }
         
         checkBtnState()
@@ -339,7 +412,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         AppDelegate.shared().tempRecipientObj.recipient_name = field1.text
         AppDelegate.shared().tempRecipientObj.id_card_no = field2.text
         AppDelegate.shared().tempRecipientObj.phone_no = field3.text
-        AppDelegate.shared().tempRecipientObj.relationship = field4.text?.lowercased()
+        AppDelegate.shared().tempRecipientObj.relationship = relationEngTypeAry[choseRelationType].lowercased()
         
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientAddressVC") as? AddReciptientAddressVC
         nextVC!.canSelectForTransfer = canSelectForTransfer
@@ -405,10 +478,25 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     
     //MARK: - Button-Action
     @IBAction func hideTextAction(_ sender: Any) {
+        field1.delegate = self
+        field2.delegate = self
+        field3.delegate = self
+        field4.delegate = self
         closeAll()
     }
     
     @IBAction func nextAction(_ sender: Any) {
+        //地址只能填英數字
+        var pass = true
+        let words = field1.text
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+        pass = pred.evaluate(with: words)
+        
+        if !pass {
+            AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Register Error Name", comment: ""))
+            return
+        }
+        
         addRecipientStep2()
     }
     
@@ -446,9 +534,15 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         relationTypeAry.append(NSLocalizedString("Relation Type 3", comment: ""))
         relationTypeAry.append(NSLocalizedString("Relation Type 4", comment: ""))
         
+        relationEngTypeAry = []
+        relationEngTypeAry.append("FAMILY")
+        relationEngTypeAry.append("FRIEND")
+        relationEngTypeAry.append("SELF")
+        relationEngTypeAry.append("OTHERS")
+        
         field1.keyboardType = .default
         field1.autocorrectionType = .no
-        field2.keyboardType = .asciiCapable
+        field2.keyboardType = .numberPad
         field3.keyboardType = .numberPad
         field4.keyboardType = .default
         
@@ -530,17 +624,41 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
             field2.text = AppDelegate.shared().tempRecipientObj.id_card_no
             field3.text = AppDelegate.shared().tempRecipientObj.phone_no
             
+            choseRelationType = 0
             //比對關係
             let ori = AppDelegate.shared().tempRecipientObj.relationship
-            for i in 0..<relationTypeAry.count {
-                let str = relationTypeAry[i].lowercased()
+            for i in 0..<relationEngTypeAry.count {
+                let str = relationEngTypeAry[i].lowercased()
                 if ori == str {
                     choseRelationType = i
-                    field4.text = relationTypeAry[i]
                     break
                 }
             }
+            field4.text = relationTypeAry[choseRelationType]
             checkBtnState()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if loadOnce {
+            return
+        }
+        
+        loadOnce = true
+        
+        field1.text = AppDelegate.shared().tempRecipientObj.recipient_name
+        field1.isEnabled = canEditName
+        
+        if field1.text == "" {
+            field1.isUserInteractionEnabled = true
+            field1.isEnabled = true
+        }
+        
+        if field2.text == "" {
+            field2.isUserInteractionEnabled = true
+            field2.isEnabled = true
         }
     }
     

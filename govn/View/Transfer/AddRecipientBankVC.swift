@@ -233,7 +233,16 @@ class AddRecipientBankVC: UIViewController, UITextFieldDelegate, UITableViewDele
                         nextVC!.topBarSelectIdx = self.topBarSelectIdx
                         self.navigationController?.pushViewController(nextVC!, animated: true)
                     } else {
-                        self.navigationController?.popViewController(animated: true)
+                        //回到列表
+                        guard let viewControllers = self.navigationController?.viewControllers else {
+                            return
+                        }
+                        for firstViewController in viewControllers {
+                            if firstViewController is RecipientListVC {
+                                self.navigationController?.popToViewController(firstViewController, animated: true)
+                                return
+                            }
+                        }
                     }
                     
                 } else if result == ResponseState.failed {

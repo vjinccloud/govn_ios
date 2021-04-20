@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0411502425F289A0005ED763 /* AddRecipientBankAndAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0411502325F289A0005ED763 /* AddRecipientBankAndAccountVC.swift */; };
 		041E9D4324C70ABF00763D53 /* RegisterInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041E9D4224C70ABF00763D53 /* RegisterInputVC.swift */; };
 		0420CE9A24FA39FD000CCC08 /* BankObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420CE9924FA39FD000CCC08 /* BankObj.swift */; };
 		0420CE9C24FA44BC000CCC08 /* AddRecipientVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420CE9B24FA44BC000CCC08 /* AddRecipientVC.swift */; };
@@ -291,6 +292,8 @@
 		04714F6C259885D6007F3AD4 /* downarrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04714F69259885D6007F3AD4 /* downarrow@3x.png */; };
 		0472E23D24C2DC8600CC48A0 /* RegisterAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0472E23C24C2DC8600CC48A0 /* RegisterAgreementVC.swift */; };
 		047B89312522F00500CC0809 /* RegisterIDAndSelfPhotoStep2VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B89302522F00500CC0809 /* RegisterIDAndSelfPhotoStep2VC.swift */; };
+		0492268A26173638007EA2E5 /* dtd_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0492268826173638007EA2E5 /* dtd_default.png */; };
+		0492268B26173638007EA2E5 /* service_phone.png in Resources */ = {isa = PBXBuildFile; fileRef = 0492268926173638007EA2E5 /* service_phone.png */; };
 		049686DD24B6EFB0005EF74A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049686DC24B6EFB0005EF74A /* AppDelegate.swift */; };
 		049686E124B6EFB0005EF74A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049686E024B6EFB0005EF74A /* ViewController.swift */; };
 		049686E424B6EFB0005EF74A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049686E224B6EFB0005EF74A /* Main.storyboard */; };
@@ -487,6 +490,9 @@
 		04C26BA62540A34E0091B871 /* okmart.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C26B552540A34E0091B871 /* okmart.png */; };
 		04C26BA72540A34E0091B871 /* cash_pick_up@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C26B562540A34E0091B871 /* cash_pick_up@3x.png */; };
 		04C26BA82540A34E0091B871 /* 711_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C26B572540A34E0091B871 /* 711_logo@2x.png */; };
+		04C2DE3C2614F96A0036BD49 /* phone2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C2DE392614F9690036BD49 /* phone2@2x.png */; };
+		04C2DE3D2614F96A0036BD49 /* phone2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C2DE3A2614F9690036BD49 /* phone2@3x.png */; };
+		04C2DE3E2614F96A0036BD49 /* phone2.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C2DE3B2614F96A0036BD49 /* phone2.png */; };
 		04C8CBEA24D5570400AE90F6 /* RegisterSelfPhotoStep2VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C8CBE924D5570400AE90F6 /* RegisterSelfPhotoStep2VC.swift */; };
 		04C8CBEE24D5635D00AE90F6 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C8CBED24D5635D00AE90F6 /* UIImage+Extension.swift */; };
 		04C8CBF024D83BD500AE90F6 /* RegisterIDTakePhotoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C8CBEF24D83BD500AE90F6 /* RegisterIDTakePhotoVC.swift */; };
@@ -520,6 +526,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04114FFF25F0EA2D005ED763 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0411502325F289A0005ED763 /* AddRecipientBankAndAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipientBankAndAccountVC.swift; sourceTree = "<group>"; };
 		041E9D4224C70ABF00763D53 /* RegisterInputVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterInputVC.swift; sourceTree = "<group>"; };
 		0420CE9924FA39FD000CCC08 /* BankObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankObj.swift; sourceTree = "<group>"; };
 		0420CE9B24FA44BC000CCC08 /* AddRecipientVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipientVC.swift; sourceTree = "<group>"; };
@@ -804,6 +812,8 @@
 		04714F69259885D6007F3AD4 /* downarrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downarrow@3x.png"; sourceTree = "<group>"; };
 		0472E23C24C2DC8600CC48A0 /* RegisterAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAgreementVC.swift; sourceTree = "<group>"; };
 		047B89302522F00500CC0809 /* RegisterIDAndSelfPhotoStep2VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDAndSelfPhotoStep2VC.swift; sourceTree = "<group>"; };
+		0492268826173638007EA2E5 /* dtd_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dtd_default.png; sourceTree = "<group>"; };
+		0492268926173638007EA2E5 /* service_phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = service_phone.png; sourceTree = "<group>"; };
 		049686D924B6EFB0005EF74A /* govn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = govn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		049686DC24B6EFB0005EF74A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		049686E024B6EFB0005EF74A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -1002,6 +1012,9 @@
 		04C26B552540A34E0091B871 /* okmart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = okmart.png; sourceTree = "<group>"; };
 		04C26B562540A34E0091B871 /* cash_pick_up@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cash_pick_up@3x.png"; sourceTree = "<group>"; };
 		04C26B572540A34E0091B871 /* 711_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "711_logo@2x.png"; sourceTree = "<group>"; };
+		04C2DE392614F9690036BD49 /* phone2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone2@2x.png"; sourceTree = "<group>"; };
+		04C2DE3A2614F9690036BD49 /* phone2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone2@3x.png"; sourceTree = "<group>"; };
+		04C2DE3B2614F96A0036BD49 /* phone2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone2.png; sourceTree = "<group>"; };
 		04C8CBE924D5570400AE90F6 /* RegisterSelfPhotoStep2VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSelfPhotoStep2VC.swift; sourceTree = "<group>"; };
 		04C8CBED24D5635D00AE90F6 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		04C8CBEF24D83BD500AE90F6 /* RegisterIDTakePhotoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDTakePhotoVC.swift; sourceTree = "<group>"; };
@@ -1066,6 +1079,9 @@
 		043ADED624E1468900E0892E /* second */ = {
 			isa = PBXGroup;
 			children = (
+				04C2DE3B2614F96A0036BD49 /* phone2.png */,
+				04C2DE392614F9690036BD49 /* phone2@2x.png */,
+				04C2DE3A2614F9690036BD49 /* phone2@3x.png */,
 				049760C625149A7200921D17 /* teach1.jpg */,
 				049760C425149A7100921D17 /* teach1@2x.jpg */,
 				049760C825149A7200921D17 /* teach1@3x.jpg */,
@@ -1554,6 +1570,8 @@
 		04C26B062540A34E0091B871 /* govn */ = {
 			isa = PBXGroup;
 			children = (
+				0492268826173638007EA2E5 /* dtd_default.png */,
+				0492268926173638007EA2E5 /* service_phone.png */,
 				04714F68259885D5007F3AD4 /* downarrow.png */,
 				04714F67259885D5007F3AD4 /* downarrow@2x.png */,
 				04714F69259885D6007F3AD4 /* downarrow@3x.png */,
@@ -1685,6 +1703,7 @@
 				049BA98025A09BA2006F1EA3 /* SelectRecitientNameTableViewCell.xib */,
 				049BA98425A0FE49006F1EA3 /* SelectRecitientType2and3TableViewCell.swift */,
 				049BA98525A0FE49006F1EA3 /* SelectRecitientType2and3TableViewCell.xib */,
+				0411502325F289A0005ED763 /* AddRecipientBankAndAccountVC.swift */,
 			);
 			path = Transfer;
 			sourceTree = "<group>";
@@ -1752,6 +1771,7 @@
 				en,
 				Base,
 				id,
+				vi,
 			);
 			mainGroup = 049686D024B6EFB0005EF74A;
 			productRefGroup = 049686DA24B6EFB0005EF74A /* Products */;
@@ -1811,6 +1831,7 @@
 				043AE0D824E1468B00E0892E /* camera_button_big@3x.png in Resources */,
 				043AE00224E1468A00E0892E /* question-1@3x.png in Resources */,
 				043AE11124E1468B00E0892E /* view_w@3x.png in Resources */,
+				04C2DE3C2614F96A0036BD49 /* phone2@2x.png in Resources */,
 				0454E57C256EDC8500B9A1AD /* man_with_id_-4@2x.png in Resources */,
 				0496884224BCD3F0005EF74A /* cover2.png in Resources */,
 				04C26B612540A34E0091B871 /* logo2@3x.png in Resources */,
@@ -1889,6 +1910,7 @@
 				043AE0B924E1468B00E0892E /* profile_pic_change_button@2x.png in Resources */,
 				043AE0CF24E1468B00E0892E /* messenger@3x.png in Resources */,
 				043AE0A824E1468B00E0892E /* r_sand@3x.png in Resources */,
+				0492268A26173638007EA2E5 /* dtd_default.png in Resources */,
 				04C26B9B2540A34E0091B871 /* cash_pick_up_select@3x.png in Resources */,
 				04C26B622540A34E0091B871 /* okmart@3x.png in Resources */,
 				043AE04824E1468A00E0892E /* more_red@3x.png in Resources */,
@@ -1907,6 +1929,7 @@
 				04F289FB2541723700FD95A1 /* GoogleService-Info.plist in Resources */,
 				04C26B6A2540A34E0091B871 /* fanilymart@2x.png in Resources */,
 				043AE11624E1468B00E0892E /* messenger@2x.png in Resources */,
+				04C2DE3E2614F96A0036BD49 /* phone2.png in Resources */,
 				043AE08424E1468A00E0892E /* profile_pic_change_button@3x.png in Resources */,
 				043AE0A124E1468B00E0892E /* fb@3x.png in Resources */,
 				043AE06424E1468A00E0892E /* noview_w@2x.png in Resources */,
@@ -1934,6 +1957,7 @@
 				043AE00D24E1468A00E0892E /* edit@3x.png in Resources */,
 				04D9835524F9684D007D1269 /* RecipientTableViewCell.xib in Resources */,
 				043AE03424E1468A00E0892E /* medium_logo@2x.png in Resources */,
+				04C2DE3D2614F96A0036BD49 /* phone2@3x.png in Resources */,
 				0454E57D256EDC8500B9A1AD /* man_with_id_-4@3x.png in Resources */,
 				043AE0F424E1468B00E0892E /* icon_remit@3x.png in Resources */,
 				043AE0FF24E1468B00E0892E /* previous.png in Resources */,
@@ -1984,6 +2008,7 @@
 				04C26B642540A34E0091B871 /* cover1@3x.png in Resources */,
 				043AE0ED24E1468B00E0892E /* line.png in Resources */,
 				04C26B5B2540A34E0091B871 /* doortodoor_select.png in Resources */,
+				0492268B26173638007EA2E5 /* service_phone.png in Resources */,
 				043AE06624E1468A00E0892E /* edit-1.png in Resources */,
 				043AE0D724E1468B00E0892E /* r_mamber@2x.png in Resources */,
 				043AE00324E1468A00E0892E /* more_red.png in Resources */,
@@ -2299,6 +2324,7 @@
 				04D9834F24F96181007D1269 /* RecipientObj.swift in Sources */,
 				0436E72624F03183008A38E9 /* TransferPointVC.swift in Sources */,
 				049686DD24B6EFB0005EF74A /* AppDelegate.swift in Sources */,
+				0411502425F289A0005ED763 /* AddRecipientBankAndAccountVC.swift in Sources */,
 				0436E71A24EC55D3008A38E9 /* PointHistorySingleObj.swift in Sources */,
 				04E82A7424DD3A0F00E25DCD /* ImagePickerStatus.swift in Sources */,
 				04AC3EE7250020B800E48622 /* TransactionObj.swift in Sources */,
@@ -2354,6 +2380,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				0496880124B8D03C005EF74A /* en */,
+				04114FFF25F0EA2D005ED763 /* vi */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2485,7 +2512,7 @@
 				CODE_SIGN_ENTITLEMENTS = govn/govn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 8P43SK2KHA;
 				INFOPLIST_FILE = govn/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -2509,7 +2536,7 @@
 				CODE_SIGN_ENTITLEMENTS = govn/govn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 8P43SK2KHA;
 				INFOPLIST_FILE = govn/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

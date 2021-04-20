@@ -67,15 +67,33 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     }
     
     @IBAction func topBarBtn1Action(_ sender: Any) {
-       
+        //觀看模式才能轉
+        if !canSelectForTransfer {
+            topBarSelectIdx = 0
+            AppDelegate.shared().transactionObj.recipient_type = 1
+            getRecipents()
+            initTopBar()
+        }
     }
     
     @IBAction func topBarBtn2Action(_ sender: Any) {
-        
+        //觀看模式才能轉
+        if !canSelectForTransfer {
+            topBarSelectIdx = 1
+            AppDelegate.shared().transactionObj.recipient_type = 2
+            getRecipents()
+            initTopBar()
+        }
     }
     
     @IBAction func topBarBtn3Action(_ sender: Any) {
-        
+        //觀看模式才能轉
+        if !canSelectForTransfer {
+            topBarSelectIdx = 2
+            AppDelegate.shared().transactionObj.recipient_type = 3
+            getRecipents()
+            initTopBar()
+        }
     }
     
     //MARK: - TableView Delegate
@@ -139,12 +157,14 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if !canSelectForTransfer {
-            return
+            //return
         }
         
         AppDelegate.shared().transactionObj.recipientObj = showDataList[indexPath.row]
         
-        if AppDelegate.shared().transactionObj.recipient_type == 1 {
+        if AppDelegate.shared().transactionObj.recipient_type == 1, canSelectForTransfer {
+            Dlog("AppDelegate.shared().transactionObj.recipientObj.printSelf")
+            AppDelegate.shared().transactionObj.recipientObj.printSelf()
             let cell = tableView.cellForRow(at: indexPath) as! RecipientTableViewCell
             cell.checkImgV.image = UIImage.init(named: "choosen_checklist")
             
@@ -157,14 +177,31 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
             self.navigationController?.pushViewController(nextVC!, animated: true)
             
         } else {
-            let cell = tableView.cellForRow(at: indexPath) as! SelectRecitientType2and3TableViewCell
-            cell.choseImgV.image = UIImage.init(named: "choosen_checklist")
+            
+            AppDelegate.shared().tempRecipientObj = showDataList[indexPath.row]
+            AppDelegate.shared().tempTransferChoseMode = true
+            
+            AppDelegate.shared().tempRecipientObj.printSelf()
+            
+            if AppDelegate.shared().transactionObj.recipient_type == 1 {
+                let cell = tableView.cellForRow(at: indexPath) as! RecipientTableViewCell
+                cell.checkImgV.image = UIImage.init(named: "choosen_checklist")
+                
+                //bank_code要用找的
+                let serchBankobj = UtilityTool().searchBankObj(BankName: AppDelegate.shared().tempRecipientObj.bank_name)
+                if serchBankobj.bank_code == "" {
+                    return
+                }
+                AppDelegate.shared().tempRecipientObj.bank_code = serchBankobj.bank_code!
+            
+            } else {
+                let cell = tableView.cellForRow(at: indexPath) as! SelectRecitientType2and3TableViewCell
+                cell.choseImgV.image = UIImage.init(named: "choosen_checklist")
+            }
             
             //先找出詳細資料
             //searchRecipient()
             
-            AppDelegate.shared().tempRecipientObj = showDataList[indexPath.row]
-            AppDelegate.shared().tempTransferChoseMode = true
             //直接到填受款人
             let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
             nextVC!.canSelectForTransfer = self.canSelectForTransfer
@@ -230,6 +267,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         if paymentAry.count == 0 {
             self.reloadDataAndTable(Str: self.searchTextfield.text!)
+            return
         }
         
         let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "recipient_name":paymentAry]
@@ -280,7 +318,10 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     }
     public func hideRecipient(Recipient obj:RecipientObj) {
         let serchBankobj = UtilityTool().searchBankObj(BankName: obj.bank_name!)
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":serchBankobj.bank_code!, "bank_acc":obj.bank_acc!]
+        var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":serchBankobj.bank_code!, "bank_acc":obj.bank_acc!, "recipient_type":topBarSelectIdx+1]
+        if topBarSelectIdx != 0 {
+            parameters = ["token":AppDelegate.shared().sessionToken, "id_card_no":obj.id_card_no!, "recipient_type":topBarSelectIdx+1]
+        }
         let headers: HTTPHeaders = [:]
         closeAll()
         AppDelegate.shared().addLoadingView()
@@ -348,12 +389,14 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                 AppDelegate.shared().recipientShownListObjs = []
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
                 if result == ResponseState.ok {
-                    //再去取得所有的細節
-                    self.searchRecipient()
+                    
                     //self.reloadDataAndTable(Str: self.searchTextfield.text!)
                     if AppDelegate.shared().recipientShownListObjs.count == 0, self.hasGotoAddRecipient == false {
                         self.hasGotoAddRecipient = true
                         self.goAddRecipient()
+                    } else {
+                        //再去取得所有的細節
+                        self.searchRecipient()
                     }
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
@@ -476,7 +519,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-            
+        
         AppDelegate.shared().tempTransferChoseMode = false
         AppDelegate.shared().hideTopButton()
         getRecipents()

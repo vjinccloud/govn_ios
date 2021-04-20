@@ -71,6 +71,8 @@ class APIHandle {
             //特殊狀況
             if apiStr == API_CheckMemExist && stateStr == "3" {
                 return ResponseState.member_not_exist
+            } else if apiStr == API_AddRecipient {
+                return ResponseState.error
             } else if apiStr == API_MemberRecipents && stateStr == "509" {
                 return ResponseState.error
             } else if apiStr == API_BankList {
@@ -104,7 +106,7 @@ class APIHandle {
             login(DataStr: resultStr)
             break
         case API_Get_province_district:
-            checkProvinceList(DataStr: resultStr)
+            checkProvinceListByJson(DataStr: resultStr)
             break
         case API_CheckMemExist:
             checkMemExist(DataStr: resultStr)
@@ -148,6 +150,9 @@ class APIHandle {
         case API_Search_recipient:
             chectSearchRecopoentList(DataStr: resultStr)
             break
+        case API_UpdateAddRecipient:
+            updateAddRecipient(DataStr: resultStr)
+            break
         case API_BarCode_711, API_BarCode_fami, API_BarCode_ok, API_BarCode_hilife:
             checkBarCode(DataStr: resultStr)
             break
@@ -156,6 +161,18 @@ class APIHandle {
         }
         
         return ResponseState.ok
+    }
+    
+    private func updateAddRecipient(DataStr dataStr:String) {
+        //目前直接用zero width空格
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        for j in 0..<ary.count {
+            if j==0 {
+                AppDelegate.shared().tempRecipientObj.recipient_id = ary[0]
+            } else if j==1 {
+                AppDelegate.shared().tempRecipientObj.recipient_name = ary[1]
+            }
+        }
     }
     
     //找到第二個空白
@@ -270,6 +287,40 @@ class APIHandle {
                     obj.district_id = aryzone[6]
                     obj.address = aryzone[7]
                     AppDelegate.shared().tempSearchRecipientList.append(obj)
+                }
+            }
+        }
+    }
+    
+    private func checkProvinceListByJson(DataStr dataStr:String) {
+        let allObj = JSON.init(parseJSON: dataStr)
+
+        AppDelegate.shared().provinceData = []
+        
+        var maxValue:Int = 0
+        //先找出最大的
+        for (key, _) in allObj {
+            if Int(key)! > maxValue {
+                maxValue = Int(key)!
+            }
+        }
+        
+        for i in 0..<maxValue {
+            let key = "\(i+1)"
+            let subObj = allObj[key]
+            if allObj[key] != JSON.null {
+                let provinceObj:ProvinceObj = ProvinceObj()
+                provinceObj.province_name = subObj["province_name"].stringValue
+                provinceObj.province_id = key
+                for j in 0..<subObj["districts"].count {
+                    let zoneObj:ZoneObj = ZoneObj()
+                    zoneObj.district_id = subObj["districts"][j]["district_id"].stringValue
+                    zoneObj.district_name = subObj["districts"][j]["district_name"].stringValue
+                    provinceObj.appendZone(Zone: zoneObj)
+                }
+                
+                if provinceObj.allZone.count>0 { //有可能是空的
+                    AppDelegate.shared().provinceData.append(provinceObj)
                 }
             }
         }
@@ -485,7 +536,7 @@ class APIHandle {
             }
             
             if canAdd {
-                AppDelegate.shared().transferFriendListObj.append(obj)
+                AppDelegate.shared().transferStepOneListObj.append(obj)
             }
             
             //obj.printSelf()
@@ -523,12 +574,12 @@ class APIHandle {
         let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
         
         AppDelegate.shared().userLogin(TokenStr: ary[0])
-        let keyAry:[String] = ["member_name","kurs_value","kurs_lm_time","service_charge","remit_point","free_service_charge","share_id","app_phone_no","app_share_bonus","google_map_url","app_version","app_market","line_url","games_url","member_id","arc_photo","arc_back_photo","signature_photo","id_card_photo","self_photo","usd_kurs_value","ude_kurs_lm_time"]
+        let keyAry:[String] = ["member_name","kurs_value","kurs_lm_time","service_charge","remit_point","free_service_charge","share_id","app_phone_no","app_share_bonus","google_map_url","app_version","app_market","line_url","games_url","member_id","arc_photo","arc_back_photo","signature_photo","id_card_photo","self_photo","usd_kurs_value","usd_kurs_lm_time","service_charge_2","service_charge_3"]
         for i in 0..<keyAry.count {
             var value:String = ""
             if (i+1) < ary.count {
                 value = ary[i+1]
-                if keyAry[i] == "kurs_lm_time" || keyAry[i] == "ude_kurs_lm_time" {
+                if keyAry[i] == "kurs_lm_time" || keyAry[i] == "usd_kurs_lm_time" {
                     value = value.replacingOccurrences(of: "-", with: "/")
                 }
                 AppDelegate.shared().memberData[keyAry[i]] = value

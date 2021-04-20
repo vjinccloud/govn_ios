@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+//測試開關部分
+var Para_simulaotroBanc = "19032945890010"
+var Para_isTestForBcc = false
+
 //尺寸
 var AppWidth:CGFloat = 320.0
 var AppTotalHeight:CGFloat = 960.0
@@ -31,7 +35,7 @@ let Lang_APIDecodeFail = NSLocalizedString("API DecodeFail", comment: "伺服器
 let AppVersion = "1.0"
 let AppId = 1
 //正式
-let ServerURL = "http://govnprod.indogo.link"
+let ServerURL = "https://govnprod.indogo.link"
 //測試機
 //let ServerURL = "http://govndev.indogo.link"
 

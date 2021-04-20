@@ -72,6 +72,7 @@ class MemberMainVC: UIViewController {
     }
     
     @IBAction func reciteAction(_ sender: Any) {
+        AppDelegate.shared().transactionObj.recipient_type = 1
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "RecipientListVC") as? RecipientListVC
         nextVC!.canSelectForTransfer = false
         self.navigationController?.pushViewController(nextVC!, animated: true)
@@ -82,9 +83,10 @@ class MemberMainVC: UIViewController {
     }
     
     @IBAction func callAction(_ sender: Any) {
-        let phone = "0287928773"
+        let phone = "0227955959"
+        let extensionNum = "2211"
         let cleanPhoneNumber = phone.components(separatedBy: CharacterSet.decimalDigits.inverted).joined(separator: "")
-        let urlString:String = "tel://\(cleanPhoneNumber)"
+        let urlString:String = "tel://\(cleanPhoneNumber),\(extensionNum)"
 
         if let phoneCallURL = URL(string: urlString) {
             if (UIApplication.shared.canOpenURL(phoneCallURL)) {

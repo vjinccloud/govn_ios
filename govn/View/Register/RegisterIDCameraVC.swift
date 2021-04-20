@@ -208,7 +208,7 @@ class RegisterIDCameraVC: UIViewController, UINavigationControllerDelegate, AVCa
         // Do any additional setup after loading the view.
         backL.text = NSLocalizedString("back", comment: "")
         backL.adjustsFontSizeToFitWidth = true
-        bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
+        bottomL.text = NSLocalizedString("bottom for forgoet sec2", comment: "")
         
         scanView.layer.cornerRadius = 25
         resultImgV.layer.cornerRadius = 25
@@ -264,6 +264,7 @@ class RegisterIDCameraVC: UIViewController, UINavigationControllerDelegate, AVCa
             backL.text = NSLocalizedString("Register ID Photo Title Front", comment: "")
         } else if takePhotoType == PhotoIDType.back || takePhotoType == PhotoIDType.backFromEdit {
             backL.text = NSLocalizedString("Register ID Photo Title Back", comment: "")
+            bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
         }
         
         if self.view.frame.size.width<321 {

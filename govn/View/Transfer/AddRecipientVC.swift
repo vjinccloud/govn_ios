@@ -22,6 +22,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     @IBOutlet weak var accountTextfield: UITextField!
     @IBOutlet weak var bankCodeTextfield: UITextField!
     var canSelectForTransfer = false
+    var checkMode = false
     @IBOutlet weak var nextBtn: UIButton!
     var tempBankCode = ""
     @IBOutlet weak var selectBankNameL: UILabel!
@@ -38,6 +39,8 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     
     var showBankList:[BankObj] = []
     var tempRecipientObj:RecipientObj =  RecipientObj()
+    
+    var loadOnce = false
     
     @IBOutlet weak var bankImg: UIImageView!
     
@@ -118,6 +121,12 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     //MARK: - Utility
+    func initBankForCheckMode() {
+        tempBankCode = AppDelegate.shared().transactionObj.recipientObj.bank_code
+        changeBankImg(BankName: AppDelegate.shared().transactionObj.recipientObj.bank_name)
+        accountTextfield.text = AppDelegate.shared().transactionObj.recipientObj.bank_acc
+    }
+    
     func changeBankImg(BankName name:String) {
         let serchBankobj = UtilityTool().searchBankObj(BankName: name)
         let imgurl = serchBankobj.bank_photo!
@@ -126,7 +135,12 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     func checkBtnState() {
-        if bankCodeTextfield.text! != "", accountTextfield.text! != "" {
+        var pass = true
+        if bankCodeTextfield.text! == "" || accountTextfield.text! == "" {
+            pass = false
+        }
+        
+        if pass {
             nextBtn.isEnabled = true
             nextBtn.backgroundColor = Color_Main_Red
         } else {
@@ -190,6 +204,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        
         reloadDataAndTable(Str: newString)
         checkBtnState()
         return true
@@ -235,7 +250,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                     self.tempRecipientObj.recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
                     self.tempRecipientObj.recipient_name = AppDelegate.shared().tempRecipientObj.recipient_name
                     
-                    if self.canSelectForTransfer {
+                    if true {
                         AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
                         AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
                         AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
@@ -247,15 +262,52 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
                         self.navigationController?.pushViewController(nextVC!, animated: true)*/
                         
-                        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
-                        nextVC!.canSelectForTransfer = self.canSelectForTransfer
-                        self.navigationController?.pushViewController(nextVC!, animated: true)
+                        //如果是Bank，則要多一個確認銀行與名稱的頁面
+                        if self.topBarSelectIdx==0 {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddRecipientBankAndAccountVC") as? AddRecipientBankAndAccountVC
+                            nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                            
+                            if AppDelegate.shared().tempRecipientObj.recipient_name == "" {
+                                //先進去下一頁，然後給改
+                                AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
+                                
+                                nextVC!.canEnterName = true
+                            }
+                            
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        } else {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
+                            nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        }
                     } else {
                         self.navigationController?.popViewController(animated: true)
                     }
                     
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                } else if result == ResponseState.error {
+                    //先進去下一頁，然後給改
+                    AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
+                    self.tempRecipientObj.bank_acc = self.accountTextfield.text!
+                    self.tempRecipientObj.bank_code = serchBankobj.bank_code!
+                    self.tempRecipientObj.recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
+                    self.tempRecipientObj.recipient_name = AppDelegate.shared().tempRecipientObj.recipient_name
+                    
+                    if true {
+                        AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
+                        AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
+                        AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
+                        
+                        //如果是Bank，則要多一個確認銀行與名稱的頁面
+                        if self.topBarSelectIdx==0 {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddRecipientBankAndAccountVC") as? AddRecipientBankAndAccountVC
+                            nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                            nextVC!.canEnterName = true
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        }
+                    }
+                    
                 }
         }
     }
@@ -317,7 +369,10 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         
         backL.text = ""
         
-        bankCodeTextfield.becomeFirstResponder()
+        if !checkMode {
+            bankCodeTextfield.becomeFirstResponder()
+        }
+        
         bankCodeTextfield.placeholder = NSLocalizedString("Point Transfer Add Recipient Code PlaceHolder", comment: "")
         accountTextfield.placeholder = NSLocalizedString("Point Transfer Add Recipient Accounnt PlaceHolder", comment: "")
         
@@ -336,6 +391,28 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         hideTextBtn.isHidden = true
         topBarSelectIdx = AppDelegate.shared().transactionObj.recipient_type-1
         initTopBar()
+        
+        if Para_isTestForBcc {
+            #if targetEnvironment(simulator)
+            accountTextfield.text = Para_simulaotroBanc
+            #else
+            #endif
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if loadOnce {
+            return
+        }
+        
+        loadOnce = true
+        if checkMode {
+            accountTextfield.isEnabled = false
+            bankCodeTextfield.isEnabled = false
+            initBankForCheckMode()
+        }
     }
     
     /*

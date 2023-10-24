@@ -33,6 +33,9 @@ class PointHistorySingleObj: NSObject {
             remit_point = valueStr
         } else if orderNum == 2 {
             reason_id = valueStr
+            let localStr = "reason_show\(reason_id ?? "0")"
+            reason_show = NSLocalizedString(localStr, comment: " ")
+            /*
             switch reason_id {
             case "1" : reason_show = NSLocalizedString("reason_show1", comment: "")//"app download bonus"
             case "2" : reason_show = NSLocalizedString("reason_show2", comment: "")//"app share bonus"
@@ -48,8 +51,9 @@ class PointHistorySingleObj: NSObject {
             case "12" : reason_show = NSLocalizedString("reason_show12", comment: "")//"roulette"
             case "13" : reason_show = NSLocalizedString("reason_show13", comment: "")//"transfer point to remit system member"
             case "14" : reason_show = NSLocalizedString("reason_show14", comment: "")//"transfer point to web shop member"
+            case "15" : reason_show = NSLocalizedString("reason_show15", comment: "")//"transfer point to web shop member"
             default : reason_show = ""
-            }
+            }*/
             
         } else if orderNum == 3 {
             friend_name = valueStr

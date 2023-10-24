@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -319,7 +319,7 @@ berada dalam kotak yang ditentukan</string>
                                 <rect key="frame" x="0.0" y="89" width="414" height="807"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="JsR-ec-BQd">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1068"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1190"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K4m-5h-9Cq">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="180"/>
@@ -373,7 +373,7 @@ berada dalam kotak yang ditentukan</string>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXU-dX-PCH">
                                                         <rect key="frame" x="50" y="9" width="314" height="44"/>
-                                                        <color key="backgroundColor" red="0.30754500629999998" green="0.32042944429999998" blue="0.35411232710000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="44" id="1Lp-I1-hfG"/>
                                                         </constraints>
@@ -406,12 +406,50 @@ berada dalam kotak yang ditentukan</string>
                                                     <constraint firstItem="Eg3-AB-fRt" firstAttribute="leading" secondItem="sXU-dX-PCH" secondAttribute="leading" constant="6" id="hz8-qc-wHp"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuk-N2-I4A">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VSK-eK-Aim" userLabel="Birth View">
                                                 <rect key="frame" x="0.0" y="242" width="414" height="62"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="38E-7a-tca">
+                                                        <rect key="frame" x="50" y="9" width="314" height="44"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="44" id="OJb-rz-8O3"/>
+                                                        </constraints>
+                                                    </button>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="name.png" translatesAutoresizingMaskIntoConstraints="NO" id="kUM-SG-uRP">
+                                                        <rect key="frame" x="56" y="18" width="26" height="26"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="26" id="1Er-YS-a8U"/>
+                                                            <constraint firstAttribute="height" constant="26" id="vCY-je-eVL"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="G8b-Hk-bz9">
+                                                        <rect key="frame" x="92" y="20" width="232" height="22"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="38E-7a-tca" firstAttribute="centerY" secondItem="VSK-eK-Aim" secondAttribute="centerY" id="AmD-TZ-Yjr"/>
+                                                    <constraint firstItem="kUM-SG-uRP" firstAttribute="centerY" secondItem="38E-7a-tca" secondAttribute="centerY" id="D0p-6n-SMq"/>
+                                                    <constraint firstItem="38E-7a-tca" firstAttribute="leading" secondItem="VSK-eK-Aim" secondAttribute="leading" constant="50" id="JP1-Up-QSI"/>
+                                                    <constraint firstItem="kUM-SG-uRP" firstAttribute="leading" secondItem="38E-7a-tca" secondAttribute="leading" constant="6" id="OYM-9N-mzO"/>
+                                                    <constraint firstAttribute="height" constant="62" id="VBz-9e-9ou"/>
+                                                    <constraint firstItem="G8b-Hk-bz9" firstAttribute="leading" secondItem="kUM-SG-uRP" secondAttribute="trailing" constant="10" id="nzf-Cj-GGW"/>
+                                                    <constraint firstItem="G8b-Hk-bz9" firstAttribute="trailing" secondItem="38E-7a-tca" secondAttribute="trailing" constant="-40" id="oE6-rE-JDR"/>
+                                                    <constraint firstAttribute="trailing" secondItem="38E-7a-tca" secondAttribute="trailing" constant="50" id="qfX-lF-Fh7"/>
+                                                    <constraint firstItem="G8b-Hk-bz9" firstAttribute="centerY" secondItem="kUM-SG-uRP" secondAttribute="centerY" id="rIR-gz-0V9"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuk-N2-I4A">
+                                                <rect key="frame" x="0.0" y="304" width="414" height="62"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFh-p0-Ffu">
                                                         <rect key="frame" x="50" y="9" width="314" height="44"/>
-                                                        <color key="backgroundColor" red="0.30754500629999998" green="0.32042944429999998" blue="0.35411232710000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="44" id="FDt-Q7-BsL"/>
                                                         </constraints>
@@ -445,11 +483,11 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DHt-80-ASW">
-                                                <rect key="frame" x="0.0" y="304" width="414" height="62"/>
+                                                <rect key="frame" x="0.0" y="366" width="414" height="62"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QYa-L9-pDP">
                                                         <rect key="frame" x="50" y="9" width="314" height="44"/>
-                                                        <color key="backgroundColor" red="0.30754500629999998" green="0.32042944429999998" blue="0.35411232710000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="44" id="AtM-nn-fkG"/>
                                                         </constraints>
@@ -474,7 +512,7 @@ berada dalam kotak yang ditentukan</string>
                                                             <constraint firstAttribute="height" constant="28" id="3Pl-SQ-PGp"/>
                                                             <constraint firstAttribute="width" constant="28" id="guH-UE-Caz"/>
                                                         </constraints>
-                                                        <state key="normal" backgroundImage="noview_b.png"/>
+                                                        <state key="normal" backgroundImage="noview_w.png"/>
                                                         <connections>
                                                             <action selector="showPassAction:" destination="WK1-X2-jt9" eventType="touchUpInside" id="3Ay-Hx-udE"/>
                                                         </connections>
@@ -496,11 +534,11 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uta-Kw-As1">
-                                                <rect key="frame" x="0.0" y="366" width="414" height="62"/>
+                                                <rect key="frame" x="0.0" y="428" width="414" height="62"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tl5-mc-E67">
                                                         <rect key="frame" x="50" y="9" width="314" height="44"/>
-                                                        <color key="backgroundColor" red="0.30754500629999998" green="0.32042944429999998" blue="0.35411232710000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="44" id="j3N-gZ-vlL"/>
                                                         </constraints>
@@ -525,7 +563,7 @@ berada dalam kotak yang ditentukan</string>
                                                             <constraint firstAttribute="height" constant="28" id="AVI-8B-WVt"/>
                                                             <constraint firstAttribute="width" constant="28" id="Vq1-iN-mf7"/>
                                                         </constraints>
-                                                        <state key="normal" backgroundImage="noview_b.png"/>
+                                                        <state key="normal" backgroundImage="noview_w.png"/>
                                                         <connections>
                                                             <action selector="showRePassAction:" destination="WK1-X2-jt9" eventType="touchUpInside" id="iZF-i7-Oxi"/>
                                                         </connections>
@@ -547,7 +585,7 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IDu-Yg-ICF">
-                                                <rect key="frame" x="0.0" y="428" width="414" height="50"/>
+                                                <rect key="frame" x="0.0" y="490" width="414" height="50"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNu-mR-GwL">
                                                         <rect key="frame" x="50" y="19.5" width="314" height="0.5"/>
@@ -566,7 +604,7 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e7I-qk-ovS">
-                                                <rect key="frame" x="0.0" y="478" width="414" height="50"/>
+                                                <rect key="frame" x="0.0" y="540" width="414" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Irt-mp-899">
                                                         <rect key="frame" x="20" y="0.0" width="374" height="18"/>
@@ -585,7 +623,7 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Bw-K6-Yde">
-                                                <rect key="frame" x="0.0" y="528" width="414" height="85"/>
+                                                <rect key="frame" x="0.0" y="590" width="414" height="85"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="barcode.png" translatesAutoresizingMaskIntoConstraints="NO" id="3aC-9f-FL3">
                                                         <rect key="frame" x="66" y="8.5" width="282" height="68"/>
@@ -624,7 +662,7 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bm5-gp-Tx0">
-                                                <rect key="frame" x="0.0" y="613" width="414" height="85"/>
+                                                <rect key="frame" x="0.0" y="675" width="414" height="85"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7fh-af-9zf">
                                                         <rect key="frame" x="73" y="31.5" width="268" height="22"/>
@@ -661,8 +699,48 @@ berada dalam kotak yang ditentukan</string>
                                                     <constraint firstItem="7fh-af-9zf" firstAttribute="width" secondItem="eJU-Th-6yg" secondAttribute="width" multiplier="0.95" id="zbw-tx-aSt"/>
                                                 </constraints>
                                             </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aHC-HK-hXd">
+                                                <rect key="frame" x="0.0" y="760" width="414" height="60"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UNL-w3-70a">
+                                                        <rect key="frame" x="88.5" y="15" width="37.5" height="18"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pfy-fK-SIN" userLabel="DateLabel">
+                                                        <rect key="frame" x="166" y="11.5" width="160" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="doP-bp-tTf"/>
+                                                            <constraint firstAttribute="width" constant="160" id="iBC-kr-J38"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="U2f-10-Yxi">
+                                                        <rect key="frame" x="166" y="11.5" width="160" height="25"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="UNL-w3-70a" firstAttribute="centerX" secondItem="aHC-HK-hXd" secondAttribute="centerX" constant="-100" id="2zY-WO-lbu"/>
+                                                    <constraint firstItem="U2f-10-Yxi" firstAttribute="width" secondItem="Pfy-fK-SIN" secondAttribute="width" id="DiX-53-iZz"/>
+                                                    <constraint firstItem="Pfy-fK-SIN" firstAttribute="centerY" secondItem="UNL-w3-70a" secondAttribute="centerY" id="L7b-sq-a21"/>
+                                                    <constraint firstItem="UNL-w3-70a" firstAttribute="top" secondItem="aHC-HK-hXd" secondAttribute="top" constant="15" id="ajN-mJ-kqu"/>
+                                                    <constraint firstItem="U2f-10-Yxi" firstAttribute="top" secondItem="Pfy-fK-SIN" secondAttribute="top" id="fF3-Mt-uuu"/>
+                                                    <constraint firstAttribute="height" constant="60" id="g99-5F-S2r"/>
+                                                    <constraint firstItem="Pfy-fK-SIN" firstAttribute="leading" secondItem="UNL-w3-70a" secondAttribute="trailing" constant="40" id="iet-Cn-qvN"/>
+                                                    <constraint firstItem="U2f-10-Yxi" firstAttribute="leading" secondItem="Pfy-fK-SIN" secondAttribute="leading" id="lWL-x4-12W"/>
+                                                    <constraint firstItem="U2f-10-Yxi" firstAttribute="height" secondItem="Pfy-fK-SIN" secondAttribute="height" id="wyp-qc-Flc"/>
+                                                </constraints>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CtD-PI-kVi">
-                                                <rect key="frame" x="0.0" y="698" width="414" height="70"/>
+                                                <rect key="frame" x="0.0" y="820" width="414" height="70"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DLQ-NG-LRV">
                                                         <rect key="frame" x="48.5" y="19" width="317" height="34"/>
@@ -701,7 +779,7 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t6z-E6-KCD">
-                                                <rect key="frame" x="0.0" y="768" width="414" height="100"/>
+                                                <rect key="frame" x="0.0" y="890" width="414" height="100"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DVJ-hg-kBI">
                                                         <rect key="frame" x="103.5" y="48" width="207" height="44"/>
@@ -727,14 +805,14 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W3w-iZ-6FG">
-                                                <rect key="frame" x="0.0" y="868" width="414" height="50"/>
+                                                <rect key="frame" x="0.0" y="990" width="414" height="50"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="TsO-zY-zUB"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="61e-hy-HtO">
-                                                <rect key="frame" x="0.0" y="918" width="414" height="150"/>
+                                                <rect key="frame" x="0.0" y="1040" width="414" height="150"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="150" id="D4f-tR-csN"/>
@@ -773,9 +851,16 @@ berada dalam kotak yang ditentukan</string>
                         <outlet property="arcCodeL" destination="7fh-af-9zf" id="eLb-hd-dE0"/>
                         <outlet property="arcTextfield" destination="DLQ-NG-LRV" id="5cR-Zn-SQ3"/>
                         <outlet property="backL" destination="heh-OU-0UR" id="yNa-Vh-lj8"/>
+                        <outlet property="birthBtn" destination="38E-7a-tca" id="hUk-s1-2sM"/>
+                        <outlet property="birthTextfield" destination="G8b-Hk-bz9" id="rss-Op-sdf"/>
+                        <outlet property="birthView" destination="VSK-eK-Aim" id="40G-FM-beE"/>
                         <outlet property="camBtn" destination="d1p-Sd-Byv" id="tuY-fc-19N"/>
                         <outlet property="errorL" destination="Irt-mp-899" id="ybK-6X-eXb"/>
                         <outlet property="errorView" destination="e7I-qk-ovS" id="cAY-0c-CRz"/>
+                        <outlet property="expiredIntroL" destination="UNL-w3-70a" id="lGQ-Z8-rqy"/>
+                        <outlet property="expiredPlaceholderL" destination="Pfy-fK-SIN" id="Uug-SS-8fW"/>
+                        <outlet property="expiredTextfield" destination="U2f-10-Yxi" id="NRu-nx-A9l"/>
+                        <outlet property="expiredView" destination="aHC-HK-hXd" id="514-TQ-VSZ"/>
                         <outlet property="hasArcView" destination="Bm5-gp-Tx0" id="0Xq-Qw-wHN"/>
                         <outlet property="iconBtn" destination="k4l-EC-i0f" id="JP5-ME-ZtK"/>
                         <outlet property="inputArcView" destination="CtD-PI-kVi" id="CNh-c5-zRP"/>
@@ -2450,10 +2535,10 @@ berada dalam kotak yang ditentukan</string>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y5C-ov-jw8" customClass="SwiftSignatureView" customModule="SwiftSignatureView">
-                                        <rect key="frame" x="10" y="115" width="394" height="295.5"/>
+                                        <rect key="frame" x="10" y="115" width="394" height="394"/>
                                         <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="Y5C-ov-jw8" secondAttribute="height" multiplier="4:3" id="V4A-AP-KEe"/>
+                                            <constraint firstAttribute="width" secondItem="Y5C-ov-jw8" secondAttribute="height" multiplier="1:1" id="V4A-AP-KEe"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czL-IM-bJU">
@@ -2468,7 +2553,7 @@ berada dalam kotak yang ditentukan</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I2u-f3-VNp">
-                                        <rect key="frame" x="0.0" y="410.5" width="414" height="100"/>
+                                        <rect key="frame" x="0.0" y="509" width="414" height="100"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyr-Z8-mw9">
                                                 <rect key="frame" x="41" y="27.5" width="145" height="45"/>
@@ -3186,7 +3271,7 @@ berada dalam kotak yang ditentukan</string>
         <image name="name.png" width="24" height="24"/>
         <image name="next-1.png" width="24" height="24"/>
         <image name="next.png" width="24" height="24"/>
-        <image name="noview_b.png" width="24" height="24"/>
+        <image name="noview_w.png" width="24" height="24"/>
         <image name="phone2.png" width="24" height="24"/>
         <image name="previous.png" width="24" height="24"/>
         <image name="profile_pic_change_button.png" width="24" height="24"/>

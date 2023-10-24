@@ -34,7 +34,7 @@ class ForgotPassEnterCodeVC: UIViewController, UITextFieldDelegate {
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_SendSMS;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -64,7 +64,7 @@ class ForgotPassEnterCodeVC: UIViewController, UITextFieldDelegate {
     
     @IBAction func nextAction(_ sender: Any) {
         if allCodeTextField.text == "" || allCodeTextField.text?.count != 4 {
-            AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Please Enter Number", comment: ""))
+            AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Please Enter Code", comment: ""))
             return
         }
         

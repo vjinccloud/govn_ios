@@ -70,7 +70,7 @@ class RegisterIDTakeIntroVC: UIViewController {
             backL.text = NSLocalizedString("Register ID Photo Title Front", comment: "")
         } else if takePhotoType == PhotoIDType.back || takePhotoType == PhotoIDType.backFromEdit {
             bottomImgV.image = UIImage.init(named: "id_back.png")
-            bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
+            bottomL.text = NSLocalizedString("maek sure all barcode in box", comment: "")
             backL.text = NSLocalizedString("Register ID Photo Title Back", comment: "")
         } else if takePhotoType == PhotoIDType.passport || takePhotoType == PhotoIDType.passportFromEdit {
             bottomImgV.image = UIImage.init(named: "visa.png")

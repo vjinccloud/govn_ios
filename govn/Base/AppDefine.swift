@@ -28,8 +28,13 @@ public let Color_Main_Red = UtilityTool().hexStringToUIColor(hex: "#b20808")
 public let Color_Main_LightGray = UtilityTool().hexStringToUIColor(hex: "#d6d7d8")
 public let Color_Main_DarkGray = UtilityTool().hexStringToUIColor(hex: "#3b3f47")
 
+let SecureSaltStr = "indo"
+let SecureIvStr = "indogoEncodeIv00"
+let SecurePSStr = "indogoEncodePass"
+let AES28Key = "cryptindogocrypt"
+
 //開發階段
-let DevMode = true
+let DevMode = false
 let Lang_APIDecodeFail = NSLocalizedString("API DecodeFail", comment: "伺服器忙線中，請稍候再試")
 
 let AppVersion = "1.0"
@@ -38,6 +43,8 @@ let AppId = 1
 let ServerURL = "https://govnprod.indogo.link"
 //測試機
 //let ServerURL = "http://govndev.indogo.link"
+
+let PinCodeMode = 2
 
 //訂票時限
 let orderTicketTimeLimitSecs:Double = 300
@@ -76,6 +83,8 @@ let API_PassUpdate = ServerURL + "/app/remit/password_update"
 let API_PhoneTokenSet = ServerURL + "/app/remit/phone_token_set"
 let API_Search_recipient = ServerURL + "/app/remit/search_recipient"
 let API_Get_province_district = ServerURL + "/app/remit/get_province_district"
+let API_Check_recipient_v2 = ServerURL + "/app/remit/check_recipient_v2"
+let API_Search_recipient_ids = ServerURL + "/app/remit/search_recipient_ids"
 
 public enum TransferMemberStyle {
     case normal

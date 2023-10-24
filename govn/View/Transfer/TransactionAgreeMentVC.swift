@@ -22,13 +22,14 @@ class TransactionAgreeMentVC: UIViewController {
     
     //MARK: - API
     public func getAgreement() {
+        
         let obj = AppDelegate.shared().transactionObj
         var recipient_id = AppDelegate.shared().transactionObj.recipientObj.recipient_id!
         if recipient_id == "" {
             recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
         }
         
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "doc_name":"外籍勞工薪資結匯申報委託書", "recipient_id":recipient_id, "transfer_amount_ntd":obj.ntdValue+obj.feeValue]
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "doc_name":"外籍勞工薪資結匯申報委託書", "recipient_id":recipient_id, "transfer_amount_ntd":obj.ntdValue+obj.feeValue,"recipient_type":AppDelegate.shared().tempRecipientObj.recipient_type[0]]
         let headers: HTTPHeaders = [:]
         
         AppDelegate.shared().addLoadingView()
@@ -37,7 +38,7 @@ class TransactionAgreeMentVC: UIViewController {
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -83,7 +84,7 @@ class TransactionAgreeMentVC: UIViewController {
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -118,7 +119,7 @@ class TransactionAgreeMentVC: UIViewController {
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 

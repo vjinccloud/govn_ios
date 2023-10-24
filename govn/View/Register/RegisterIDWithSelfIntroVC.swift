@@ -132,10 +132,11 @@ class RegisterIDWithSelfIntroVC: UIViewController, UIImagePickerControllerDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        /*
         if takePhotoType == PhotoIDType.faceAndId || takePhotoType == PhotoIDType.faceAndIdFromEdit {
             //bottomImgV.image = UIImage.init(named: "man_with_id_2.png")
             backL.text = NSLocalizedString("Register ID Photo Title Passport", comment: "")
-        }
+        }*/
     }
 
     /*

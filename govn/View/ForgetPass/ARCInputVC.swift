@@ -1,6 +1,5 @@
 //
 //  ARCInputVC.swift
-//  govn
 //
 //  Created by mac on 2020/11/25.
 //  Copyright © 2020 DIM. All rights reserved.
@@ -38,10 +37,15 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
         if code.count < 2 {
             checkedWrong = true
         } else {
-            let singleWord = code.getSubString(Start: 1, EndNotInclude: 2).lowercased()
-            Dlog("singleWord = \(singleWord)")
-            if singleWord == "c" || singleWord == "d" || singleWord == "8" || singleWord == "9" {
-                checkedWrong = false
+            
+            if code.count != 10 {
+                checkedWrong = true
+            } else {
+                let singleWord = code.getSubString(Start: 1, EndNotInclude: 2).lowercased()
+                Dlog("singleWord = \(singleWord)")
+                if singleWord == "c" || singleWord == "d" || singleWord == "8" || singleWord == "9" {
+                    checkedWrong = false
+                }
             }
         }
         
@@ -49,7 +53,7 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
             
             let window = UIApplication.shared.keyWindow
             let customAlert = CustomAlertView.init(frame: self.view.frame)
-            customAlert.initSimpleAlert(Title: "", Content: NSLocalizedString("scan format wrong" , comment: ""), NextBtn1Str: NSLocalizedString("ok" , comment: ""))
+            customAlert.initSimpleAlert(Title: "", Content: NSLocalizedString("scan format wrong" , comment: ""), NextBtn1Str: NSLocalizedString("ok2" , comment: ""))
             window!.addSubview(customAlert)
             customAlert.customDelegate = self
             return
@@ -63,7 +67,7 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_CheckMemExist;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -110,7 +114,7 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
                     } else if self.fromType == .forgotPass {
                         //要顯示錯誤
                         let alert = UIAlertController(title: NSLocalizedString("Incorrect ARC Number", comment: ""), message: NSLocalizedString("Please input Your ARC number correctly", comment: ""), preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default) { action in
+                        alert.addAction(UIAlertAction(title: NSLocalizedString("ok2", comment: ""), style: .default) { action in
                         })
                         self.present(alert, animated: true)
                         

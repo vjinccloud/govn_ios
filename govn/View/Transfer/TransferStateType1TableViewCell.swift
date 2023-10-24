@@ -26,12 +26,14 @@ class TransferStateType1TableViewCell: UITableViewCell {
     @IBOutlet weak var pureValueL: UILabel!
     @IBOutlet weak var pureCodeL: UILabel!
     @IBOutlet weak var pinCodeL: UILabel!
+    @IBOutlet weak var upTotalL: UILabel!
     
     @IBOutlet weak var upV: UIView!
     @IBOutlet weak var upIconIgV: UIImageView!
     @IBOutlet weak var upIDL: UILabel!
     @IBOutlet weak var upValueL: UILabel!
     @IBOutlet weak var upNoteL: UILabel!
+    @IBOutlet weak var questionImgV: UIImageView!
     
     @IBOutlet weak var midL: UILabel!
     
@@ -211,6 +213,7 @@ class TransferStateType1TableViewCell: UITableViewCell {
         plotL4.text = NSLocalizedString("Transfer State Plot Text L4", comment: "")
         
         pinCodeL.text = NSLocalizedString("Transfer State 1 KODE PIN", comment: "")
+        upTotalL.text = NSLocalizedString("Transfer Confirm Total Title", comment: "")
         
         /*
         plotWholeLineV.layer.cornerRadius = plotWholeLineV.frame.size.height/2
@@ -235,6 +238,14 @@ class TransferStateType1TableViewCell: UITableViewCell {
         plotC4V.layer.cornerRadius = plotC4V.frame.size.height/2
         plotC4SubV.layer.cornerRadius = plotC4SubV.frame.size.height/2
         
+        let tap = UITapGestureRecognizer(target: self, action: #selector(callPhone))
+        questionImgV.addGestureRecognizer(tap)
+        questionImgV.isUserInteractionEnabled = true
+        
+    }
+    
+    @objc private func callPhone() {
+        AppDelegate.shared().showFloatingContainer()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

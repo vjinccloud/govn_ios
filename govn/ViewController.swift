@@ -11,7 +11,7 @@ import Alamofire
 import SwiftyJSON
 import Firebase
 
-class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewControllerDataSource, CustomAlertDelegate {
+class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewControllerDataSource, UITextFieldDelegate, CustomAlertDelegate {
     
     @IBOutlet weak var accountBtn: UIButton!
     @IBOutlet weak var accountTextfield: UITextField!
@@ -19,9 +19,11 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
     @IBOutlet weak var passBtn: UIButton!
     @IBOutlet weak var passTextField: UITextField!
     
+    @IBOutlet weak var introL: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var remeberBtn: UIButton!
     
+    @IBOutlet weak var bottomL: UILabel!
     @IBOutlet weak var lupaBtn: UIButton!
     @IBOutlet weak var registerBtn: UIButton!
     
@@ -42,7 +44,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         passTextField.isSecureTextEntry.toggle()
         
         if passTextField.isSecureTextEntry {
-            showPassBtn.setBackgroundImage(UIImage.init(named: "noview_b"), for: .normal)
+            showPassBtn.setBackgroundImage(UIImage.init(named: "noview_w"), for: .normal)
         } else {
             showPassBtn.setBackgroundImage(UIImage.init(named: "view_w"), for: .normal)
         }
@@ -116,7 +118,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -165,7 +167,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
                     
                     //讀取未讀通知數量
                     AppDelegate.shared().getNotice()
-                    
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().userLogout()
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
@@ -182,8 +184,9 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         let todoEndpoint: String = API_Login;
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        URLCache.shared.removeAllCachedResponses()
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -240,6 +243,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
                     AppDelegate.shared().nowBottomMenuType = AppDelegate.shared().defautBottomMenuType
                     AppDelegate.shared().changeRootOfFunc(Type: .transaction)
                     //AppDelegate.shared().showAlertWithWindow(self, Message: "Hi, \(AppDelegate.shared().memberData["member_name"] ?? "") 登入成功")
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
@@ -258,7 +262,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 
                 guard response.result.error == nil else {
@@ -283,7 +287,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_Promo;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -442,9 +446,9 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         lupaBtn.setTitle(NSLocalizedString("recover passcode", comment: ""), for: .normal)
         registerBtn.setTitle(NSLocalizedString("register", comment: ""), for: .normal)
         
-        let bnumber = Bundle.main.buildNumber
-        
-        remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: "") + " " + bnumber, for: .normal)
+        //let bnumber = Bundle.main.buildNumber
+        //remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: "") + " " + bnumber, for: .normal)
+        remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: ""), for: .normal)
         
         passTextField.isSecureTextEntry = true
         registerBtn.layer.cornerRadius = registerBtn.frame.height/2
@@ -452,12 +456,21 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         accountTextfield.text = AppDelegate.shared().getRemeberedAccount()
         passTextField.text = AppDelegate.shared().getRemeberedPassword()
         
+        accountTextfield.delegate = self
+        passTextField.delegate = self
+        
         if DevMode {
             accountTextfield.text = "XC00000060" //XX00000026
             passTextField.text = "123456"
         }
         
         AppDelegate.shared().rootController = self
+        
+        bottomL.adjustsFontSizeToFitWidth = true
+        bottomL.text = "Địa chỉ: 4F., No.501, Sec. 6, Nanjing E. Rd., Neihu Dist., Taipei City 114057, Taiwan (R.O.C.) Số điện thoại: 02-2795 5959 "
+        
+        introL.text = "Digital Idea Multi-Media Co., Ltd.\nSố Giấy phép kinh doanh: xxxxxx\nThời hạn: dd/mm/yyyy\nNgân hàng bảo lãnh: Ngân hàng Thương mại Yuanta\nTỷ giá USD và NTD tham khảo theo giá niêm yết của ngân hàng Đài Loan\nTỷ giá USD và VND tham khảo theo giá niêm yết của ngân hàng Sacombank"
+        introL.adjustsFontSizeToFitWidth = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -495,12 +508,30 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
            getPromo()
         }
         
-        //自動登入
+        //自動登入(取消)
+        /*
         let userDefaults = UserDefaults.standard
         if userDefaults.value(forKey: "sessionToken") != nil {
             AppDelegate.shared().sessionToken = userDefaults.value(forKey: "sessionToken") as! String
             checkTokenLogin()
+        }*/
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else{
+            return true
         }
+        
+        if !string.checkAlphabetDigit() {
+            return false
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
+        
+        return true
     }
 }
 

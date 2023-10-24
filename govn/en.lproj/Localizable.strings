@@ -28,21 +28,23 @@
 "Incorrect ARC Number" = "Incorrect ARC Number";
 "Please input Your ARC number correctly" = "Please input Your ARC number correctly";
 
-"input arc number" = "Input Arc Number"; //手動輸入
+"input arc number" = "Input ARC Number"; //手動輸入
 "Please input Your ARC number" = "Please input Your ARC number"; //手動輸入提示
 "back" = ""; //返回(改成不顯示)
 "back Show" = "KEMBALI"; //返回
 "send" = "SEND"; //送出
 "ok" = "NEXT"; //繼續
+"ok2" = "OK"; //繼續
 "JustOK" = "OK"; //繼續
 "API DecodeFail" = "Server sedang sibuk, silakan coba lagi nanti"; //伺服器忙線中，請稍候再試
 "account" = "ARC Number"; //帳號
 "passcode" = "Password"; //密碼
 "scan again" = "RE-SCAN"; //再次掃描
-"scan format wrong" = "Wrong"; //掃描格式錯誤
+"scan format wrong" = "Your ARC format is wrong.\nPlease enter the correct format."; //掃描格式錯誤
 "API Timeout" = "The network is unstable and busy";//======也請幫我翻譯英文
-"SMS Code Wrong" = "Verification code error";//======也請幫我翻譯英文
+"SMS Code Wrong" = "Wrong Vertification Code. Please try again";//======也請幫我翻譯英文
 "Please Enter Number" = "Please Enter Number";
+"Please Enter Code" = "Please enter vertification code";
 "submit Upper" = "SUBMIT";
 
 //這邊要新翻譯
@@ -54,7 +56,7 @@
 "Register Error Name" = "The name can only be entered in English";//======也請幫我翻譯英文
 "Register Error ARC" = "ARC format error";//======也請幫我翻譯英文
 "Register Error Pass" = "Password must exceed four digits";//======也請幫我翻譯英文
-"Register Error Pass Not match" = "Password didn't match, please enter again";
+"Register Error Pass Not match" = "Password do not match, please enter again";
 "Register Member Exist" = "Account already exists";//======也請幫我翻譯英文
 "Camera Request Agreement" = "Allow camera to scan";//======也請幫我翻譯英文
 "Camera Photo Request Agreement" = "Allow camera to take picture";//======也請幫我翻譯英文
@@ -69,18 +71,22 @@
 "remmber me" = "Remember Password";//======也請幫我翻譯英文
 "top for forgoet main" = "Please prepare your ARC";//忘記密碼首頁的說明
 "intro for forgoet main" = "Scan or input your ARC here";
-"top for forgoet sec" = "How to Scan\nARC Barcide Number";
-"bottom for forgoet sec" = "Make sure the entire barcode\nare in the specified box";
-"bottom for forgoet sec2" = "Make sure the entire ARC\nare in the specified box";
-"bottom for forgoet sec3" = "Make sure the entire ARC\nare in the specified box";
-"bottom for sign sec" = "Write your name according to your ARC";
+"top for forgoet sec" = "How to Scan\nARC Barcode Number";
+"bottom for forgoet sec" = "Make sure the entire barcode\nis in the specified box";
+"bottom for forgoet sec2" = "Make sure the entire ARC\nis in the specified box";
+"bottom for forgoet sec3" = "Make sure the entire ARC\nis in the specified box";
+//--should--
+"maek sure arc barcode in box" = "Make sure the entire ARC\nis in the specified box";
+"maek sure all barcode in box" = "Make sure the entire of ARC barcode\nis in the specified box";
+
+"bottom for sign sec" = "Sign your name as it is shown on ARC";
 "top for forget arc scan" = "How to Scan\nARC Barcide Number";
-"top for forget result has phone" = "Your ARC ?Number is";
+"top for forget result has phone" = "Your ARC Number is";
 "TFFRHP Msg Title" = "Mohon Perhatian";
 "TFFRHP Msg Top" = "Make sure your phone\nnumber is active";
 "TFFRHP Msg End" = "We will send 4 digits code\nvia text message to\nyour phone number";
 
-"TFFRHP Msg Register Title" = "Mohon Maaf";
+"TFFRHP Msg Register Title" = "Attention";
 "TFFRHP Msg Register Top" = "Your ARC number\nhaven't registered yet\n\nPlease sign up first";
 
 "TFFRHP Enter Title" = "Enter Verification Code";
@@ -157,7 +163,7 @@
 
 "Profile Main Title" = "Your Profile";
 "Profile Main Point" = "Your Point";
-"Profile Main Reciter" = "Recepients";
+"Profile Main Reciter" = "Recipients";
 "Profile Main Transaction" = "Transaction History";
 "Profile Main Call" = "Contact Us";
 "Profile Main About" = "About Us";
@@ -198,8 +204,8 @@
 
 "Point Transfer Title" = "TRANSFER POINT";
 "Point Transfer Input Title" = "Transfer to";
-"Point Transfer Input Phone Place Holder" = "Input Recepient's Phone No.";
-"Point Transfer Input Point Place Holder" = "Total Points Transfered";
+"Point Transfer Input Phone Place Holder" = "Input Recipient's Phone No.";
+"Point Transfer Input Point Place Holder" = "Total Points Transferred";
 "Point Transfer Alert Title" = "FAILED";//======也請幫我翻譯英文
 
 "Point Transfer Alert No Member Title" = "Sorry";//======也請幫我翻譯英文
@@ -211,7 +217,7 @@
 "Point Transfer Step2 Title" = "Transfer to";
 "Point Transfer Step2 Successed Title" = "SUCCESSFUL";//======也請幫我翻譯英文
 "Point Transfer Step2 Successed SubTitle" = "Thank you";//======也請幫我翻譯英文
-"Point Transfer Step2 Successed Content A" = "You have submitted\nsuccessfully";//======也請幫我翻譯英文
+"Point Transfer Step2 Successed Content A" = "You have transferred\nsuccessfully";//======也請幫我翻譯英文
 "Point Transfer Step2 Successed Content B" = " Point";
 "Point Transfer Add Recipient Next" = "CHECK";
 "Point Transfer Add Recipient Code PlaceHolder" = "";
@@ -226,7 +232,7 @@
 "Transfer State 1" = "PENDING";
 "Transfer State 2" = "PAID";
 "Transfer State 3" = "PROCESS";
-"Transfer State 4" = "TRANSFERED";
+"Transfer State 4" = "TRANSFERRED";
 "Transfer State 5" = "FAILED";
 
 "Transfer State Pure Text Title" = "Please make a payment";
@@ -239,6 +245,11 @@
 "Transfer State Plot Text L2" = "Paid";
 "Transfer State Plot Text L3" = "Process";
 "Transfer State Plot Text L4" = "Done";
+/*
+"Transfer State Plot Text L1" = "Tạo đơn"; // 更改
+"Transfer State Plot Text L2" = "Đã thanh toán"; // 更改
+"Transfer State Plot Text L3" = "Đang xử lý"; // 更改
+"Transfer State Plot Text L4" = "Hoàn tất"; // 更改*/
 "Transfer State Down Time Title" = "Time";//Pukul
 "Transfer State Down Kurs Value Title" = "Exchange Rate"; //Referensi Kurs
 
@@ -250,26 +261,26 @@
 "Transfer Main Total Money" = "Total NTD";
 "Transfer Main Total Point Title" = "Point Exchange";
 
-"Transfer Confirm Title" = "Confirm Recepients";
+"Transfer Confirm Title" = "Confirm Recipients";
 "Transfer Confirm TWD Title" = "Send";
 "Transfer Confirm Fee Title" = "Delivery Fee";
 "Transfer Confirm UsePoint Title" = "Discount";
 "Transfer Confirm Total Title" = "Total";
 
-"Transfer Result Exceed" = "Total payment can not ecxeed NTD";
+"Transfer Result Exceed" = "Total payment can not exceed NTD";
 
 "Transfer Result Title" = "Your PIN Code";
 "Transfer Result Bar Title" = "PENDING";
-"Transfer Result Store Title" = "Choose Convinient Store";
-"Transfer Result Go Map Title" = "Find The Nearest Convinient Store";
+"Transfer Result Store Title" = "Choose Convenience Store";
+"Transfer Result Go Map Title" = "Find The Nearest Convenience Store";
 "Transfer Result Pay Title" = "GO TO CASHIER";
 
-"Transfer PayStep Title" = "Your Pincode";
+"Transfer PayStep Title" = "Your PIN Code";
 "Transfer PayStep Up Intro" = "Please go to the nearest ";
 "Transfer PayStep Up Intro2" = "\nand make a payment";
 "Transfer PayStep Min Title" = "Minute";
 "Transfer PayStep Sec Title" = "Second";
-"Transfer PayStep Warn" = "The barcode will expires after 10 minutes\nYou can request again barcode by pressing\nbutton above";
+"Transfer PayStep Warn" = "The barcode will expire after 10 minutes\nYou can request again barcode by pressing\nthe button above";
 "Transfer PayStep Btn Enlarge" = "ZOOM BARCODE";
 "Transfer PayStep Btn Reload" = "REQUEST AGAIN BARCODE";
 
@@ -309,5 +320,19 @@
 "reason_show12" = "roulette";
 "reason_show13" = "transfer point to remit system member";
 "reason_show14" = "transfer point to web shop member";
+"reason_show15" = "transfer Forgot Password";
 
 "transtate CP DTD ID" = "ID";
+
+//202105之後新增
+"No illeagal Words in name" = "Please enter in English";
+"Scan Title Label" = "ARC No.";
+"Coming Soon" = "Coming Soon";
+
+"Debate Page Title" = "Assessment disputes";
+"Debate Page Btn" = "COPY LINK";
+"Debate Page Content" = "Chúng tôi là Trung tâm thẩm định tiêu dùng tài chính, cơ quan giải quyết các tranh chấp giữa người tiêu dùng tài chính với ngành dịch vụ tài chính mà không thuộc phạm vi tố tụng. Nếu bạn xảy ra các tranh chấp liên quan đến “chuyển gửi số tiền nhỏ” hoặc các tiêu dùng tài chính khác, có thể “gọi đường dây dịch vụ tài chính 0800-789885”, nhân viên chăm sóc khách hàng của Trung tâm sẽ cung cấp dịch vụ tư vấn bằng tiếng Trung hoặc tiếng Anh cho bạn, đồng thời hỗ trợ thủ tục về khiếu nại và xem xét giải quyết liên quan. Nếu bạn muốn được hỗ trợ bằng ngôn ngữ khác, Trung tâm sẽ hỗ trợ tìm kiếm nguồn phiên dịch, để hai bên chúng ta có thể giao tiếp thuận lợi.";
+
+"Register Btn Birth" = "Birthday";
+"Register Expired Title" = "Expired Day";
+"Register Expired Date" = "Day | Month | Year";

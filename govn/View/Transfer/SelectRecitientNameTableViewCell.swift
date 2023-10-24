@@ -1,6 +1,5 @@
 //
 //  SelectRecitientNameTableViewCell.swift
-//  govn
 //
 //  Created by mac on 2021/1/2.
 //  Copyright © 2021 DIM. All rights reserved.

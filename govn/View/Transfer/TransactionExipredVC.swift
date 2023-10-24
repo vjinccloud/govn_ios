@@ -47,7 +47,7 @@ class TransactionExipredVC: UIViewController {
         warn2L.text = NSLocalizedString("Transfer Expired Step Warn2", comment: "")
         warnTL.text = NSLocalizedString("Transfer Expired Step Warn Title", comment: "")
         
-        twdL.text = "TWD \(transferStateObj.total.stringToIntDecimalString())"
+        twdL.text = "NTD \(transferStateObj.total.stringToIntDecimalString())"
         reloadBtn.setTitle(NSLocalizedString("Transfer Expired Step Btn Title", comment: "") + "    ", for: .normal)
         reloadBtn.layer.cornerRadius = reloadBtn.frame.size.height/2
         

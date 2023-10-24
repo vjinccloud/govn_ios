@@ -30,13 +30,13 @@ class ForgotPassIntroVC: UIViewController {
     //MARK: - View-Life
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         backL.text = NSLocalizedString("back", comment: "")
         nextBtn.setTitle(NSLocalizedString("start scan", comment: ""), for: .normal)
         nextBtn.layer.cornerRadius = nextBtn.frame.height/2
         topL.text = NSLocalizedString("top for forgoet sec", comment: "")
-        bottomL.text = NSLocalizedString("bottom for forgoet sec2", comment: "")
+        bottomL.text = NSLocalizedString("maek sure arc barcode in box", comment: "")
     }
     
 

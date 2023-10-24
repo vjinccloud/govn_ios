@@ -36,7 +36,7 @@ class ShareMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_PointHistoryList;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -72,7 +72,7 @@ class ShareMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -204,7 +204,7 @@ class ShareMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -225,6 +225,7 @@ class ShareMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
                     if AppDelegate.shared().pointRootShowHistory {
                         self.callPointHistory()
                     }
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
@@ -262,6 +263,11 @@ class ShareMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     }
     
     @IBAction func transferPointAction(_ sender: Any) {
+        //暫時隱藏功能
+        AppDelegate.shared().showNormalAlertWithWindow(self, Message: NSLocalizedString("Coming Soon", comment: "") + " ...")
+        
+        return
+        
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransferPointVC") as? TransferPointVC
         self.navigationController?.pushViewController(nextVC!, animated: true)
     }

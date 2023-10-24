@@ -59,7 +59,7 @@ class TransactionInfoConfirmVC: UIViewController {
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -77,6 +77,7 @@ class TransactionInfoConfirmVC: UIViewController {
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
                 if result == ResponseState.ok {
                     self.recalculateTargetMoneyAndGoNext()
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
@@ -115,12 +116,128 @@ class TransactionInfoConfirmVC: UIViewController {
             kursValue = Double(AppDelegate.shared().memberData["kurs_value"]!)!
         }
         
-        let downValue = Int(ceil(Double(AppDelegate.shared().transactionObj.ntdValue) * kursValue))
+        //--should-- 20210608 把這函數所有 ceil 改成 round
+        let downValue = Int(round(Double(AppDelegate.shared().transactionObj.ntdValue) * kursValue))
         AppDelegate.shared().transactionObj.targetValue = downValue
         
-        //AppDelegate.shared().transactionObj.targetValue = Int(ceil(Double(obj.ntdValue) * kursValue))
+        //AppDelegate.shared().transactionObj.targetValue = Int(round(Double(obj.ntdValue) * kursValue))
         
+        //改成直接到結果頁
+        createTransaction()
+        
+        /*
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransactionAgreeMentVC") as? TransactionAgreeMentVC
+        self.navigationController?.pushViewController(nextVC!, animated: true)
+         */
+    }
+    
+    public func createTransaction() {
+        let obj = AppDelegate.shared().transactionObj
+        let recipient_id = AppDelegate.shared().transactionObj.recipientObj.recipient_id!
+        //let total_payment = obj.ntdValue + obj.feeValue -
+        var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":obj.ntdValue,"kurs_lm_time":AppDelegate.shared().memberData["kurs_lm_time"]!, "service_charge":obj.feeValue, "total_payment":obj.totalNtdValue, "transfer_idr":
+                                        obj.targetValue, "recipient_id":recipient_id, "pin_code_mode":PinCodeMode, "recipient_type":AppDelegate.shared().transactionObj.recipient_type,"currency":AppDelegate.shared().transactionObj.currency!]
+        
+        if obj.usePoint == 0 {
+            parameters["use_remit_point"] = 0
+        } else {
+            parameters["use_remit_point"] = 1
+            parameters["use_points"] = obj.usePoint
+        }
+        
+        let headers: HTTPHeaders = [:]
+        
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_TransactionCreate;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("responseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    //self.getNextStep()
+                    self.getTransferListAndCheck()
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+    }
+    
+    //改成直接撈history的資料，不然第一種銀行匯款，無法有地址資料
+    public func getTransferListAndCheck() {
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
+        let headers: HTTPHeaders = [:]
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_TransferHistory;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("responseStr = \(responseStr ?? "")")
+                
+                AppDelegate.shared().transferStateListObjs = []
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    for i in 0..<AppDelegate.shared().transferStateListObjs.count {
+                        let obj = AppDelegate.shared().transferStateListObjs[i]
+                        if obj.payment_info == AppDelegate.shared().tempTransactionResultObj.payment_info {
+                            self.getNextStep(TransferStateObj: obj)
+                            return
+                        }
+                    }
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+    }
+    
+    func getNextStep(TransferStateObj transferStateObj:TransferStateObj) {
+        /*
+        let transferStateObj = TransferStateObj()
+        let serchBankobj = UtilityTool().searchBankObj(BankName: AppDelegate.shared().transactionObj.recipientObj.bank_name!)
+        
+        transferStateObj.bank_code = serchBankobj.bank_code
+        transferStateObj.to_acc = AppDelegate.shared().transactionObj.recipientObj.bank_acc
+        transferStateObj.total = "\(AppDelegate.shared().transactionObj.totalNtdValue)"
+        transferStateObj.transfer_amount_idr = "\(AppDelegate.shared().transactionObj.targetValue)"
+        transferStateObj.recipient_id = AppDelegate.shared().transactionObj.recipientObj.recipient_id
+        transferStateObj.phone = AppDelegate.shared().transactionObj.recipientObj.phone_no
+        transferStateObj.address = AppDelegate.shared().wholeAddress
+            //AppDelegate.shared().transactionObj.recipientObj.address
+        //AppDelegate.shared().tempRecipientObj.address
+        transferStateObj.recipient_name =  AppDelegate.shared().transactionObj.recipientObj.recipient_name
+        */
+        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransactionResultVC") as? TransactionResultVC
+        nextVC?.payment_info = AppDelegate.shared().tempTransactionResultObj.payment_info
+        nextVC?.transferStateObj = transferStateObj
         self.navigationController?.pushViewController(nextVC!, animated: true)
     }
     
@@ -163,15 +280,15 @@ class TransactionInfoConfirmVC: UIViewController {
             dtdIDL.text = obj.recipientObj.id_card_no
             dtdPhoneL.text = obj.recipientObj.phone_no
             
-            var address = ""
-            var choseProvinceIdx = 0
+            var address = obj.recipientObj.address + " "
+            var choseProvinceIdx = Int(AppDelegate.shared().tempRecipientObj.province_id)!
+            
             //比對省份
             var ori = AppDelegate.shared().tempRecipientObj.province_id
             for i in 0..<AppDelegate.shared().provinceData.count {
                 let str = AppDelegate.shared().provinceData[i].province_id
                 if ori == str {
                     choseProvinceIdx = i
-                    address += AppDelegate.shared().provinceData[i].province_name
                     provinceName = AppDelegate.shared().provinceData[i].province_name
                     break
                 }
@@ -181,11 +298,27 @@ class TransactionInfoConfirmVC: UIViewController {
             for i in 0..<AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count {
                 let str = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_id
                 if ori == str {
-                    address += AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_name
+                    address += " " + AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_name
                     break
                 }
             }
-            dtdAdrL.text = address + " " + obj.recipientObj.address
+            
+            address += " " + provinceName
+            
+            /*
+            //比對省份
+            ori = AppDelegate.shared().tempRecipientObj.province_id
+            for i in 0..<AppDelegate.shared().provinceData.count {
+                let str = AppDelegate.shared().provinceData[i].province_id
+                if ori == str {
+                    choseProvinceIdx = i
+                    address += " " + AppDelegate.shared().provinceData[i].province_name
+                    provinceName = AppDelegate.shared().provinceData[i].province_name
+                    break
+                }
+            }*/
+            
+            dtdAdrL.text = address
         } else {
             bankAndCPView.isHidden = false
             dtdView.isHidden = true
@@ -196,7 +329,7 @@ class TransactionInfoConfirmVC: UIViewController {
             midVHeight.constant = 190
             Dlog("obj.recipientObj.bank_code = \(obj.recipientObj.bank_code!)")
             var serchBankobj = UtilityTool().searchBankObj(BankName: obj.recipientObj.bank_name!)
-            if obj.recipientObj.bank_name == "" {
+            if obj.recipientObj.bank_code != "" {
                 serchBankobj = UtilityTool().searchBankObj(BankCode: obj.recipientObj.bank_code!)
             } else {
                 serchBankobj = UtilityTool().searchBankObj(BankName: obj.recipientObj.bank_name!)

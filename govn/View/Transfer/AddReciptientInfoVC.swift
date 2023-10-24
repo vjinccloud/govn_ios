@@ -1,6 +1,5 @@
 //
 //  AddReciptientInfoVC.swift
-//  govn
 //
 //  Created by mac on 2020/12/29.
 //  Copyright © 2020 DIM. All rights reserved.
@@ -155,6 +154,10 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         field2.text = cellData.id_card_no
         field3.text = cellData.phone_no
         
+        AppDelegate.shared().tempRecipientObj.province_id = cellData.province_id
+        AppDelegate.shared().tempRecipientObj.district_id = cellData.district_id
+        AppDelegate.shared().tempRecipientObj.address = cellData.address
+        
         //比對關係
         let ori = cellData.relationship
         for i in 0..<relationTypeAry.count {
@@ -284,15 +287,49 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         topScrollView.contentOffset = CGPoint.init(x: 0, y: 0)
         if textField == field1 {
             selectTable.isHidden = true
+            if !checkLeagleCharacter() {
+                showNameAlert()
+                return
+            }
         }
         checkBtnState()
+    }
+    
+    func showNameAlert() {
+        if AppDelegate.shared().alertViewContainer != nil {
+            return
+        }
+        AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("No illeagal Words in name", comment: ""))
+    }
+    
+    func checkLeagleCharacter() -> Bool {
+        var pass = true
+        let words = field1.text
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+        pass = pred.evaluate(with: words)
+        
+        if field1.text?.count==0 {
+            pass = true
+        }
+        
+        return pass
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
+        guard let text = textField.text else{
+            return true
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
+        
         if textField == field1 {
+            /*
             var pass = true
             let words = newString
             let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
@@ -307,13 +344,14 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
             }
             
             if !pass {
+                showNameAlert()
                 return false
             }
             
             if newString != "" {
                 searchRecipient(Text: newString)
             }
-            
+            */
         } else if textField == field2 {
             
             var pass = true
@@ -379,7 +417,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
          
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -435,7 +473,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -486,6 +524,11 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     }
     
     @IBAction func nextAction(_ sender: Any) {
+        if !checkLeagleCharacter() {
+            showNameAlert()
+            return
+        }
+        /*
         //地址只能填英數字
         var pass = true
         let words = field1.text
@@ -495,7 +538,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         if !pass {
             AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Register Error Name", comment: ""))
             return
-        }
+        }*/
         
         addRecipientStep2()
     }
@@ -606,6 +649,8 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         titleL2.text = NSLocalizedString("Input Bank Person Info Field2", comment: "")
         titleL3.text = NSLocalizedString("Input Bank Person Info Field3", comment: "")
         titleL4.text = NSLocalizedString("Input Bank Person Info Field4", comment: "")
+        
+        field1.autocorrectionType = .no
         
         topBarSelectIdx = AppDelegate.shared().transactionObj.recipient_type-1
         selectTable.isHidden = true

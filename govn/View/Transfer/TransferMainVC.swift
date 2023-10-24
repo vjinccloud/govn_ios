@@ -122,6 +122,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         
         initCondition()
         initTopBar()
+        clearCharge()
         
         checkAndCalculateValue(UseStyle:0, NweString: "")
     }
@@ -136,6 +137,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         initCondition()
         topBarSelectIdx = 1
         initTopBar()
+        clearCharge()
         
         checkAndCalculateValue(UseStyle:0, NweString: "")
     }
@@ -150,6 +152,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         initCondition()
         topBarSelectIdx = 2
         initTopBar()
+        clearCharge()
         
         checkAndCalculateValue(UseStyle:0, NweString: "")
     }
@@ -269,6 +272,8 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     
     func justCalculateValue(UseStyle style:Int, NweString newString:String) {
         
+        //--should-- 20210608 把這函數所有 ceil 改成 round
+        
         var upValue = Int(newString.replacingOccurrences(of: ",", with: ""))
         var downValue = Int(newString.replacingOccurrences(of: ",", with: ""))
          
@@ -277,7 +282,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 upTextField.text = "1"
                 upValue = 1
             }
-            downValue = Int(ceil(Double(upValue!) * kursValue))
+            downValue = Int(round(Double(upValue!) * kursValue))
             if downValue! < 1 {
                 downValue! = 1
             }
@@ -286,7 +291,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 downTextField.text = "1"
                 downValue = 1
             }
-            upValue = Int(ceil(Double(downValue!) / kursValue))
+            upValue = Int(round(Double(downValue!) / kursValue))
             if upValue! < 1 {
                 upValue! = 1
             }
@@ -304,6 +309,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     func checkAndCalculateValue(UseStyle style:Int, NweString newString:String) {
         setUpKursValue()
 
+        //--should-- 20210608 把這函數所有 ceil 改成 round
         /*
         let value = Double(AppDelegate.shared().memberData["remit_point"]!)!
         if value < 200 {
@@ -320,7 +326,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 upTextField.text = "1"
                 upValue = 1
             }
-            downValue = Int(ceil(Double(upValue ?? 1) * kursValue))
+            downValue = Int(round(Double(upValue ?? 1) * kursValue))
             if downValue! < 1 {
                 downValue! = 1
             }
@@ -329,7 +335,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 downTextField.text = "1"
                 downValue = 1
             }
-            upValue = Int(ceil(Double(downValue!) / kursValue))
+            upValue = Int(round(Double(downValue!) / kursValue))
             if upValue! < 1 {
                 upValue! = 1
             }
@@ -340,7 +346,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             }
             
             upValue = Int(string)
-            downValue = Int(ceil(Double(upValue!) * kursValue))
+            downValue = Int(round(Double(upValue!) * kursValue))
             downTextField.text = "\(downValue ?? 1)".stringToIntDecimalString()
         } else if style == 3 {
             if string == "" {
@@ -349,7 +355,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             }
             
             downValue = Int(string)
-            upValue = Int(ceil(Double(downValue!) / kursValue))
+            upValue = Int(round(Double(downValue!) / kursValue))
             if upValue! < 1 {
                 upValue! = 1
             }
@@ -383,34 +389,75 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     @IBAction func leftBtnAction(_ sender: Any) {
         let value = Int(AppDelegate.shared().memberData["remit_point"]!)!
         
-        if decresedCharge == serviceCharge || decresedCharge == value {
+        if decresedCharge == serviceCharge {
             decresedCharge = 0
         } else {
             
-            decresedCharge = value
+            /*
             if decresedCharge > value {
                 decresedCharge = 0
             }
             
             if decresedCharge > serviceCharge {
                 decresedCharge = serviceCharge
+            }*/
+            
+            if value >= serviceCharge {
+                decresedCharge = serviceCharge
+            } else {
+                decresedCharge = 0
             }
             
         }
         
         checkAndCalculateValue(UseStyle: 0, NweString: "")
     }
+    
+    func clearCharge() {
+        decresedCharge = 0
+    }
 
     @IBAction func rightBtnAction(_ sender: Any) {
         
-        if upTextField.text!.replacingOccurrences(of: ",", with: "") == "" || downTextField.text!.replacingOccurrences(of: ",", with: "") == "" || Int(upTextField.text!.replacingOccurrences(of: ",", with: ""))! == 0 || Int(downTextField.text!.replacingOccurrences(of: ",", with: ""))! == 0 {
+        if upTextField.text!.replacingOccurrences(of: ",", with: "") == "" || downTextField.text!.replacingOccurrences(of: ",", with: "") == "" {
+            return
+        }
+        
+        var ntdValue = 0
+        //有小數點，換算成整數
+        if upTextField.text!.contains(".")  {
+            let value = Double(upTextField.text!.replacingOccurrences(of: ",", with: ""))!
+            ntdValue = lround(value)
+        } else {
+            ntdValue = Int(upTextField.text!.replacingOccurrences(of: ",", with: ""))!
+        }
+        
+        Dlog("ntdValue = \(ntdValue)")
+        
+        if ntdValue == 0 {
+            return
+        }
+            
+        var down2Value = 0
+        //有小數點，換算成整數
+        if downTextField.text!.contains(".")  {
+            let value = Double(downTextField.text!.replacingOccurrences(of: ",", with: ""))!
+            down2Value = lround(value)
+        } else {
+            down2Value = Int(downTextField.text!.replacingOccurrences(of: ",", with: ""))!
+        }
+        
+        Dlog("downValue = \(down2Value)")
+        
+        if down2Value == 0 {
             return
         }
         
         AppDelegate.shared().transactionObj = TransactionObj()
-        AppDelegate.shared().transactionObj.ntdValue = Int(upTextField.text!.replacingOccurrences(of: ",", with: ""))!
+        AppDelegate.shared().transactionObj.ntdValue = ntdValue //Int(upTextField.text!.replacingOccurrences(of: ",", with: ""))!
         //印尼盾必須再用台幣換算印尼盾(要對齊)
-        let downValue = Int(ceil(Double(AppDelegate.shared().transactionObj.ntdValue) * kursValue))
+        //--should-- 20210608 把這函數所有 ceil 改成 round
+        let downValue = Int(round(Double(AppDelegate.shared().transactionObj.ntdValue) * kursValue))
         AppDelegate.shared().transactionObj.targetValue = downValue
         AppDelegate.shared().transactionObj.feeValue = serviceCharge
         AppDelegate.shared().transactionObj.usePoint = decresedCharge
@@ -438,7 +485,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -456,6 +503,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
                 if result == ResponseState.ok {
                     self.setUpKursValue()
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
@@ -474,7 +522,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -499,6 +547,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                         //送出前要查詢是否超過金額
                         self.checkAmount()
                     }
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.error {
                     let msg = NSLocalizedString("Transfer Result Exceed", comment: "") + " " + AppDelegate.shared().apiBackContentStr.stringToIntDecimalString()
                     AppDelegate.shared().showAlertWithWindow(self, Message:msg)
@@ -519,7 +568,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -541,6 +590,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                     let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "RecipientListVC") as? RecipientListVC
                     nextVC!.canSelectForTransfer = true
                     self.navigationController?.pushViewController(nextVC!, animated: true)
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.error {
                     let msg = NSLocalizedString("Transfer Result Exceed", comment: "") + " " + AppDelegate.shared().apiBackContentStr.stringToIntDecimalString()
                     AppDelegate.shared().showAlertWithWindow(self, Message:msg)
@@ -714,6 +764,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         leftDownL.adjustsFontSizeToFitWidth = true
         rightTitleL.text = NSLocalizedString("send", comment: "")
         headTitleL.text = NSLocalizedString("Transfer Head Title", comment: "")
+        //--should--
         leftTotalPL.text = AppDelegate.shared().memberData["remit_point"]!
         checkAndCalculateValue(UseStyle:0, NweString: "")
         

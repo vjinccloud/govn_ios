@@ -52,6 +52,10 @@ class TransactionResultVC: UIViewController {
     @IBOutlet weak var goPayL: UILabel!
     @IBOutlet weak var goPayBtn: UIButton!
     
+    @IBOutlet weak var downBigBoxHeight: NSLayoutConstraint! //default 155
+    @IBOutlet weak var downSmallBoxHeight: NSLayoutConstraint! //default 95
+    
+    
     var loadOnce = false
     var transferStateObj:TransferStateObj!
     var orderCheckStateObj:TransferOrderCheckObj!
@@ -72,7 +76,7 @@ class TransactionResultVC: UIViewController {
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -126,13 +130,23 @@ class TransactionResultVC: UIViewController {
             }
             
             self.downNameL.text = transferStateObj.recipient_name
-            self.downIDL.text = "ID: " + transferStateObj.recipient_id
+            self.downIDL.text = "CMND: " + transferStateObj.id_card_no
             
             //self.downValueL.text = "IDR " + transferStateObj.transfer_amount_idr.stringToIntDecimalString()
             self.downValueL.text = transferStateObj.phone
             //self.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + transferStateObj.kurs_value
             self.downNoteL.text = transferStateObj.address
-            self.downNoteL.numberOfLines = 2
+            self.downNoteL.numberOfLines = 0
+            
+            let hei = downNoteL.requiredHeight
+            var moreHei:CGFloat = 0
+            if hei > 38 {
+                moreHei = hei - 38
+            }
+            
+            downBigBoxHeight.constant = 155 + moreHei
+            downSmallBoxHeight.constant = 95 + moreHei
+            
             /*
             let expireTimeStr = orderCheckStateObj.lm_time_expire!
             let serverTimeStr = orderCheckStateObj.server_time!
@@ -181,7 +195,7 @@ class TransactionResultVC: UIViewController {
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -231,6 +245,7 @@ class TransactionResultVC: UIViewController {
             teach4ImgV.isHidden = false
         } else if style == .ok {
             teach3ImgV.isHidden = false
+            payV.isHidden = true
         } else if style == .hiLife {
             teach2ImgV.isHidden = false
         }

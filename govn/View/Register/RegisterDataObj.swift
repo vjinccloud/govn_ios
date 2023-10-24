@@ -20,4 +20,6 @@ class RegisterDataObj: NSObject {
     var faceImg:UIImage!
     var passportImg:UIImage!
     var signImg:UIImage!
+    var birthday:String = ""
+    var arcDay:String = ""
 }

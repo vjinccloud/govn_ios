@@ -35,7 +35,7 @@ class MemberMainVC: UIViewController {
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_PointHistoryList;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -83,10 +83,10 @@ class MemberMainVC: UIViewController {
     }
     
     @IBAction func callAction(_ sender: Any) {
-        let phone = "0227955959"
-        let extensionNum = "2211"
+        let phone = "0287925880"
+        //let extensionNum = "2211"
         let cleanPhoneNumber = phone.components(separatedBy: CharacterSet.decimalDigits.inverted).joined(separator: "")
-        let urlString:String = "tel://\(cleanPhoneNumber),\(extensionNum)"
+        let urlString:String = "tel://\(cleanPhoneNumber)"
 
         if let phoneCallURL = URL(string: urlString) {
             if (UIApplication.shared.canOpenURL(phoneCallURL)) {
@@ -104,7 +104,7 @@ class MemberMainVC: UIViewController {
     
     @IBAction func aboutAction(_ sender: Any) {
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "PureWebVC") as? PureWebVC
-        nextVC?.setTitleAndCallURL(URL: "https://prod.indogo.link/tomcat_images/ABOUT_US-01.html", Title: NSLocalizedString("Profile Main About", comment: ""))
+        nextVC?.setTitleAndCallURL(URL: "https://govnprod.indogo.link/tomcat_images/GOVN_Info.html", Title: NSLocalizedString("Profile Main About", comment: ""))
         self.navigationController?.pushViewController(nextVC!, animated: true)
     }
     
@@ -114,9 +114,13 @@ class MemberMainVC: UIViewController {
     }
     
     @IBAction func faqAction(_ sender: Any) {
-        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "PureWebVC") as? PureWebVC
-        nextVC?.setTitleAndCallURL(URL: "https://prod.indogo.link/tomcat_images/REMIT_INFO.html", Title: NSLocalizedString("Profile Main Faq", comment: ""))
+        //改成到新畫面
+        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "SpecialPageVC") as? SpecialPageVC
         self.navigationController?.pushViewController(nextVC!, animated: true)
+        
+        //let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "PureWebVC") as? PureWebVC
+        //nextVC?.setTitleAndCallURL(URL: "https://govnprod.indogo.link/tomcat_images/GOVN_faq.html", Title: NSLocalizedString("Profile Main Faq", comment: ""))
+        //self.navigationController?.pushViewController(nextVC!, animated: true)
         
     }
     
@@ -139,7 +143,7 @@ class MemberMainVC: UIViewController {
         callL.text = NSLocalizedString("Profile Main Call", comment: "")
         aboutL.text = NSLocalizedString("Profile Main About", comment: "")
         termsL.text = NSLocalizedString("Profile Main Terms", comment: "")
-        faqL.text = NSLocalizedString("Profile Main Faq", comment: "")
+        faqL.text = NSLocalizedString("Debate Page Title", comment: "")
         logoutL.text = NSLocalizedString("Profile Main Logout", comment: "")
         
         memberImgV.contentMode = .scaleAspectFill

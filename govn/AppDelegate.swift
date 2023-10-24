@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var topMargin: CGFloat!
     var shopWebView:WKWebView!
     var shopWebBgV:UIView!
+    var blackWindow:UIView!
     var callUrlOnce = false
     
     //var topContainer:UIView!
@@ -105,6 +106,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var lastUrl = URL.init(string: "")
     var tempType:LoginFuncType!
     var rootController:ViewController!
+    
+    var checkRecipientName = ""
     
     //MARK: - Web Delegate
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -290,7 +293,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         floatingButton.frame = CGRect(origin: CGPoint(x: (window?.frame.size.width)!-65, y: (window?.frame.size.height)!-132), size: CGSize(width: 55, height: 55))
         floatingButton.imageView?.contentMode = .scaleToFill
         //floatingButton.setImage(UIImage.init(named: "question.png"), for: .normal)
-        floatingButton.setBackgroundImage(UIImage.init(named: "online_service.png"), for: .normal)
+        floatingButton.setBackgroundImage(UIImage.init(named: "service_phone.png"), for: .normal)
         floatingButton.backgroundColor = UIColor.clear
         floatingButton.layer.shadowColor = UIColor.black.cgColor
         floatingButton.layer.shadowRadius = 3
@@ -388,7 +391,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         titelL.textColor = .white
         
         let divs:CGFloat = (alertViewBg.frame.size.width - 3*85)/4
-        let ary:[String] = ["service_phone.png","line.png","messenger.png"] //phone-1.png
+        let ary:[String] = ["phone-1.png","line.png","messenger.png"] //phone-1.png
         let strAry:[String] = [NSLocalizedString("telephone", comment: ""),NSLocalizedString("line", comment: ""),NSLocalizedString("messenger", comment: "")]
         for i in 0..<3 {
             let x = divs + (divs + 85) * CGFloat(i)
@@ -417,7 +420,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     }
     
     @objc func callPhone() {
-        removeFloatingContainer()
+        if floatingContainer != nil {
+            removeFloatingContainer()
+        }
         /*
         let phone = "0287928773"
         let cleanPhoneNumber = phone.components(separatedBy: CharacterSet.decimalDigits.inverted).joined(separator: "")
@@ -429,10 +434,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
             }
         }*/
         
-        let phone = "0227955959"
-        let extensionNum = "2211"
+        let phone = "0287925880"
+        //let extensionNum = "2211"
         let cleanPhoneNumber = phone.components(separatedBy: CharacterSet.decimalDigits.inverted).joined(separator: "")
-        let urlString:String = "tel://\(cleanPhoneNumber),\(extensionNum)"
+        //let urlString:String = "tel://\(cleanPhoneNumber),\(extensionNum)"
+        let urlString:String = "tel://\(cleanPhoneNumber)"
 
         if let phoneCallURL = URL(string: urlString) {
             if (UIApplication.shared.canOpenURL(phoneCallURL)) {
@@ -442,7 +448,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     }
     
     @objc func callLine() {
-        removeFloatingContainer()
+        if floatingContainer != nil {
+            removeFloatingContainer()
+        }
         
         let urlString:String = "https://line.me/R/ti/p/%40vbo9560f"
 
@@ -454,7 +462,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     }
     
     @objc func callMessenger() {
-        removeFloatingContainer()
+        if floatingContainer != nil {
+            removeFloatingContainer()
+        }
         
         let urlString:String = "https://m.me/govndailoan"
 
@@ -472,12 +482,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     //MARK: -  Alamofire 設置為全局變量
     var alamofireManagerWithTimeout:Alamofire.SessionManager = {
+        let configuration = URLSessionConfiguration.default
+        //請求超時時間15秒
+        configuration.timeoutIntervalForRequest = 15
+        configuration.urlCache = nil
+        configuration.requestCachePolicy = .reloadIgnoringCacheData
+        
+        //let serverTrustPolicies: [String: ServerTrustPolicy] = ["prod.indogo.com.tw": .disableEvaluation]
+        let serverTrustPolicies: [String: ServerTrustPolicy] = [:]
+        let servertrustManager = ServerTrustPolicyManager(policies: serverTrustPolicies)
+        
+        return Alamofire.SessionManager(configuration: configuration, serverTrustPolicyManager: servertrustManager)
+    }()
+    
+    /*
+    var alamofireManagerWithTimeout:Alamofire.SessionManager = {
     let configuration = URLSessionConfiguration.default
          //請求超時時間15秒
          configuration.timeoutIntervalForRequest = 15
+        configuration.urlCache = nil
+        configuration.requestCachePolicy = .reloadIgnoringCacheData
          return Alamofire.SessionManager(configuration: configuration)
      }()
-    
+    */
     //MARK: - API
     func getNotice() {
         let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "page":1, "limit":9]
@@ -486,7 +513,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         AppDelegate.shared().noteListObjs = []
         
         let todoEndpoint: String = API_NoticeRecordList;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 
                 guard response.result.error == nil else {
@@ -538,7 +565,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         
         let todoEndpoint: String = API_BankList;
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 
                 guard response.result.error == nil else {
@@ -607,29 +634,91 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         userDefaults.synchronize()
     }
     
+    func aesWord(OriStr str:String, IsEncode encode:Bool) -> String {
+        var answerStr = ""
+        do {
+            
+            let password = SecurePSStr
+            let salt = SecureSaltStr.data(using: .utf8)! //AES256Crypter.randomSalt()
+            let iv = SecureIvStr.data(using: .utf8)!
+            //AES256Crypter.randomIv()
+            
+            let key = try AES256Crypter.createKey(password: password.data(using: .utf8)!, salt: salt)
+            let aes = try AES256Crypter(key: key, iv: iv)
+            
+            if encode {
+                let sourceData = str.data(using: .utf8)!
+                let encryptedData = try aes.encrypt(sourceData)
+                answerStr = encryptedData.base64EncodedString()
+                //String.init(data: encryptedData, encoding: .utf8)!
+            } else {
+                //let nowData = str.data(using: .utf8)!
+                let nowData = Data(base64Encoded: str, options: .ignoreUnknownCharacters)!
+                let decryptedData = try aes.decrypt(nowData)
+                answerStr = String.init(data: decryptedData, encoding: .utf8)!
+            }
+            
+            Dlog("Decrypted hex string: \(answerStr)")
+        } catch {
+            Dlog("Failed")
+            return ""
+        }
+        
+        return answerStr
+    }
+    
     public func rememberAccount(Account account:String, Pass pass:String) {
+        let userDefaults = UserDefaults.standard
+        
+        let convertStr = aesWord(OriStr: account, IsEncode: true)
+        let convertPassStr = aesWord(OriStr: pass, IsEncode: true)
+        
+        userDefaults.setValue(convertStr, forKey: "remeberAccount")
+        userDefaults.setValue(convertPassStr, forKey: "remeberPass")
+        userDefaults.synchronize()
+        /*
         let userDefaults = UserDefaults.standard
         userDefaults.setValue(account, forKey: "remeberAccount")
         userDefaults.setValue(pass, forKey: "remeberPass")
         userDefaults.synchronize()
+         */
     }
     
     public func getRemeberedAccount() -> String {
         let userDefaults = UserDefaults.standard
         if userDefaults.string(forKey: "remeberAccount") != nil {
-            return userDefaults.string(forKey: "remeberAccount")!
+            let str = userDefaults.string(forKey: "remeberAccount")!
+            let ansStr = aesWord(OriStr: str, IsEncode: false)
+            return ansStr
         } else {
             return ""
         }
+        
+        /*
+        let userDefaults = UserDefaults.standard
+        if userDefaults.string(forKey: "remeberAccount") != nil {
+            return userDefaults.string(forKey: "remeberAccount")!
+        } else {
+            return ""
+        }*/
     }
     
     public func getRemeberedPassword() -> String {
         let userDefaults = UserDefaults.standard
         if userDefaults.string(forKey: "remeberPass") != nil {
-            return userDefaults.string(forKey: "remeberPass")!
+            let str = userDefaults.string(forKey: "remeberPass")!
+            let ansStr = aesWord(OriStr: str, IsEncode: false)
+            return ansStr
         } else {
             return ""
         }
+        /*
+        let userDefaults = UserDefaults.standard
+        if userDefaults.string(forKey: "remeberPass") != nil {
+            return userDefaults.string(forKey: "remeberPass")!
+        } else {
+            return ""
+        }*/
     }
     
     public func removeSavedAccount() {
@@ -655,6 +744,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     public func rememberAarcNo(Account account:String) {
         let userDefaults = UserDefaults.standard
+        let convertStr = aesWord(OriStr: account, IsEncode: true)
+        userDefaults.setValue(convertStr, forKey: "remeberArcNo")
+        userDefaults.synchronize()
+    }
+    
+    public func getRemeberedAarcNo() -> String {
+        let userDefaults = UserDefaults.standard
+        if userDefaults.string(forKey: "remeberArcNo") != nil {
+            let str = userDefaults.string(forKey: "remeberArcNo")!
+            let ansStr = aesWord(OriStr: str, IsEncode: false)
+            return ansStr
+        } else {
+            return ""
+        }
+    }
+    
+    /*
+    public func rememberAarcNo(Account account:String) {
+        let userDefaults = UserDefaults.standard
         userDefaults.setValue(account, forKey: "remeberArcNo")
         userDefaults.synchronize()
     }
@@ -666,7 +774,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         } else {
             return ""
         }
-    }
+    }*/
     
     public func setHasReadPromo () {
         let userDefaults = UserDefaults.standard
@@ -1114,6 +1222,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     @objc func removeAlert () {
         alertViewContainer.removeFromSuperview()
+        alertViewContainer = nil
     }
     
     func getDocumentsDirectory() -> URL {
@@ -1139,6 +1248,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
             return UIImage.init(named: "profile_picture.png")!
         }
     }
+    
+    //MARK: - BlackWindow
+    func showBlackWindow() {
+        Dlog("BlackWindow Show")
+        if blackWindow != nil {
+            blackWindow.removeFromSuperview()
+        }
+        
+        let window = UIApplication.shared.keyWindow
+        blackWindow = UIView.init(frame: window!.bounds)
+        blackWindow.backgroundColor = .black
+        window?.addSubview(blackWindow)
+    }
+    
+    func hideBlackWindow() {
+        Dlog("BlackWindow Hide")
+        if blackWindow != nil {
+            blackWindow.removeFromSuperview()
+        }
+    }
 }
 
 extension AppDelegate : MessagingDelegate {
@@ -1150,9 +1279,9 @@ extension AppDelegate : MessagingDelegate {
     
     // [START refresh_token]
     
-    internal func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    internal func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(fcmToken)")
-        FirebaseToken = fcmToken
+        FirebaseToken = fcmToken ?? ""
         /*
         pushToken = fcmToken
         Messaging.messaging().subscribe(toTopic: "TOPIC_iOS") { error in
@@ -1163,4 +1292,27 @@ extension AppDelegate : MessagingDelegate {
         //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
     }
     
+}
+
+extension Alamofire.SessionManager{
+    @discardableResult
+    open func requestWithoutCache(
+        _ url: URLConvertible,
+        method: HTTPMethod = .post,
+        parameters: Parameters? = nil,
+        encoding: ParameterEncoding = URLEncoding.default,
+        headers: HTTPHeaders? = nil)// also you can add URLRequest.CachePolicy here as parameter
+        -> DataRequest
+    {
+        do {
+            var urlRequest = try URLRequest(url: url, method: method, headers: headers)
+            urlRequest.cachePolicy = .reloadIgnoringCacheData // <<== Cache disabled
+            let encodedURLRequest = try encoding.encode(urlRequest, with: parameters)
+            return request(encodedURLRequest)
+        } catch {
+            // TODO: find a better way to handle error
+            print(error)
+            return request(URLRequest(url: URL(string: "http://example.com/wrong_request")!))
+        }
+    }
 }

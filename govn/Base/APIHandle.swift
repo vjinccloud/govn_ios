@@ -114,7 +114,7 @@ class APIHandle {
         case API_SendSMS:
             sendSMS(DataStr: resultStr)
             break
-        case API_Register:
+        case API_Register, API_ResendRegisterSMS:
             sendRegisterSMS(DataStr: resultStr)
             break
         case API_NoticeRecordList:
@@ -147,7 +147,13 @@ class APIHandle {
         case API_AddRecipient:
             checkAddRecipientResult(DataStr: resultStr)
             break
+        case API_Check_recipient_v2:
+            checkAddRecipientResultV2(DataStr: resultStr)
+            break
         case API_Search_recipient:
+            chectSearchRecopoentList(DataStr: resultStr)
+            break
+        case API_Search_recipient_ids:
             chectSearchRecopoentList(DataStr: resultStr)
             break
         case API_UpdateAddRecipient:
@@ -209,6 +215,18 @@ class APIHandle {
             }
         }
         
+    }
+    
+    private func checkAddRecipientResultV2(DataStr dataStr:String) {
+        Dlog("checkAddRecipientResultV2 DataStr a = \(dataStr)")
+        //目前直接用zero width空格
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        for j in 0..<ary.count {
+            if j==1 {
+                AppDelegate.shared().checkRecipientName = ary[1]
+                Dlog("checkAddRecipientResultV2 DataStr b = \(AppDelegate.shared().checkRecipientName)")
+            }
+        }
     }
     
     private func checkTransactionResult(DataStr dataStr:String) {

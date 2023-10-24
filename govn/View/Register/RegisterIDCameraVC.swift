@@ -264,7 +264,7 @@ class RegisterIDCameraVC: UIViewController, UINavigationControllerDelegate, AVCa
             backL.text = NSLocalizedString("Register ID Photo Title Front", comment: "")
         } else if takePhotoType == PhotoIDType.back || takePhotoType == PhotoIDType.backFromEdit {
             backL.text = NSLocalizedString("Register ID Photo Title Back", comment: "")
-            bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
+            bottomL.text = NSLocalizedString("maek sure all barcode in box", comment: "")
         }
         
         if self.view.frame.size.width<321 {

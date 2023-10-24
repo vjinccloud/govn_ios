@@ -25,6 +25,12 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     @IBOutlet weak var accountBtn: UIButton!
     @IBOutlet weak var accountTextfield: UITextField!
     
+    @IBOutlet weak var birthView: UIView!
+    @IBOutlet weak var birthBtn: UIButton!
+    @IBOutlet weak var birthTextfield: UITextField!
+    
+    @IBOutlet weak var expiredTextfield: UITextField!
+    
     @IBOutlet weak var phoneView: UIView!
     @IBOutlet weak var phoneBtn: UIButton!
     @IBOutlet weak var phoneTextfield: UITextField!
@@ -53,9 +59,20 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     
     @IBOutlet weak var scanARC: UILabel!
     
+    @IBOutlet weak var expiredView: UIView!
+    var birthDatePicker:UIDatePicker!
+    var expiredDatePicker:UIDatePicker!
+    var nowTextIdx = 0
+    
     var hasSharedCode = false
     var hasMeCode = false
     var meImg:UIImage!
+    
+    var birthDate:Date = Date()
+    var expiredDate:Date = Date()
+    
+    @IBOutlet weak var expiredIntroL: UILabel!
+    @IBOutlet weak var expiredPlaceholderL: UILabel!
     
     //MARK: - Button-Action
     @IBAction func shareCodeInputAction(_ sender: Any) {
@@ -77,6 +94,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         } else {
             AppDelegate.shared().tempRegisterObj.shareCode = ""
         }
+        AppDelegate.shared().tempRegisterObj.birthday = birthTextfield.text!
+        AppDelegate.shared().tempRegisterObj.arcDay = expiredTextfield.text!
         
         let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterIDTakePhotoVC") as? RegisterIDTakePhotoVC
         self.navigationController?.pushViewController(nextVC!, animated: true)
@@ -139,7 +158,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         passTextField.isSecureTextEntry.toggle()
         
         if passTextField.isSecureTextEntry {
-            showPassBtn.setBackgroundImage(UIImage.init(named: "noview_b"), for: .normal)
+            showPassBtn.setBackgroundImage(UIImage.init(named: "noview_w"), for: .normal)
         } else {
             showPassBtn.setBackgroundImage(UIImage.init(named: "view_w"), for: .normal)
         }
@@ -149,7 +168,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         rePassTextField.isSecureTextEntry.toggle()
         
         if rePassTextField.isSecureTextEntry {
-            showRePassBtn.setBackgroundImage(UIImage.init(named: "noview_b"), for: .normal)
+            showRePassBtn.setBackgroundImage(UIImage.init(named: "noview_w"), for: .normal)
         } else {
             showRePassBtn.setBackgroundImage(UIImage.init(named: "view_w"), for: .normal)
         }
@@ -209,6 +228,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     
     @objc func nextBarAction() {
         if accountTextfield.isFirstResponder {
+            birthTextfield.becomeFirstResponder()
+        } else if birthTextfield.isFirstResponder {
             phoneTextfield.becomeFirstResponder()
         } else if phoneTextfield.isFirstResponder {
             passTextField.becomeFirstResponder()
@@ -222,6 +243,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     //MARK: - Text Delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == accountTextfield {
+            birthTextfield.becomeFirstResponder()
+        } else if textField == birthTextfield {
             phoneTextfield.becomeFirstResponder()
         } else if textField == phoneTextfield {
             passTextField.becomeFirstResponder()
@@ -239,6 +262,11 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             topScrollView.contentOffset = CGPoint.init(x: 0, y: accountView.frame.origin.y)
             accountBtn.backgroundColor = Color_Main_LightGray
             accountTextfield.textColor = .black
+        } else if textField == birthTextfield {
+            nowTextIdx = 0
+            topScrollView.contentOffset = CGPoint.init(x: 0, y: birthView.frame.origin.y)
+            birthBtn.backgroundColor = Color_Main_LightGray
+            birthTextfield.textColor = .black
         } else if textField == phoneTextfield {
             topScrollView.contentOffset = CGPoint.init(x: 0, y: phoneView.frame.origin.y)
             phoneBtn.backgroundColor = Color_Main_LightGray
@@ -251,6 +279,9 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             topScrollView.contentOffset = CGPoint.init(x: 0, y: rePassView.frame.origin.y)
             rePassBtn.backgroundColor = Color_Main_LightGray
             rePassTextField.textColor = .black
+        } else if textField == expiredTextfield {
+            nowTextIdx = 1
+            topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
         }
     }
     
@@ -264,6 +295,14 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             } else {
                 accountBtn.backgroundColor = Color_Main_LightGray
                 accountTextfield.textColor = .black
+            }
+        } else if textField == birthTextfield {
+            if textField.text!.count == 0 {
+                birthBtn.backgroundColor = Color_Main_DarkGray
+                birthTextfield.textColor = .white
+            } else {
+                birthBtn.backgroundColor = Color_Main_LightGray
+                birthTextfield.textColor = .black
             }
         } else if textField == phoneTextfield {
             if textField.text!.count == 0 {
@@ -301,6 +340,66 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         }
         return true
     }*/
+    
+    //MARK: - Date Picker
+    func addDatePicker() {
+        
+        let dateNow = Date()
+        
+        if true {
+            let datePicker = UIDatePicker.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            datePicker.datePickerMode = .date
+            
+            //datePicker.locale = NSLocale(localeIdentifier: "zh_TW") as Locale
+            datePicker.date = dateNow
+            datePicker.maximumDate = dateNow
+            birthTextfield.inputView = datePicker
+            let doneButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(self.datePickerDone))
+            let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
+            toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
+            birthTextfield.inputAccessoryView = toolBar
+            birthDatePicker = datePicker
+            if #available(iOS 14, *) {
+                datePicker.preferredDatePickerStyle = .wheels
+            }
+        }
+        
+        if true {
+            let datePicker = UIDatePicker.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            datePicker.datePickerMode = .date
+            
+            //datePicker.locale = NSLocale(localeIdentifier: "zh_TW") as Locale
+            datePicker.date = dateNow
+            datePicker.minimumDate = dateNow
+            expiredTextfield.inputView = datePicker
+            let doneButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(self.datePickerDone))
+            let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
+            toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
+            expiredTextfield.inputAccessoryView = toolBar
+            expiredDatePicker = datePicker
+            if #available(iOS 14, *) {
+                datePicker.preferredDatePickerStyle = .wheels
+            }
+        }
+        
+    }
+    
+    @objc func datePickerDone() {
+        birthTextfield.resignFirstResponder()
+        expiredTextfield.resignFirstResponder()
+        
+        if nowTextIdx == 0 {
+            let date = birthDatePicker.date
+            birthDate = date
+            birthTextfield.text = date.toString()
+        } else if nowTextIdx == 1 {
+            let date = expiredDatePicker.date
+            expiredPlaceholderL.isHidden = true
+            expiredDate = date
+            expiredTextfield.text = date.toString()
+        }
+    }
+    
     //MARK: - Utility
     func checkTextFormat() -> Bool {
         
@@ -344,7 +443,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         let text = arcCodeL.text!
         
         if text.count != 10 {
-            pass = false
+            return false
         }
         
         let singleWord = text.getSubString(Start: 1, EndNotInclude: 2).lowercased()
@@ -406,7 +505,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     func checkNextBtnState(CheckText checkNow:Bool) {
         var pass = true
         
-        if accountTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
+        if accountTextfield.text?.count == 0 || birthTextfield.text?.count == 0 || expiredTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
             pass = false
         } else if passTextField.text != rePassTextField.text {
             pass = false
@@ -470,6 +569,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         
         backL.text = NSLocalizedString("back", comment: "")
         accountBtn.layer.cornerRadius = accountBtn.frame.size.height/2
+        birthBtn.layer.cornerRadius = birthBtn.frame.size.height/2
         phoneBtn.layer.cornerRadius = phoneBtn.frame.size.height/2
         passBtn.layer.cornerRadius = passBtn.frame.size.height/2
         rePassBtn.layer.cornerRadius = rePassBtn.frame.size.height/2
@@ -487,15 +587,35 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         //setShareCode(Code: "FD30471099")
         showShareCodeInputview()
         
+        accountBtn.layer.borderWidth = 0.5
+        birthBtn.layer.borderWidth = 0.5
+        phoneBtn.layer.borderWidth = 0.5
+        passBtn.layer.borderWidth = 0.5
+        rePassBtn.layer.borderWidth = 0.5
+        
+        accountBtn.layer.borderColor = Color_Main_LightGray.cgColor
+        birthBtn.layer.borderColor = Color_Main_LightGray.cgColor
+        phoneBtn.layer.borderColor = Color_Main_LightGray.cgColor
+        passBtn.layer.borderColor = Color_Main_LightGray.cgColor
+        rePassBtn.layer.borderColor = Color_Main_LightGray.cgColor
+        
         accountTextfield.keyboardType = .asciiCapable
         passTextField.keyboardType = .asciiCapable
         rePassTextField.keyboardType = .asciiCapable
         arcTextfield.autocapitalizationType = .allCharacters
         accountTextfield.delegate = self
+        birthTextfield.delegate = self
         phoneTextfield.delegate = self
         passTextField.delegate = self
         rePassTextField.delegate = self
         arcTextfield.isEnabled = false
+        expiredTextfield.delegate = self
+        
+        birthTextfield.inputAccessoryView = generateToolBar()
+        expiredTextfield.inputAccessoryView = generateToolBar()
+        
+        expiredIntroL.text = NSLocalizedString("Register Expired Title", comment: "")
+        expiredPlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
         
         accountTextfield.inputAccessoryView = generateToolBar()
         phoneTextfield.inputAccessoryView = generateToolBar()
@@ -505,6 +625,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         errorView.isHidden = true
         
         accountTextfield.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Register Input Name", comment: ""), attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        birthTextfield.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Register Btn Birth", comment: ""), attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        
         phoneTextfield.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Register Input Phone", comment: ""), attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         passTextField.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Register Input Pass", comment: ""), attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         rePassTextField.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Register Input rePass", comment: ""), attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
@@ -521,7 +643,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         checkNextBtnState(CheckText: false)
         #if targetEnvironment(simulator)
         //模擬器直接秀下一步
-        self.simulatorNextAction()
+        //self.simulatorNextAction()
         #else
         //--should--
         if DevMode {
@@ -537,6 +659,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         if AppDelegate.shared().hasArcResultAndGotoRegister {
             setArcCodeString(Code: AppDelegate.shared().arcScanReulstForRegister)
         }
+        
+        addDatePicker()
     }
     
     func setArcText(Text text:String) {
@@ -558,7 +682,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         phoneTextfield.text = "0935499332"
         passTextField.text = "a12345"
         rePassTextField.text = "a12345"
-        setArcCodeString(Code: "XC00000092") //XX00000037
+        setArcCodeString(Code: "XD00000092") //XX00000037
         
         checkNextBtnState(CheckText: true)
     }

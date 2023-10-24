@@ -15,7 +15,7 @@ pod 'ImageSlideshow', '~> 1.7.0'
 pod 'ImageSlideshow/Kingfisher'
 pod 'Firebase/Core'
 pod 'Firebase/Messaging'
-pod 'Firebase/Analytics'
+# pod 'Firebase/Analytics'
 pod "KingfisherWebP"
 pod 'iProgressHUD', '~> 1.1.1'
 pod 'PKHUD'

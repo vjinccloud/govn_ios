@@ -203,6 +203,27 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
+        guard let text = textField.text else{
+            return true
+        }
+        
+        if textField == accountTextfield {
+            if !string.checkAlphabetDigit() {
+                return false
+            }
+        }
+        
+        if textField == bankCodeTextfield {
+            if !string.checkNumber() {
+                return false
+            }
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
+        
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
         reloadDataAndTable(Str: newString)
@@ -228,7 +249,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -251,9 +272,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                     self.tempRecipientObj.recipient_name = AppDelegate.shared().tempRecipientObj.recipient_name
                     
                     if true {
-                        AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
-                        AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
-                        AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
+                        
                         /*
                         var storyboardId = "TransactionInfoConfirmVC"
                         if AppDelegate.shared().deviceSmall {
@@ -272,7 +291,11 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                                 AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
                                 
                                 nextVC!.canEnterName = true
+                            } else {
+                                AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
                             }
+                            AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
+                            AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
                             
                             self.navigationController?.pushViewController(nextVC!, animated: true)
                         } else {
@@ -312,9 +335,138 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         }
     }
     
+    //改成先檢查才會新增
+    func checkRecipient() {
+        //找出 bank code
+        let serchBankobj = UtilityTool().searchBankObj(BankName: bankCodeTextfield.text!)
+        if serchBankobj.bank_code == "" {
+            return
+        }
+        
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":serchBankobj.bank_code!, "bank_acc":accountTextfield.text!]
+        let headers: HTTPHeaders = [:]
+        closeAll()
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_Check_recipient_v2;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("(API_Check_recipient_v2)responseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    self.tempRecipientObj.bank_acc = self.accountTextfield.text!
+                    self.tempRecipientObj.bank_code = serchBankobj.bank_code!
+                    self.tempRecipientObj.recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
+                    self.tempRecipientObj.recipient_name = AppDelegate.shared().tempRecipientObj.recipient_name
+                    
+                    if true {
+                        
+                        /*
+                        var storyboardId = "TransactionInfoConfirmVC"
+                        if AppDelegate.shared().deviceSmall {
+                            storyboardId = "TransactionInfoConfirmVCSmall"
+                        }
+                        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
+                        self.navigationController?.pushViewController(nextVC!, animated: true)*/
+                        
+                        //如果是Bank，則要多一個確認銀行與名稱的頁面
+                        if self.topBarSelectIdx==0 {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddRecipientBankAndAccountVC") as? AddRecipientBankAndAccountVC
+                            nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                            
+                            if AppDelegate.shared().checkRecipientName == "" {
+                                //先進去下一頁，然後給改
+                                AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
+                                
+                                nextVC!.canEnterName = true
+                            } else {
+                                self.tempRecipientObj.recipient_name = AppDelegate.shared().checkRecipientName
+                            }
+                            
+                            AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
+                            AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
+                            AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
+                            
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        } else {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
+                            nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        }
+                    } else {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    
+                } else if result == ResponseState.failed {
+                    if self.topBarSelectIdx==0 {
+                        //先進去下一頁，然後給改
+                        AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
+                        self.tempRecipientObj.bank_acc = self.accountTextfield.text!
+                        self.tempRecipientObj.bank_code = serchBankobj.bank_code!
+                        self.tempRecipientObj.recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
+                        self.tempRecipientObj.recipient_name = AppDelegate.shared().tempRecipientObj.recipient_name
+                        
+                        if true {
+                            AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
+                            AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
+                            AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
+                            
+                            //如果是Bank，則要多一個確認銀行與名稱的頁面
+                            if self.topBarSelectIdx==0 {
+                                let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddRecipientBankAndAccountVC") as? AddRecipientBankAndAccountVC
+                                nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                                nextVC!.canEnterName = true
+                                self.navigationController?.pushViewController(nextVC!, animated: true)
+                            }
+                        }
+                    } else {
+                        AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                    }
+                } else if result == ResponseState.error {
+                    //先進去下一頁，然後給改
+                    AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
+                    self.tempRecipientObj.bank_acc = self.accountTextfield.text!
+                    self.tempRecipientObj.bank_code = serchBankobj.bank_code!
+                    self.tempRecipientObj.recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
+                    self.tempRecipientObj.recipient_name = AppDelegate.shared().tempRecipientObj.recipient_name
+                    
+                    if true {
+                        AppDelegate.shared().transactionObj.recipientObj = self.tempRecipientObj
+                        AppDelegate.shared().tempRecipientObj = self.tempRecipientObj
+                        AppDelegate.shared().tempRecipientObj.recipient_type.append(1)
+                        
+                        //如果是Bank，則要多一個確認銀行與名稱的頁面
+                        if self.topBarSelectIdx==0 {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddRecipientBankAndAccountVC") as? AddRecipientBankAndAccountVC
+                            nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                            nextVC!.canEnterName = true
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        }
+                    }
+                    
+                }
+        }
+    }
+    
     //MARK: - Button-Action
     @IBAction func nextAction(_ sender: Any) {
-        addRecipient()
+        //addRecipient()
+        checkRecipient()
     }
     
     @IBAction func hideTextAction(_ sender: Any) {

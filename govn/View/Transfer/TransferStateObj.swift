@@ -31,6 +31,8 @@ class TransferStateObj: NSObject {
     var recipient_type:String! = "" //1: 銀行轉帳(To Bank Account), 2:櫃台, 3:送到家
     var address:String! = ""
     var phone:String! = ""
+    var id_card_no:String! = ""
+    var currency:String! = ""
     
     public func setValueByOrder(Order orderNum:Int, Value valueStr:String) {
         
@@ -78,10 +80,14 @@ class TransferStateObj: NSObject {
             address = valueStr
         } else if orderNum == 21 {
             phone = valueStr
+        } else if orderNum == 22 {
+            id_card_no = valueStr
+        } else if orderNum == 23 {
+            currency = valueStr
         }
     }
     
     public func printSelf() {
-        Dlog("payment_info(\(payment_info ?? "")), transfer_status_id(\(transfer_status_id ?? "")), transfer_status_name(\(transfer_status_name ?? "")), recipient_name(\(recipient_name ?? "")), total(\(total ?? "")), lm_time_pending(\(lm_time_pending ?? "")), transfer_amount_idr(\(transfer_amount_idr ?? "")), to_acc(\(to_acc ?? "")), from_acc(\(from_acc ?? "")), lm_time_transfer(\(lm_time_transfer ?? "")), kurs_value(\(kurs_value ?? "")), exchange_id(\(exchange_id ?? "")), old_kurs_value(\(old_kurs_value ?? "")), diff_kurs_value(\(diff_kurs_value ?? "")), lm_time_paid(\(lm_time_paid ?? "")), bank_code(\(bank_code ?? "")), recipient_id(\(recipient_id ?? "")), mini_mart_id(\(mini_mart_id ?? "")), lm_time_fail(\(lm_time_fail ?? ""))")
+        Dlog("payment_info(\(payment_info ?? "")), transfer_status_id(\(transfer_status_id ?? "")), transfer_status_name(\(transfer_status_name ?? "")), recipient_name(\(recipient_name ?? "")), total(\(total ?? "")), lm_time_pending(\(lm_time_pending ?? "")), transfer_amount_idr(\(transfer_amount_idr ?? "")), to_acc(\(to_acc ?? "")), from_acc(\(from_acc ?? "")), lm_time_transfer(\(lm_time_transfer ?? "")), kurs_value(\(kurs_value ?? "")), exchange_id(\(exchange_id ?? "")), old_kurs_value(\(old_kurs_value ?? "")), diff_kurs_value(\(diff_kurs_value ?? "")), lm_time_paid(\(lm_time_paid ?? "")), bank_code(\(bank_code ?? "")), recipient_id(\(recipient_id ?? "")), mini_mart_id(\(mini_mart_id ?? "")), lm_time_fail(\(lm_time_fail ?? "")), id_card_no(\(id_card_no ?? "")), currency(\(currency ?? ""))")
     }
 }

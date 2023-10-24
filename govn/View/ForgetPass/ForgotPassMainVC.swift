@@ -13,6 +13,7 @@ class ForgotPassMainVC: UIViewController {
     @IBOutlet weak var backL: UILabel!
     @IBOutlet weak var topL: UILabel!
     @IBOutlet weak var introL: UILabel!
+    @IBOutlet weak var scanTitleL: UILabel!
     
     //MARK: - Button-Action
     @IBAction func nextAction(_ sender: Any) {
@@ -35,6 +36,7 @@ class ForgotPassMainVC: UIViewController {
         backL.text = NSLocalizedString("back", comment: "")
         topL.text = NSLocalizedString("top for forgoet main", comment: "")
         introL.text = NSLocalizedString("intro for forgoet main", comment: "")
+        scanTitleL.text = NSLocalizedString("Scan Title Label", comment: "")
         
         AppDelegate.shared().hideTopButton()
     }

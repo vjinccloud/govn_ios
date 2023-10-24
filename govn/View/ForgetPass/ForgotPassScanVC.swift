@@ -81,7 +81,7 @@ class ForgotPassScanVC: UIViewController, UINavigationControllerDelegate, AVCapt
                 
                 let window = UIApplication.shared.keyWindow
                 let customAlert = CustomAlertView.init(frame: self.view.frame)
-                customAlert.initSimpleAlert(Title: "", Content: NSLocalizedString("scan format wrong" , comment: ""), NextBtn1Str: NSLocalizedString("ok" , comment: ""))
+                customAlert.initSimpleAlert(Title: "", Content: NSLocalizedString("scan format wrong" , comment: ""), NextBtn1Str: NSLocalizedString("ok2" , comment: ""))
                 window!.addSubview(customAlert)
                 customAlert.customDelegate = self
             }
@@ -104,7 +104,7 @@ class ForgotPassScanVC: UIViewController, UINavigationControllerDelegate, AVCapt
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_CheckMemExist;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -322,6 +322,13 @@ class ForgotPassScanVC: UIViewController, UINavigationControllerDelegate, AVCapt
         scanL.text = NSLocalizedString("scanning", comment: "")
         bottomL.text = NSLocalizedString("bottom for forgoet sec", comment: "")
         scanL.isHidden = true
+        
+        #if targetEnvironment(simulator)
+        if countDownTimer == nil {
+            countDownTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(countDownEnd), userInfo: nil, repeats: false)
+        }
+        #else
+        #endif
     }
     
     @objc func countDownEnd() {

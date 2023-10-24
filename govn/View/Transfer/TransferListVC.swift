@@ -93,7 +93,8 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 }
                 
                 cell.downType2L1.text = ""
-                let str = cellData.recipient_name + "  " + NSLocalizedString("transtate CP DTD ID", comment: "") + ": " + cellData.recipient_id
+                //--shoud--
+                let str = cellData.recipient_name + "  CMND: " + cellData.id_card_no
                 let attributedString = NSMutableAttributedString(string: str);
                 attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 14), range: NSMakeRange(0, cellData.recipient_name.count));
                 cell.downType2L1.attributedText = attributedString
@@ -103,7 +104,14 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 let totalvnd = Int((cellData.kurs_value as NSString).floatValue * (cellData.transfer_amount_idr as NSString).floatValue)
                 let totalstr = "\(totalvnd)"
                 
-                cell.downType2L4.text = "VND " + totalstr.stringToIntDecimalString()
+                if cellData.recipient_type == "3" {
+                    cell.downType2L4.text = cellData.currency + " " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                    //totalstr.stringToIntDecimalString()
+                } else {
+                    cell.downType2L4.text = "VND " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                    //totalstr.stringToIntDecimalString()
+                }
+                
                 cell.downType2L5.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
             }
         }
@@ -171,32 +179,50 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
             
             if cellData.recipient_type == "1" {
                 cell.failType2V.isHidden = true
-                
+                Dlog("failed 1")
+                cellData.printSelf()
                 cell.failNameL.text = cellData.recipient_name
                 cell.failIDL.text = cellData.to_acc
-                cell.failValueL.text = "IDR " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                //cell.failValueL.text = "NTD " + cellData.transfer_amount_idr.stringToIntDecimalString() failType2L4
+                cell.failValueL.text = "\(cellData.currency!) " + cellData.transfer_amount_idr.stringToIntDecimalString()
                 cell.failNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
                 
             } else {
                 cell.failType2V.isHidden = false
-                
+                Dlog("failed 2")
+                cellData.printSelf()
                 cell.failType2L1.text = ""
-                let str = cellData.recipient_name + "  " + "ID: " + cellData.recipient_id
+                //--should--
+                //let str = cellData.recipient_name + "  " + "ID: " + cellData.recipient_id
+                let str = cellData.recipient_name + "  " + "CMND: " + cellData.id_card_no
                 let attributedString = NSMutableAttributedString(string: str);
                 attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 14), range: NSMakeRange(0, cellData.recipient_name.count));
                 cell.failType2L1.attributedText = attributedString
                 
                 cell.failType2L2.text = cellData.phone
                 cell.failType2L3.text = cellData.address
-                cell.failType2L4.text = "TWD " + cellData.total.stringToIntDecimalString()
+                cell.failType2L4.text = "\(cellData.currency!) " + cellData.transfer_amount_idr.stringToIntDecimalString()
                 cell.failType2L5.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
             }
             
         } else {
+            
             cell.barNumberV.isHidden = true
             cell.barTimeL.isHidden = false
             cell.pureTextV.isHidden = true
             cell.upV.isHidden = false
+            cell.upV.alpha = 1
+            cell.failV.isHidden = true
+            
+            if cellOrderCheckData.mini_mart_id == "1" {
+                cell.upIconIgV.image = UIImage.init(named: "711.png")
+            } else if cellOrderCheckData.mini_mart_id == "2" {
+                cell.upIconIgV.image = UIImage.init(named: "fanilymart.png")
+            } else if cellOrderCheckData.mini_mart_id == "3" {
+                cell.upIconIgV.image = UIImage.init(named: "okmart.png")
+            } else if cellOrderCheckData.mini_mart_id == "4" {
+                cell.upIconIgV.image = UIImage.init(named: "hilife.png")
+            }
             
             var timeStr = cellOrderCheckData.lm_time_paid!
             if cellOrderCheckData.order_status == "2" {
@@ -234,7 +260,6 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         let cellOrderCheckData = showOrderCheckDataList[realIdx]
         
         if cellOrderCheckData.order_status == "5" {
-            AppDelegate.shared().showFloatingContainer()
             return
         }
         
@@ -269,7 +294,7 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -294,17 +319,28 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         }
     }
     
-    public func getTransferList() {
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
+    /*
+    public func getAllOrdersDetail() {
+        if AppDelegate.shared().transferStateListObjs.count==0 {
+            return
+        }
+        
+        var paymentAry:[String] = []
+        for i in 0..<AppDelegate.shared().transferStateListObjs.count {
+            let obj = AppDelegate.shared().transferStateListObjs[i]
+            paymentAry.append(obj.payment_info)
+        }
+        
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "payment_info":paymentAry]
         let headers: HTTPHeaders = [:]
         closeAll()
         AppDelegate.shared().addLoadingView()
         
-        let todoEndpoint: String = API_TransferHistory;
+        let todoEndpoint: String = API_OrderCheckMuilti;
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -318,6 +354,41 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 
                 let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
                 Dlog("responseStr = \(responseStr ?? "")")
+                
+                AppDelegate.shared().transferOrderCheckListObjs = []
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    self.reloadDataAndTable(Str: self.searchTextfield.text!)
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+    }*/
+    
+    public func getTransferList() {
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
+        let headers: HTTPHeaders = [:]
+        closeAll()
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_TransferHistory;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("API_TransferHistory responseStr = \(responseStr ?? "")")
                 
                 AppDelegate.shared().transferStateListObjs = []
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
@@ -364,6 +435,19 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        guard let text = textField.text else{
+            return true
+        }
+        
+        if !string.checkAlphabetDigitAndSpace() {
+            return false
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
         
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         reloadDataAndTable(Str: newString)

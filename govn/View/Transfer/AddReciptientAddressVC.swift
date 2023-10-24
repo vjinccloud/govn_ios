@@ -1,6 +1,5 @@
 //
 //  AddReciptientAddressVC.swift
-//  govn
 //
 //  Created by mac on 2021/1/2.
 //  Copyright © 2021 DIM. All rights reserved.
@@ -210,20 +209,83 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
     func textFieldDidEndEditing(_ textField: UITextField) {
         topScrollView.contentOffset = CGPoint.init(x: 0, y: 0)
         
+        if textField == field3 {
+            Dlog("check now")
+            if !checkLeagleCharacter() {
+                showNameAlert()
+                return
+            }
+        }
+        
         checkBtnState()
+    }
+    
+    func showNameAlert() {
+        if AppDelegate.shared().alertViewContainer != nil {
+            return
+        }
+        AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("No illeagal Words in name", comment: ""))
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
+        guard let text = textField.text else{
+            return true
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
+        
         if textField == field1 {
             searchRecipient(Text: newString)
+        } else if textField == field3 {
+            //改成轉移焦點與最後一步時檢查
+            return true
+            /*
+            var pass = true
+            let words = newString
+            let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ,./-]+")
+            pass = pred.evaluate(with: words)
+            
+            if let char = string.cString(using: String.Encoding.utf8) {
+                    let isBackSpace = strcmp(char, "\\b")
+                    if (isBackSpace == -92) {
+                        print("Backspace was pressed")
+                        pass = true
+                    }
+            }
+            
+            if !pass {
+                if string == "," || string == "." || string == "/" || string == "-" {
+                    pass = true
+                }
+            }
+            
+            if !pass {
+                return false
+            }*/
         }
         
         checkBtnState()
         return true
 
+    }
+    
+    func checkLeagleCharacter() -> Bool {
+        var pass = true
+        let words = field3.text
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ,./-]+")
+        pass = pred.evaluate(with: words)
+        
+        if field3.text?.count==0 {
+            pass = true
+        }
+        
+        return pass
     }
     
     //MARK: - API
@@ -237,7 +299,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -295,7 +357,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { [self] response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -345,6 +407,12 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
     
     //MARK: - Button-Action
     @IBAction func nextAction(_ sender: Any) {
+        
+        if !checkLeagleCharacter() {
+            showNameAlert()
+            return
+        }
+        /*
         //地址只能填英數字加上 / -
         var pass = true
         var words = field3.text
@@ -356,7 +424,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         if !pass {
             AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Input Error Address", comment: ""))
             return
-        }
+        }*/
         
         addRecipientStep2()
     }
@@ -403,6 +471,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         field1.delegate = self
         field2.delegate = self
         field3.delegate = self
+        field3.autocorrectionType = .no
         
         let tempWindow = UIApplication.shared.keyWindow
         pickBackView = UIView(frame: CGRect(x: 0, y: (tempWindow?.frame.height)!, width: view.frame.width, height: 260))
@@ -458,6 +527,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         topBarSelectIdx = AppDelegate.shared().transactionObj.recipient_type-1
         initTopBar()
         
+        /*
         if AppDelegate.shared().tempTransferChoseMode {
             
             field3.text = AppDelegate.shared().tempRecipientObj.address
@@ -483,7 +553,37 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                 }
             }
             checkBtnState()
+        }*/
+        
+        if AppDelegate.shared().tempRecipientObj.address != "" {
+            field3.text = AppDelegate.shared().tempRecipientObj.address
         }
+        
+        if AppDelegate.shared().tempRecipientObj.province_id != "" {
+            //比對省份
+            let ori = AppDelegate.shared().tempRecipientObj.province_id
+            for i in 0..<AppDelegate.shared().provinceData.count {
+                let str = AppDelegate.shared().provinceData[i].province_id
+                if ori == str {
+                    choseProvinceIdx = i
+                    field1.text = AppDelegate.shared().provinceData[i].province_name
+                    break
+                }
+            }
+        }
+            
+        if AppDelegate.shared().tempRecipientObj.district_id != "" {
+            let ori = AppDelegate.shared().tempRecipientObj.district_id
+            for i in 0..<AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count {
+                let str = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_id
+                if ori == str {
+                    choseDistrictIdx = i
+                    field2.text = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_name
+                    break
+                }
+            }
+        }
+        checkBtnState()
     }
     
 

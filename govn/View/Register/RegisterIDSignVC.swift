@@ -61,6 +61,8 @@ class RegisterIDSignVC: UIViewController {
             multipartFormData.append(UtilityTool().sha256(Code: obj.passwaord!).data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "password")
             multipartFormData.append(obj.shareCode.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "share_member_id")
             
+            multipartFormData.append(obj.arcDay.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "arc_expire_date")
+            multipartFormData.append(obj.birthday.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "birthday")
             
             multipartFormData.append(obj.frontImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "arc", fileName: "arc.jpg", mimeType: "image/jpg")
             multipartFormData.append(obj.backImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "arc_back", fileName: "arc_back.jpg", mimeType: "image/jpg")
@@ -76,6 +78,7 @@ class RegisterIDSignVC: UIViewController {
                 upload.response { response in
                     
                     AppDelegate.shared().removeLoadingView()
+                    AppDelegate.shared().forgotPassTempPhone = obj.phoneNum!
                     
                     guard response.error == nil else {
                         // got an error in getting the data, need to handle it

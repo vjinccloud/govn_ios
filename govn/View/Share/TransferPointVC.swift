@@ -56,7 +56,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     
     //MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return AppDelegate.shared().transferFriendListObj.count
+         return AppDelegate.shared().transferStepOneListObj.count
      }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -65,7 +65,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
      
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = tableView.dequeueReusableCell(withIdentifier: "TransferMemberChoseTableViewCell", for: indexPath) as! TransferMemberChoseTableViewCell
-       let cellData = AppDelegate.shared().transferFriendListObj[indexPath.row]
+       let cellData = AppDelegate.shared().transferStepOneListObj[indexPath.row]
        if cellData.memberStyle == .normal {
            cell.nameL.text = cellData.name
            cell.phoneL.text = phoneTextfield.text
@@ -95,7 +95,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -131,7 +131,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         AppDelegate.shared().transferStepOneListObj = []
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -148,13 +148,14 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                 
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "\(mode)")
                 if result == ResponseState.ok {
+                    /*
                     if mode == 1 {
                         //self.checkTransferFirstStep(Mode: 2)
                         self.transferSecondStep()
                         return
-                    }
+                    }*/
                     
-                    let count = AppDelegate.shared().transferFriendListObj.count
+                    let count = AppDelegate.shared().transferStepOneListObj.count  //transferFriendListObj
                     
                     if count == 0 {
                         self.showAlertWithText(Title: NSLocalizedString("Point Transfer Alert No Member Title", comment: ""), Content: NSLocalizedString("Point Transfer Alert No Member Content", comment: ""))
@@ -194,7 +195,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -212,7 +213,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
                 if result == ResponseState.ok {
                     self.transferSucceed = true
-                    self.showAlertWithText(Title: NSLocalizedString("Point Transfer Step2 Successed SubTitle", comment: ""), Content: NSLocalizedString("Point Transfer Step2 Successed Content A", comment: "") + self.pointTextfield.text! + NSLocalizedString("Point Transfer Step2 Successed Content B", comment: ""))
+                    self.showAlertWithText(Title: NSLocalizedString("Point Transfer Step2 Successed SubTitle", comment: ""), Content: NSLocalizedString("Point Transfer Step2 Successed Content A", comment: "") + " " + self.pointTextfield.text! + " " + NSLocalizedString("Point Transfer Step2 Successed Content B", comment: ""))
                 }/* else {
                     self.showWarningWithText(Content: AppDelegate.shared().apiBackContentStr)
                 }*/ else if result == ResponseState.failed {
@@ -228,8 +229,9 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         warningBgV.isHidden = true
         choseBgV.isHidden = false
         
+        //transferStepOneListObj
         chosedAry = []
-        for _ in 0..<AppDelegate.shared().transferFriendListObj.count {
+        for _ in 0..<AppDelegate.shared().transferStepOneListObj.count { //transferFriendListObj
             chosedAry.append(false)
         }
         
@@ -320,7 +322,7 @@ class TransferPointVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     
     @IBAction func choseNextAction(_ sender: Any) {
         chosedIndx = -1
-        for i in 0..<AppDelegate.shared().transferFriendListObj.count {
+        for i in 0..<AppDelegate.shared().transferStepOneListObj.count {
             if chosedAry[i] == true {
                 chosedIndx = i
                 break

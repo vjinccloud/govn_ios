@@ -117,6 +117,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
             let serchBankobj = UtilityTool().searchBankObj(BankName: cellData.bank_name!)
             
             let imgurl = serchBankobj.bank_photo!
+            Dlog("imgurl = \(imgurl)")
             let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
             cell.logoImgV.kf.setImage(with: urlhaed)
             
@@ -137,7 +138,36 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
             cell.nameL.text = cellData.recipient_name
             cell.idL.text = cellData.id_card_no + " "
             cell.phoneL.text = cellData.phone_no + " "
-            cell.adrL.text = cellData.address + " "
+            
+            var address = cellData.address + " "
+            if cellData.province_id != nil, cellData.province_id.count != 0 {
+                var choseProvinceIdx = Int(cellData.province_id)!
+                
+                //比對省份
+                var ori = cellData.province_id
+                var provinceName = ""
+                for i in 0..<AppDelegate.shared().provinceData.count {
+                    let str = AppDelegate.shared().provinceData[i].province_id
+                    if ori == str {
+                        choseProvinceIdx = i
+                        provinceName = AppDelegate.shared().provinceData[i].province_name
+                        break
+                    }
+                }
+                
+                ori = AppDelegate.shared().tempRecipientObj.district_id
+                for i in 0..<AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count {
+                    let str = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_id
+                    if ori == str {
+                        address += " " + AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_name
+                        break
+                    }
+                }
+                
+                address += " " + provinceName
+            }
+            
+            cell.adrL.text = address
             cell.backgroundColor = .clear
             cell.selectionStyle = .none
             return cell
@@ -165,6 +195,10 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         if AppDelegate.shared().transactionObj.recipient_type == 1, canSelectForTransfer {
             Dlog("AppDelegate.shared().transactionObj.recipientObj.printSelf")
             AppDelegate.shared().transactionObj.recipientObj.printSelf()
+            
+            AppDelegate.shared().tempRecipientObj = RecipientObj()
+            AppDelegate.shared().tempRecipientObj.recipient_type.append(AppDelegate.shared().transactionObj.recipient_type)
+            
             let cell = tableView.cellForRow(at: indexPath) as! RecipientTableViewCell
             cell.checkImgV.image = UIImage.init(named: "choosen_checklist")
             
@@ -222,7 +256,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -262,6 +296,66 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         for i in 0..<AppDelegate.shared().recipientShownListObjs.count {
             let obj = AppDelegate.shared().recipientShownListObjs[i]
+            paymentAry.append(obj.recipient_id)
+        }
+        
+        if paymentAry.count == 0 {
+            self.reloadDataAndTable(Str: self.searchTextfield.text!)
+            return
+        }
+        
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "recipient_id":paymentAry]
+        let headers: HTTPHeaders = [:]
+
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_Search_recipient_ids;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+         
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("responseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    for i in 0..<AppDelegate.shared().recipientShownListObjs.count {
+                        let oriname = AppDelegate.shared().recipientShownListObjs[i].recipient_id.lowercased()
+                        for j in 0..<AppDelegate.shared().tempSearchRecipientList.count {
+                            let objname = AppDelegate.shared().tempSearchRecipientList[j].recipient_id.lowercased()
+                            if oriname == objname {
+                                AppDelegate.shared().recipientShownListObjs[i].getIdenticalFromObjExceptHidden(Obj:AppDelegate.shared().tempSearchRecipientList[j], AddBank:false)
+                                Dlog("identical at \(i) to \(j)")
+                                break
+                            }
+                            
+                        }
+                    }
+                    self.reloadDataAndTable(Str: self.searchTextfield.text!)
+                    
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+        
+    }
+    
+    func searchRecipientOld() {
+        var paymentAry:[String] = []
+        
+        for i in 0..<AppDelegate.shared().recipientShownListObjs.count {
+            let obj = AppDelegate.shared().recipientShownListObjs[i]
             paymentAry.append(obj.recipient_name)
         }
         
@@ -279,7 +373,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
          
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -316,6 +410,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         }
         
     }
+    
     public func hideRecipient(Recipient obj:RecipientObj) {
         let serchBankobj = UtilityTool().searchBankObj(BankName: obj.bank_name!)
         var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":serchBankobj.bank_code!, "bank_acc":obj.bank_acc!, "recipient_type":topBarSelectIdx+1]
@@ -330,7 +425,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -370,7 +465,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -398,8 +493,11 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                         //再去取得所有的細節
                         self.searchRecipient()
                     }
+                    URLCache.shared.removeAllCachedResponses()
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                    //2021.07.27 群組討論結果：新增只要有錯誤就回上一頁，不管上一頁是哪裡
+                    self.navigationController?.popViewController(animated: true)
                 }
         }
     }
@@ -461,6 +559,19 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        guard let text = textField.text else{
+            return true
+        }
+        
+        if !string.checkAlphabetDigitAndSpace() {
+            return false
+        }
+         
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
         
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         reloadDataAndTable(Str: newString)

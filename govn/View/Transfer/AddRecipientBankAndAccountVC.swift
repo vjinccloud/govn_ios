@@ -1,6 +1,5 @@
 //
 //  AddRecipientBankAndAccountVC.swift
-//  govn
 //
 //  Created by mac on 2021/3/5.
 //  Copyright © 2021 DIM. All rights reserved.
@@ -185,16 +184,39 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == accTextfield {
+            if !checkLeagleCharacter() {
+                showNameAlert()
+                return
+            }
+        }
         hideTextBtn.isHidden = true
         bankListTableView.isHidden = true
         checkBtnState()
         changeBankImg(BankName: bankCodeTextfield.text!)
     }
     
+    func showNameAlert() {
+        if AppDelegate.shared().alertViewContainer != nil {
+            return
+        }
+        AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("No illeagal Words in name", comment: ""))
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        guard let text = textField.text else{
+            return true
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
         
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         
+        /*
         if textField == accTextfield {
             var pass = true
             let words = newString
@@ -210,10 +232,11 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
             }
             
             if !pass {
+                showNameAlert()
                 return false
             }
             
-        }
+        }*/
         
         reloadDataAndTable(Str: newString)
         checkBtnState()
@@ -221,7 +244,62 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
 
     }
     
+    func checkLeagleCharacter() -> Bool {
+        var pass = true
+        let words = accTextfield.text
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+        pass = pred.evaluate(with: words)
+        
+        if accTextfield.text?.count==0 {
+            pass = true
+        }
+        return pass
+    }
+    
     //MARK: - API
+    func addRecipient() {
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":AppDelegate.shared().transactionObj.recipientObj.bank_code!, "bank_acc":AppDelegate.shared().transactionObj.recipientObj.bank_acc!]
+        let headers: HTTPHeaders = [:]
+        closeAll()
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_AddRecipient;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("(API_AddRecipient)esponseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    
+                    AppDelegate.shared().tempRecipientObj.bank_code = AppDelegate.shared().transactionObj.recipientObj.bank_code!
+                    AppDelegate.shared().tempRecipientObj.bank_acc = AppDelegate.shared().transactionObj.recipientObj.bank_acc!
+                    
+                    AppDelegate.shared().tempRecipientObj.recipient_name = self.accTextfield.text
+                    let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
+                    nextVC!.canSelectForTransfer = self.canSelectForTransfer
+                    nextVC!.canEditName = self.accTextfield.isEnabled
+                    self.navigationController?.pushViewController(nextVC!, animated: true)
+                    
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+    }
+    /*
     func addRecipient() {
         //找出 bank code
         let serchBankobj = UtilityTool().searchBankObj(BankName: bankCodeTextfield.text!)
@@ -240,7 +318,7 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 
@@ -276,15 +354,15 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
         }
-    }
+    }*/
     
     //MARK: - Button-Action
     @IBAction func nextAction(_ sender: Any) {
-        AppDelegate.shared().tempRecipientObj.recipient_name = accTextfield.text
-        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
-        nextVC!.canSelectForTransfer = self.canSelectForTransfer
-        nextVC!.canEditName = accTextfield.isEnabled
-        self.navigationController?.pushViewController(nextVC!, animated: true)
+        if !checkLeagleCharacter() {
+            showNameAlert()
+            return
+        }
+        addRecipient()
     }
     
     @IBAction func hideTextAction(_ sender: Any) {
@@ -333,7 +411,7 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
         
         accTextfield.keyboardType = .default
         accTextfield.delegate = self
-        
+        accTextfield.autocorrectionType = .no
         bankCodeTextfield.autocapitalizationType = .allCharacters
         //accTextfield.placeholder = NSLocalizedString("Point Transfer Add Recipient Accounnt PlaceHolder", comment: "")
         backL.text = ""

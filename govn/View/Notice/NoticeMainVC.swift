@@ -40,7 +40,7 @@ class NoticeMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         isLoading = true
         
         let todoEndpoint: String = API_NoticeRecordList;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 self.isLoading = false
@@ -93,7 +93,7 @@ class NoticeMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         Dlog("parameters=\(parameters)")
         
         let todoEndpoint: String = API_NotificationRead;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 guard response.result.error == nil else {
                     // got an error in getting the data, need to handle it
@@ -116,7 +116,7 @@ class NoticeMainVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         AppDelegate.shared().addLoadingView()
         
         let todoEndpoint: String = API_PointHistoryList;
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 

@@ -1,6 +1,5 @@
 //
 //  ProvinceObj.swift
-//  govn
 //
 //  Created by mac on 2021/1/1.
 //  Copyright © 2021 DIM. All rights reserved.

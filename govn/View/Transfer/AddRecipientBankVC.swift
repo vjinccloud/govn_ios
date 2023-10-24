@@ -1,6 +1,5 @@
 //
 //  AddRecipientBankVC.swift
-//  govn
 //
 //  Created by mac on 2021/1/2.
 //  Copyright © 2021 DIM. All rights reserved.
@@ -178,6 +177,15 @@ class AddRecipientBankVC: UIViewController, UITextFieldDelegate, UITableViewDele
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
+        guard let text = textField.text else{
+            return true
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textLength>20 {
+            return false
+        }
+        
         let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
         reloadDataAndTable(Str: newString)
         checkBtnState()
@@ -204,7 +212,7 @@ class AddRecipientBankVC: UIViewController, UITextFieldDelegate, UITableViewDele
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
-        AppDelegate.shared().alamofireManagerWithTimeout.request(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
                 

@@ -1,0 +1,7 @@
+{
+  "images" : [
+    { "filename" : "IndependenceDay1-120.png", "idiom" : "iphone", "scale" : "2x", "size" : "60x60" },
+    { "filename" : "IndependenceDay1-180.png", "idiom" : "iphone", "scale" : "3x", "size" : "60x60" }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}

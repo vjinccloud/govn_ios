@@ -3,10 +3,21 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010DB8222FC36F0200C1AC63 /* TransactionBankVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010DB8212FC36F0200C1AC63 /* TransactionBankVC.swift */; };
+		010DB8242FC37AFA00C1AC63 /* newtaishin.png in Resources */ = {isa = PBXBuildFile; fileRef = 010DB8232FC37AFA00C1AC63 /* newtaishin.png */; };
+		010DB8262FC37C5B00C1AC63 /* newbank.png in Resources */ = {isa = PBXBuildFile; fileRef = 010DB8252FC37C5B00C1AC63 /* newbank.png */; };
+		01343FD42DECDB580022F279 /* govn_barcode_mark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01343FD32DECDB580022F279 /* govn_barcode_mark.png */; };
+		014CB88F2FA7DBAE00BE7C2B /* BonusSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014CB88E2FA7DBAB00BE7C2B /* BonusSelectVC.swift */; };
+		014CB8912FA7DDBC00BE7C2B /* TransfePreCountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014CB8902FA7DDBA00BE7C2B /* TransfePreCountVC.swift */; };
+		014CB8942FA9232A00BE7C2B /* celbonus1.png in Resources */ = {isa = PBXBuildFile; fileRef = 014CB8922FA9232A00BE7C2B /* celbonus1.png */; };
+		014CB8952FA9232A00BE7C2B /* celbonus2.png in Resources */ = {isa = PBXBuildFile; fileRef = 014CB8932FA9232A00BE7C2B /* celbonus2.png */; };
+		01542A302FFB103600BFE70E /* newikon.png in Resources */ = {isa = PBXBuildFile; fileRef = 01542A2F2FFB103600BFE70E /* newikon.png */; };
+		015913782FA9F276005D3E80 /* iconpercent.png in Resources */ = {isa = PBXBuildFile; fileRef = 015913772FA9F276005D3E80 /* iconpercent.png */; };
+		017950E82C3EC930007BE313 /* ticket.png in Resources */ = {isa = PBXBuildFile; fileRef = 017950E72C3EC930007BE313 /* ticket.png */; };
 		018DC5B6296C671300EAA8D1 /* SpecialPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018DC5B5296C671300EAA8D1 /* SpecialPageVC.swift */; };
 		018DC5BA296DA55800EAA8D1 /* FOI_pic@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 018DC5B7296DA55700EAA8D1 /* FOI_pic@3x.png */; };
 		018DC5BB296DA55800EAA8D1 /* FOI_pic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 018DC5B8296DA55700EAA8D1 /* FOI_pic@2x.png */; };
@@ -15,6 +26,18 @@
 		018DC5C1296DAF0800EAA8D1 /* FOI@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 018DC5BE296DAF0700EAA8D1 /* FOI@3x.png */; };
 		018DC5C2296DAF0800EAA8D1 /* FOI.png in Resources */ = {isa = PBXBuildFile; fileRef = 018DC5BF296DAF0700EAA8D1 /* FOI.png */; };
 		018DC5C4296DBABD00EAA8D1 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018DC5C3296DBABD00EAA8D1 /* Date+Extension.swift */; };
+		01A71DF22C410334005DFD42 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF12C410334005DFD42 /* PrivacyInfo.xcprivacy */; };
+		01A71DFA2C44F96E005DFD42 /* 雙箭頭.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF42C44F96D005DFD42 /* 雙箭頭.png */; };
+		01A71DFB2C44F96E005DFD42 /* 國旗_TAIWAN.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF52C44F96D005DFD42 /* 國旗_TAIWAN.png */; };
+		01A71DFC2C44F96E005DFD42 /* 方框-透明.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF62C44F96D005DFD42 /* 方框-透明.png */; };
+		01A71DFD2C44F96E005DFD42 /* 國旗_Vietnam.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF72C44F96E005DFD42 /* 國旗_Vietnam.png */; };
+		01A71DFE2C44F96E005DFD42 /* 貓.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF82C44F96E005DFD42 /* 貓.png */; };
+		01A71DFF2C44F96E005DFD42 /* 背景_101.png in Resources */ = {isa = PBXBuildFile; fileRef = 01A71DF92C44F96E005DFD42 /* 背景_101.png */; };
+		01B3E1B12C4F988600340212 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01B3E1B32C4F988600340212 /* InfoPlist.strings */; };
+		01C5E1442DF2CE5D00289594 /* cer.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C5E1422DF2CE5D00289594 /* cer.png */; };
+		01C5E1452DF2CE5D00289594 /* logo2025.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C5E1432DF2CE5D00289594 /* logo2025.png */; };
+		01C5E1462DF2CE5D00289594 /* Arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 01C5E1412DF2CE5D00289594 /* Arrow.png */; };
+		01D14CFE2B03EACD006C9A12 /* ereciept.png in Resources */ = {isa = PBXBuildFile; fileRef = 01D14CFD2B03EACD006C9A12 /* ereciept.png */; };
 		0411502425F289A0005ED763 /* AddRecipientBankAndAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0411502325F289A0005ED763 /* AddRecipientBankAndAccountVC.swift */; };
 		041E9D4324C70ABF00763D53 /* RegisterInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041E9D4224C70ABF00763D53 /* RegisterInputVC.swift */; };
 		0420CE9A24FA39FD000CCC08 /* BankObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420CE9924FA39FD000CCC08 /* BankObj.swift */; };
@@ -540,9 +563,21 @@
 		04F6FF1724D1BFDB00887E80 /* UILabel+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6FF1624D1BFDB00887E80 /* UILabel+Extention.swift */; };
 		04F6FF1924D1C82000887E80 /* RegisterSelfPhotoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6FF1824D1C82000887E80 /* RegisterSelfPhotoVC.swift */; };
 		30BB9E1B472E6087D196338F /* Pods_govn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6A89A548EE6EDFBF9DF3D6 /* Pods_govn.framework */; };
+		FE1C0A0100000000000000A1 /* AppIconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C0A0100000000000000A2 /* AppIconManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		010DB8212FC36F0200C1AC63 /* TransactionBankVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionBankVC.swift; sourceTree = "<group>"; };
+		010DB8232FC37AFA00C1AC63 /* newtaishin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newtaishin.png; sourceTree = "<group>"; };
+		010DB8252FC37C5B00C1AC63 /* newbank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newbank.png; sourceTree = "<group>"; };
+		01343FD32DECDB580022F279 /* govn_barcode_mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = govn_barcode_mark.png; sourceTree = "<group>"; };
+		014CB88E2FA7DBAB00BE7C2B /* BonusSelectVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSelectVC.swift; sourceTree = "<group>"; };
+		014CB8902FA7DDBA00BE7C2B /* TransfePreCountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfePreCountVC.swift; sourceTree = "<group>"; };
+		014CB8922FA9232A00BE7C2B /* celbonus1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = celbonus1.png; sourceTree = "<group>"; };
+		014CB8932FA9232A00BE7C2B /* celbonus2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = celbonus2.png; sourceTree = "<group>"; };
+		01542A2F2FFB103600BFE70E /* newikon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newikon.png; sourceTree = "<group>"; };
+		015913772FA9F276005D3E80 /* iconpercent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconpercent.png; sourceTree = "<group>"; };
+		017950E72C3EC930007BE313 /* ticket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ticket.png; sourceTree = "<group>"; };
 		018DC5B5296C671300EAA8D1 /* SpecialPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialPageVC.swift; sourceTree = "<group>"; };
 		018DC5B7296DA55700EAA8D1 /* FOI_pic@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FOI_pic@3x.png"; sourceTree = "<group>"; };
 		018DC5B8296DA55700EAA8D1 /* FOI_pic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FOI_pic@2x.png"; sourceTree = "<group>"; };
@@ -551,6 +586,19 @@
 		018DC5BE296DAF0700EAA8D1 /* FOI@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FOI@3x.png"; sourceTree = "<group>"; };
 		018DC5BF296DAF0700EAA8D1 /* FOI.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FOI.png; sourceTree = "<group>"; };
 		018DC5C3296DBABD00EAA8D1 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		01A71DF12C410334005DFD42 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		01A71DF42C44F96D005DFD42 /* 雙箭頭.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "雙箭頭.png"; sourceTree = "<group>"; };
+		01A71DF52C44F96D005DFD42 /* 國旗_TAIWAN.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "國旗_TAIWAN.png"; sourceTree = "<group>"; };
+		01A71DF62C44F96D005DFD42 /* 方框-透明.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "方框-透明.png"; sourceTree = "<group>"; };
+		01A71DF72C44F96E005DFD42 /* 國旗_Vietnam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "國旗_Vietnam.png"; sourceTree = "<group>"; };
+		01A71DF82C44F96E005DFD42 /* 貓.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "貓.png"; sourceTree = "<group>"; };
+		01A71DF92C44F96E005DFD42 /* 背景_101.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景_101.png"; sourceTree = "<group>"; };
+		01B3E1B22C4F988600340212 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		01B3E1B42C4F988900340212 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		01C5E1412DF2CE5D00289594 /* Arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Arrow.png; sourceTree = "<group>"; };
+		01C5E1422DF2CE5D00289594 /* cer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cer.png; sourceTree = "<group>"; };
+		01C5E1432DF2CE5D00289594 /* logo2025.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo2025.png; sourceTree = "<group>"; };
+		01D14CFD2B03EACD006C9A12 /* ereciept.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ereciept.png; sourceTree = "<group>"; };
 		04114FFF25F0EA2D005ED763 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0411502325F289A0005ED763 /* AddRecipientBankAndAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipientBankAndAccountVC.swift; sourceTree = "<group>"; };
 		041E9D4224C70ABF00763D53 /* RegisterInputVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterInputVC.swift; sourceTree = "<group>"; };
@@ -1082,6 +1130,7 @@
 		7CA1F9F82732C7F1B5DBE582 /* Pods-govn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-govn.release.xcconfig"; path = "Target Support Files/Pods-govn/Pods-govn.release.xcconfig"; sourceTree = "<group>"; };
 		DC6A89A548EE6EDFBF9DF3D6 /* Pods_govn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_govn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F747AC83F0BA5460AAA2A63B /* Pods-govn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-govn.debug.xcconfig"; path = "Target Support Files/Pods-govn/Pods-govn.debug.xcconfig"; sourceTree = "<group>"; };
+		FE1C0A0100000000000000A2 /* AppIconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1097,6 +1146,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01A71DF32C44F951005DFD42 /* 2024 */ = {
+			isa = PBXGroup;
+			children = (
+				010DB8252FC37C5B00C1AC63 /* newbank.png */,
+				010DB8232FC37AFA00C1AC63 /* newtaishin.png */,
+				015913772FA9F276005D3E80 /* iconpercent.png */,
+				014CB8922FA9232A00BE7C2B /* celbonus1.png */,
+				014CB8932FA9232A00BE7C2B /* celbonus2.png */,
+				01343FD32DECDB580022F279 /* govn_barcode_mark.png */,
+				01A71DF62C44F96D005DFD42 /* 方框-透明.png */,
+				01A71DF92C44F96E005DFD42 /* 背景_101.png */,
+				01A71DF52C44F96D005DFD42 /* 國旗_TAIWAN.png */,
+				01A71DF72C44F96E005DFD42 /* 國旗_Vietnam.png */,
+				01A71DF82C44F96E005DFD42 /* 貓.png */,
+				01A71DF42C44F96D005DFD42 /* 雙箭頭.png */,
+				01C5E1412DF2CE5D00289594 /* Arrow.png */,
+				01C5E1422DF2CE5D00289594 /* cer.png */,
+				01C5E1432DF2CE5D00289594 /* logo2025.png */,
+			);
+			path = 2024;
+			sourceTree = "<group>";
+		};
 		0436E71B24ED8239008A38E9 /* Share */ = {
 			isa = PBXGroup;
 			children = (
@@ -1113,6 +1184,8 @@
 		043ADED624E1468900E0892E /* second */ = {
 			isa = PBXGroup;
 			children = (
+				017950E72C3EC930007BE313 /* ticket.png */,
+				01D14CFD2B03EACD006C9A12 /* ereciept.png */,
 				018DC5BF296DAF0700EAA8D1 /* FOI.png */,
 				018DC5BD296DAF0600EAA8D1 /* FOI@2x.png */,
 				018DC5BE296DAF0700EAA8D1 /* FOI@3x.png */,
@@ -1424,6 +1497,7 @@
 				043ADFE324E1468A00E0892E /* scan.png */,
 				043ADFE524E1468A00E0892E /* email@2x.png */,
 				043ADFE624E1468A00E0892E /* camera_button@3x.png */,
+				01542A2F2FFB103600BFE70E /* newikon.png */,
 				043ADFE724E1468A00E0892E /* graphic1@3x.png */,
 				043ADFE824E1468A00E0892E /* icon_transaction.png */,
 				043ADFE924E1468A00E0892E /* sand@3x.png */,
@@ -1447,6 +1521,8 @@
 		043AE11724E14BB000E0892E /* Member */ = {
 			isa = PBXGroup;
 			children = (
+				014CB8902FA7DDBA00BE7C2B /* TransfePreCountVC.swift */,
+				014CB88E2FA7DBAB00BE7C2B /* BonusSelectVC.swift */,
 				043AE11824E14BC600E0892E /* MemberMainVC.swift */,
 				0436E71724EAEE4D008A38E9 /* MemberEditVC.swift */,
 				0436E71924EC55D3008A38E9 /* PointHistorySingleObj.swift */,
@@ -1491,6 +1567,8 @@
 		049686D024B6EFB0005EF74A = {
 			isa = PBXGroup;
 			children = (
+				01B3E1B32C4F988600340212 /* InfoPlist.strings */,
+				01A71DF12C410334005DFD42 /* PrivacyInfo.xcprivacy */,
 				04C26B042540A06F0091B871 /* Podfile */,
 				049686DB24B6EFB0005EF74A /* govn */,
 				049686DA24B6EFB0005EF74A /* Products */,
@@ -1532,6 +1610,7 @@
 		049686F224B78ABC005EF74A /* Stuff */ = {
 			isa = PBXGroup;
 			children = (
+				01A71DF32C44F951005DFD42 /* 2024 */,
 				04C26B062540A34E0091B871 /* govn */,
 				043ADED624E1468900E0892E /* second */,
 				0496882724BCD3F0005EF74A /* cover */,
@@ -1552,6 +1631,7 @@
 				0496880B24B8D61E005EF74A /* UIView+constraints.swift */,
 				0496880C24B8D61E005EF74A /* ImageSliderVC.swift */,
 				0496881324B8D666005EF74A /* APIHandle.swift */,
+				FE1C0A0100000000000000A2 /* AppIconManager.swift */,
 				0496881524B8D693005EF74A /* UtilityTool.swift */,
 				0496881B24BC3E81005EF74A /* FloatingButtonController.swift */,
 				04D8562B24C2D14C007BD825 /* CustomAlertView.swift */,
@@ -1755,6 +1835,7 @@
 				049BA98425A0FE49006F1EA3 /* SelectRecitientType2and3TableViewCell.swift */,
 				049BA98525A0FE49006F1EA3 /* SelectRecitientType2and3TableViewCell.xib */,
 				0411502325F289A0005ED763 /* AddRecipientBankAndAccountVC.swift */,
+				010DB8212FC36F0200C1AC63 /* TransactionBankVC.swift */,
 			);
 			path = Transfer;
 			sourceTree = "<group>";
@@ -1852,6 +1933,7 @@
 				04B0277924E150C400C59670 /* id_code.png in Resources */,
 				043AE09A24E1468B00E0892E /* r_sand@2x.png in Resources */,
 				043AE07124E1468A00E0892E /* icon_faq@3x.png in Resources */,
+				01A71DFB2C44F96E005DFD42 /* 國旗_TAIWAN.png in Resources */,
 				04C26B7B2540A34E0091B871 /* fanilymart.png in Resources */,
 				0496883F24BCD3F0005EF74A /* cover2@3x.png in Resources */,
 				04B0277824E150C400C59670 /* id_code@3x.png in Resources */,
@@ -1871,6 +1953,8 @@
 				043AE06A24E1468A00E0892E /* w_share.png in Resources */,
 				04C26B5D2540A34E0091B871 /* cash_pick_up.png in Resources */,
 				043AE0E824E1468B00E0892E /* next@2x.png in Resources */,
+				014CB8942FA9232A00BE7C2B /* celbonus1.png in Resources */,
+				014CB8952FA9232A00BE7C2B /* celbonus2.png in Resources */,
 				04C26B5E2540A34E0091B871 /* doortodoor@3x.png in Resources */,
 				04B0277024E150C400C59670 /* visa@2x.png in Resources */,
 				043AE01F24E1468A00E0892E /* unselect@3x.png in Resources */,
@@ -1901,6 +1985,7 @@
 				04B0278824E150C400C59670 /* man_with_id_2.png in Resources */,
 				043AE11524E1468B00E0892E /* graphic3@2x.png in Resources */,
 				04C26B7D2540A34E0091B871 /* 711.png in Resources */,
+				017950E82C3EC930007BE313 /* ticket.png in Resources */,
 				0496880024B8D03C005EF74A /* Localizable.strings in Resources */,
 				043AE0DB24E1468B00E0892E /* camera_button@2x.png in Resources */,
 				04B0276F24E150C400C59670 /* take_id_front.png in Resources */,
@@ -1908,6 +1993,7 @@
 				0448E96E256AD61300307096 /* wood@3x.png in Resources */,
 				043AE05124E1468A00E0892E /* graphic2@3x.png in Resources */,
 				043AE0F824E1468B00E0892E /* icon_about_us@2x.png in Resources */,
+				01A71DFC2C44F96E005DFD42 /* 方框-透明.png in Resources */,
 				043AE04724E1468A00E0892E /* icon_phone.png in Resources */,
 				04C26B872540A34E0091B871 /* logo6@3x.png in Resources */,
 				04B0276C24E150C400C59670 /* id_code@2x.png in Resources */,
@@ -1928,6 +2014,7 @@
 				043AE00124E1468A00E0892E /* big_unselect@2x.png in Resources */,
 				043AE02024E1468A00E0892E /* camera_switch_button@2x.png in Resources */,
 				043AE0C024E1468B00E0892E /* icon_ign_out.png in Resources */,
+				01343FD42DECDB580022F279 /* govn_barcode_mark.png in Resources */,
 				043AE03F24E1468A00E0892E /* point_bg@3x.png in Resources */,
 				0454E576256EDC8500B9A1AD /* note-2.png in Resources */,
 				043AE00724E1468A00E0892E /* icon_recepients.png in Resources */,
@@ -2003,6 +2090,7 @@
 				043AE08824E1468A00E0892E /* w_notice.png in Resources */,
 				043AE0E224E1468B00E0892E /* noview_w.png in Resources */,
 				04C26B802540A34E0091B871 /* Rectangle.png in Resources */,
+				015913782FA9F276005D3E80 /* iconpercent.png in Resources */,
 				049760D225149A7300921D17 /* teach2@3x.jpg in Resources */,
 				043AE04324E1468A00E0892E /* previous@2x.png in Resources */,
 				043AE08B24E1468A00E0892E /* icon_recepients@3x.png in Resources */,
@@ -2025,6 +2113,7 @@
 				043AE05624E1468A00E0892E /* graphic2@2x.png in Resources */,
 				043AE10724E1468B00E0892E /* graphic1@3x.png in Resources */,
 				043AE0E324E1468B00E0892E /* instagram@2x.png in Resources */,
+				01B3E1B12C4F988600340212 /* InfoPlist.strings in Resources */,
 				043AE0AA24E1468B00E0892E /* next-1.png in Resources */,
 				043AE0D124E1468B00E0892E /* online_service.png in Resources */,
 				043AE04B24E1468A00E0892E /* icon_phone@3x.png in Resources */,
@@ -2034,11 +2123,13 @@
 				043AE03B24E1468A00E0892E /* success2@2x.png in Resources */,
 				0454E578256EDC8500B9A1AD /* note-2@3x.png in Resources */,
 				04C26B602540A34E0091B871 /* cash_pick_up_select.png in Resources */,
+				010DB8242FC37AFA00C1AC63 /* newtaishin.png in Resources */,
 				043AE03624E1468A00E0892E /* icon_faq@2x.png in Resources */,
 				04C26B762540A34E0091B871 /* 711_logo.png in Resources */,
 				043AE02224E1468A00E0892E /* question-1@2x.png in Resources */,
 				043AE01424E1468A00E0892E /* profile_picture@3x.png in Resources */,
 				043AE09E24E1468B00E0892E /* Logo.png in Resources */,
+				01A71DFE2C44F96E005DFD42 /* 貓.png in Resources */,
 				043AE0EE24E1468B00E0892E /* view_w.png in Resources */,
 				043AE0DD24E1468B00E0892E /* Status Point Reached.png in Resources */,
 				043AE0B224E1468B00E0892E /* online_service@2x.png in Resources */,
@@ -2174,6 +2265,7 @@
 				0448E96F256AD61300307096 /* wood.png in Resources */,
 				043AE07E24E1468A00E0892E /* failed@2x.png in Resources */,
 				043AE07524E1468A00E0892E /* icon_shopping@2x.png in Resources */,
+				01A71DFD2C44F96E005DFD42 /* 國旗_Vietnam.png in Resources */,
 				043AE00424E1468A00E0892E /* unselect@2x.png in Resources */,
 				04B0277224E150C400C59670 /* man_with_id_1@3x.png in Resources */,
 				043AE0CA24E1468B00E0892E /* exit.png in Resources */,
@@ -2201,6 +2293,7 @@
 				04B0278A24E150C400C59670 /* man_with_id_3@3x.png in Resources */,
 				04B0277324E150C400C59670 /* man_with_id_3@2x.png in Resources */,
 				04C26B8B2540A34E0091B871 /* cash_pick_up_select@2x.png in Resources */,
+				01D14CFE2B03EACD006C9A12 /* ereciept.png in Resources */,
 				043AE0E924E1468B00E0892E /* add_man.png in Resources */,
 				04C26B7F2540A34E0091B871 /* govn_logo.png in Resources */,
 				018DC5BA296DA55800EAA8D1 /* FOI_pic@3x.png in Resources */,
@@ -2211,6 +2304,9 @@
 				043AE0A724E1468B00E0892E /* scan@3x.png in Resources */,
 				043AE00624E1468A00E0892E /* Status Point Reached@3x.png in Resources */,
 				04C26B962540A34E0091B871 /* govn_logo@2x.png in Resources */,
+				01C5E1442DF2CE5D00289594 /* cer.png in Resources */,
+				01C5E1452DF2CE5D00289594 /* logo2025.png in Resources */,
+				01C5E1462DF2CE5D00289594 /* Arrow.png in Resources */,
 				043AE06324E1468A00E0892E /* point_bg@2x.png in Resources */,
 				043AE0D024E1468B00E0892E /* select@3x.png in Resources */,
 				0420CEAB24FD0B11000CCC08 /* TransferStateType1TableViewCell.xib in Resources */,
@@ -2219,6 +2315,7 @@
 				04C26BA52540A34E0091B871 /* cover1.png in Resources */,
 				043AE0F724E1468B00E0892E /* noview_b@2x.png in Resources */,
 				049760CB25149A7300921D17 /* teach3@3x.jpg in Resources */,
+				01A71DFF2C44F96E005DFD42 /* 背景_101.png in Resources */,
 				043AE05424E1468A00E0892E /* Status Point Not Yet Reached@2x.png in Resources */,
 				043AE05324E1468A00E0892E /* w_record.png in Resources */,
 				04B0277C24E150C400C59670 /* signature_2.png in Resources */,
@@ -2232,6 +2329,7 @@
 				043AE10824E1468B00E0892E /* icon_transaction.png in Resources */,
 				04E36A702646ED980035883C /* ok_help.jpg in Resources */,
 				04EC9A3024E13ACE007D32B6 /* Member.storyboard in Resources */,
+				01542A302FFB103600BFE70E /* newikon.png in Resources */,
 				043AE03D24E1468A00E0892E /* camera_button_big.png in Resources */,
 				043AE04624E1468A00E0892E /* fb.png in Resources */,
 				043AE01524E1468A00E0892E /* edit@2x.png in Resources */,
@@ -2257,6 +2355,7 @@
 				043AE03224E1468A00E0892E /* icon_p@2x.png in Resources */,
 				04B0277624E150C400C59670 /* signature_1@2x.png in Resources */,
 				04C26B7E2540A34E0091B871 /* bank_account.png in Resources */,
+				01A71DF22C410334005DFD42 /* PrivacyInfo.xcprivacy in Resources */,
 				04C26B752540A34E0091B871 /* logo4@3x.png in Resources */,
 				043ADFF824E1468A00E0892E /* r_notice@2x.png in Resources */,
 				04B0277E24E150C400C59670 /* scan_code.png in Resources */,
@@ -2265,6 +2364,8 @@
 				043AE06724E1468A00E0892E /* r_sand.png in Resources */,
 				043ADFF924E1468A00E0892E /* phone-1@2x.png in Resources */,
 				0496883A24BCD3F0005EF74A /* cover3@2x.png in Resources */,
+				010DB8262FC37C5B00C1AC63 /* newbank.png in Resources */,
+				01A71DFA2C44F96E005DFD42 /* 雙箭頭.png in Resources */,
 				04B0276424E150C400C59670 /* barcode.png in Resources */,
 				04B0276224E150C400C59670 /* take_visa@2x.png in Resources */,
 				043AE0DE24E1468B00E0892E /* email@3x.png in Resources */,
@@ -2297,9 +2398,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-govn/Pods-govn-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-govn/Pods-govn-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2349,10 +2454,12 @@
 				0472E23D24C2DC8600CC48A0 /* RegisterAgreementVC.swift in Sources */,
 				04C8CBF624D9759400AE90F6 /* RegisterIDCameraVC.swift in Sources */,
 				0496881624B8D693005EF74A /* UtilityTool.swift in Sources */,
+				014CB88F2FA7DBAE00BE7C2B /* BonusSelectVC.swift in Sources */,
 				0496881C24BC3E81005EF74A /* FloatingButtonController.swift in Sources */,
 				0436E71D24ED8257008A38E9 /* ShareMainVC.swift in Sources */,
 				04E82A6C24D98C1F00E25DCD /* RegisterIDSignVC.swift in Sources */,
 				0496881424B8D666005EF74A /* APIHandle.swift in Sources */,
+				FE1C0A0100000000000000A1 /* AppIconManager.swift in Sources */,
 				0436E72C24F6BDCB008A38E9 /* TransferMemberObj.swift in Sources */,
 				049DB77D24BED018006CB436 /* ForgotPassScanVC.swift in Sources */,
 				0496880D24B8D61E005EF74A /* RootNavVC.swift in Sources */,
@@ -2364,6 +2471,7 @@
 				0420CEA224FC0B5C000CCC08 /* TransferStateObj.swift in Sources */,
 				0436E71824EAEE4D008A38E9 /* MemberEditVC.swift in Sources */,
 				0420CEAA24FD0B11000CCC08 /* TransferStateType1TableViewCell.swift in Sources */,
+				014CB8912FA7DDBC00BE7C2B /* TransfePreCountVC.swift in Sources */,
 				04F6FF1724D1BFDB00887E80 /* UILabel+Extention.swift in Sources */,
 				0420CE9A24FA39FD000CCC08 /* BankObj.swift in Sources */,
 				0496884424BCDDF2005EF74A /* UIViewController+TapToDissmiss.swift in Sources */,
@@ -2380,6 +2488,7 @@
 				0426B0E024C5915A009BEDFE /* RegisterIntroVC.swift in Sources */,
 				0420CEA724FCE6C3000CCC08 /* TransferOrderCheckObj.swift in Sources */,
 				049686E124B6EFB0005EF74A /* ViewController.swift in Sources */,
+				010DB8222FC36F0200C1AC63 /* TransactionBankVC.swift in Sources */,
 				04D8562A24C22088007BD825 /* ForgotPassChangeVC.swift in Sources */,
 				04D9834D24F95D44007D1269 /* RecipientListVC.swift in Sources */,
 				04AC3EF62502923300E48622 /* BarCodeInfoObj.swift in Sources */,
@@ -2428,6 +2537,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		01B3E1B32C4F988600340212 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01B3E1B22C4F988600340212 /* en */,
+				01B3E1B42C4F988900340212 /* vi */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		049686E224B6EFB0005EF74A /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2577,18 +2695,19 @@
 			baseConfigurationReference = F747AC83F0BA5460AAA2A63B /* Pods-govn.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = govn/govn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8P43SK2KHA;
 				INFOPLIST_FILE = govn/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.govn.dim.govn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2602,18 +2721,19 @@
 			baseConfigurationReference = 7CA1F9F82732C7F1B5DBE582 /* Pods-govn.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = govn/govn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8P43SK2KHA;
 				INFOPLIST_FILE = govn/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.govn.dim.govn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

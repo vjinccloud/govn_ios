@@ -127,14 +127,24 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         if choseTag==0 {
             return AppDelegate.shared().provinceData.count
         } else {
+            //省份還沒抓到時不能直接取index，會crash
+            guard choseProvinceIdx < AppDelegate.shared().provinceData.count else {
+                return 0
+            }
             return AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count
         }
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if choseTag==0 {
+            guard row < AppDelegate.shared().provinceData.count else {
+                return nil
+            }
             return AppDelegate.shared().provinceData[row].province_name
         } else {
+            guard choseProvinceIdx < AppDelegate.shared().provinceData.count, row < AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count else {
+                return nil
+            }
             return AppDelegate.shared().provinceData[choseProvinceIdx].allZone[row].district_name
         }
     }
@@ -173,12 +183,18 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         let select = self.pickerView.selectedRow(inComponent: 0)
         
         if choseTag==0 {
+            guard select < AppDelegate.shared().provinceData.count else {
+                return
+            }
             choseProvinceIdx = select
             field1.text = AppDelegate.shared().provinceData[choseProvinceIdx].province_name
             choseDistrictIdx = 0
-            field2.text = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[choseDistrictIdx].district_name
-            
+            field2.text = AppDelegate.shared().provinceData[choseProvinceIdx].allZone.first?.district_name
+
         } else {
+            guard choseProvinceIdx < AppDelegate.shared().provinceData.count, select < AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count else {
+                return
+            }
             choseDistrictIdx = select
             field2.text = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[choseDistrictIdx].district_name
         }
@@ -278,7 +294,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
     func checkLeagleCharacter() -> Bool {
         var pass = true
         let words = field3.text
-        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ,./-]+")
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 _,./-]+")
         pass = pred.evaluate(with: words)
         
         if field3.text?.count==0 {
@@ -323,6 +339,70 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                 }
         }
         
+    }
+    
+    func addRecipient() {
+        //只有銀行帳戶受款人需要先以帳號呼叫 API_AddRecipient 建立受款人，
+        //之後 API_UpdateAddRecipient 才找得到這筆資料（否則回 1011 recipient_name not found）。
+        //不論是不是轉帳流程（canSelectForTransfer）都必須先建立。
+        //Cash Pickup 與 Door to Door 沒有銀行帳號，不可沿用上一筆 transactionObj.recipientObj。
+        if AppDelegate.shared().transactionObj.recipient_type != 1 {
+            addRecipientStep2()
+            return
+        }
+        
+        //以這次流程填的 tempRecipientObj 為主，避免沿用上一筆 transactionObj.recipientObj
+        var bankCode = AppDelegate.shared().tempRecipientObj.bank_code ?? ""
+        var bankAcc = AppDelegate.shared().tempRecipientObj.bank_acc ?? ""
+        if bankCode == "" || bankAcc == "" {
+            bankCode = AppDelegate.shared().transactionObj.recipientObj.bank_code ?? ""
+            bankAcc = AppDelegate.shared().transactionObj.recipientObj.bank_acc ?? ""
+        }
+        if bankCode == "" || bankAcc == "" {
+            addRecipientStep2()
+            return
+        }
+        
+        //API_AddRecipient 會覆寫 tempRecipientObj.recipient_name，先留著使用者輸入的名字
+        let enteredName = AppDelegate.shared().tempRecipientObj.recipient_name ?? ""
+        
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":bankCode, "bank_acc":bankAcc]
+        let headers: HTTPHeaders = [:]
+        closeAll()
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_AddRecipient;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("(API_AddRecipient)esponseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    //銀行查不到名字時（回傳空白）維持使用者自己輸入的名字
+                    if (AppDelegate.shared().tempRecipientObj.recipient_name ?? "") == "" {
+                        AppDelegate.shared().tempRecipientObj.recipient_name = enteredName
+                    }
+                    self.addRecipientStep2()
+                } else {
+                    //API_AddRecipient 失敗時 APIHandle 會回 .error，一律把 server 訊息顯示出來，
+                    //不要靜靜停在這頁（原本只處理 .failed，.error 會沒有任何反應）。
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
     }
     
     func addRecipientStep2() {
@@ -426,7 +506,7 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
             return
         }*/
         
-        addRecipientStep2()
+        addRecipient()
     }
     
     @IBAction func backAction(_ sender: Any) {
@@ -477,10 +557,10 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         pickBackView = UIView(frame: CGRect(x: 0, y: (tempWindow?.frame.height)!, width: view.frame.width, height: 260))
         
         // Toolbar
-        let btnDone = UIBarButtonItem(title: "  確定  ", style: .plain, target: self, action: #selector(finishSelect))
+        let btnDone = UIBarButtonItem(title: " Xác nhận ", style: .plain, target: self, action: #selector(finishSelect))
         //UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(finishSelect))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let cancelButton = UIBarButtonItem(title: "  取消  ", style: .plain, target: self, action: #selector(closePicker))
+        let cancelButton = UIBarButtonItem(title: "  Huỷ  ", style: .plain, target: self, action: #selector(closePicker))
         
         let barAccessory = UIToolbar(frame: CGRect(x: 0, y: 0, width: pickBackView.frame.width, height: 44))
         barAccessory.barStyle = .default
@@ -555,10 +635,33 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
             checkBtnState()
         }*/
         
+        //從會員專區進來時沒有經過TransferMainVC，省份資料是空的，這裡要自己補抓
+        //另外快取到的可能是另一種受款人類型的清單，種類不對也要重抓
+        let needDoorToDoor = (AppDelegate.shared().transactionObj.recipient_type == 3)
+        if AppDelegate.shared().provinceData.isEmpty || AppDelegate.shared().provinceDataIsDoorToDoor != needDoorToDoor {
+            AppDelegate.shared().addLoadingView()
+            AppDelegate.shared().getProvinceData(RecipientType: AppDelegate.shared().transactionObj.recipient_type) { [weak self] success in
+                AppDelegate.shared().removeLoadingView()
+                guard let self = self else { return }
+
+                if success {
+                    self.pickerView.reloadAllComponents()
+                    self.initProvinceFields()
+                } else {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                }
+            }
+        } else {
+            initProvinceFields()
+        }
+    }
+
+    //把已填過的省份/行政區帶回畫面
+    func initProvinceFields() {
         if AppDelegate.shared().tempRecipientObj.address != "" {
             field3.text = AppDelegate.shared().tempRecipientObj.address
         }
-        
+
         if AppDelegate.shared().tempRecipientObj.province_id != "" {
             //比對省份
             let ori = AppDelegate.shared().tempRecipientObj.province_id
@@ -571,8 +674,8 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                 }
             }
         }
-            
-        if AppDelegate.shared().tempRecipientObj.district_id != "" {
+
+        if AppDelegate.shared().tempRecipientObj.district_id != "", choseProvinceIdx < AppDelegate.shared().provinceData.count {
             let ori = AppDelegate.shared().tempRecipientObj.district_id
             for i in 0..<AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count {
                 let str = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_id

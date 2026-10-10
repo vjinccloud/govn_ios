@@ -10,12 +10,12 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import UserNotifications
-import iProgressHUD
 import PKHUD
 import CommonCrypto
 import Firebase
 import FirebaseMessaging
 import WebKit
+import ZKProgressHUD
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
@@ -40,6 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var hasLogin = false
     //是否有省份資料
     var hasProvinceData = false
+    //目前快取的省份資料是不是宅配到府那一份，兩種清單內容不同
+    var provinceDataIsDoorToDoor = false
     var floatingBtnBackFrame:CGRect!
     var hasFloatingBtn = false
     var deviceSmall = false
@@ -47,6 +49,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     public var promoUrlAry:[String] = []
     public var sessionToken:String = ""
     public var memberData:[String:String] = [:]
+    
+    var tempTransferMaxWarningStr = ""
+    var tempTransferMaxAmount = 0
+    var tempTransferMaxAmountStr = ""
+    var tempTransferLeftAmount = 0
+    var transferErrorIs509:Bool = false
     
     public var forgotPassTempMemID:String = ""
     public var forgotPassTempPhone:String = ""
@@ -75,6 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var bottomMenu:BottomMenuView!
     var hasBottomMenu = false
     var bottomPadding:CGFloat!
+    var firstOpenApp = false
     
     var wholeAddress = ""
     
@@ -83,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     var hasBankList = false
     var bankList:[BankObj] = []
+    var getInfoStrAry:[String] = []
     
     var pointRootShowHistory = false
     var tempAgreementHtmlContent:String = ""
@@ -109,6 +119,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     var checkRecipientName = ""
     
+    var transferQuotaTotal:Int = 0
+    var transferQuotaLeft:Int = 0
+    
+    var tempShareMemberId = ""
+    
+    var tempDiscountCodeResultAry:[String] = ["","","","",""]
+    var discountForTransfer:String = ""
+    var discountCode:String = ""
+    
     //MARK: - Web Delegate
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         Dlog("Start loading")
@@ -125,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         // Override point for customization after application launch.
         //addTopButton()
         //檢查版本
-        //checkAppStoreVersion()
+        checkAppStoreVersion()
         
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -152,6 +171,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         AppDelegate.shared().seperatorStr = NSLocalizedString("leading space", comment: "")
         AppDelegate.shared().subSeperatorStr = NSLocalizedString("leading sub space", comment: "")
         self.getBankList()
+        //後台控制 App icon
+        AppIconManager.shared.fetchAndApplyIcon()
         return true
     }
     
@@ -164,7 +185,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         AppDelegate.shared().hasArcResultAndGotoRegister = false
         AppDelegate.shared().arcScanReulstForRegister = ""
     }
-    
+
+    //iOS 13以下沒有SceneDelegate，這裡補上強制更新的再檢查
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        if #available(iOS 13.0, *) {
+            return
+        }
+        presentForceUpdateAlert()
+    }
+
     //MARK: - Notification
     func application(_ application: UIApplication,
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -335,9 +364,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         let center = floatingButton.center
         let window = UIApplication.shared.keyWindow
         
-        /*if center.y < (topContainer.frame.origin.y + topContainer.frame.size.height + floatingButton.frame.size.height*0.5) {
-            floatingButton.center.y = (topContainer.frame.origin.y+topContainer.frame.size.height+30)
-        } else*/ if center.y > ( (window?.frame.size.height)! - floatingButton.frame.size.height*0.5 - 60) {
+     if center.y < (50 + floatingButton.frame.size.height*0.5) {
+            floatingButton.center.y = (50+30)
+        } else if center.y > ( (window?.frame.size.height)! - floatingButton.frame.size.height*0.5 - 60) {
             floatingButton.center.y = (window?.frame.size.height)! - floatingButton.frame.size.height*0.5 - 60
         }
         
@@ -594,34 +623,155 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
         }
     }
     
-    func checkAppStoreVersion() {
-        let bundleId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
-        Alamofire.request("https://itunes.apple.com/lookup?bundleId=\(bundleId)").responseJSON { response in
-          if let json = response.result.value as? NSDictionary, let results = json["results"] as? NSArray, let entry = results.firstObject as? NSDictionary, let appStoreVersion = entry["version"] as? String{
-            Dlog("appStoreVersion = \(appStoreVersion)")
-            let appVersionInApp = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)!
-            
-            if appStoreVersion != appVersionInApp {
-                let alert = UIAlertController(title: "", message: NSLocalizedString("Please Update App", comment: ""), preferredStyle: .alert)
-                let action1 = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler:{(_)-> Void in
-                    self.getToAppStore()
-                    exit(0)
-                })
-                alert.addAction(action1)
-                let window = UIApplication.shared.keyWindow
-                window?.rootViewController!.present(alert ,animated: true,completion: nil)
-            }
-          }
+    //取得省份與行政區資料
+    //原本只有TransferMainVC有這支，從會員專區進去新增受款人就拿不到資料，所以移到這裡共用
+    func getProvinceData(RecipientType recipientType:Int, Completion completion:((Bool) -> Void)? = nil) {
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "mode":"json"]
+        let headers: HTTPHeaders = [:]
+
+        //宅配到府的省份清單和另外兩種不一樣
+        let todoEndpoint: String = (recipientType == 3) ? API_Get_province_districtDoorToDoor : API_Get_province_district
+
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+
+                guard response.result.error == nil else {
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    completion?(false)
+                    return
+                }
+
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("province responseStr = \(responseStr ?? "")")
+
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    AppDelegate.shared().hasProvinceData = true
+                    URLCache.shared.removeAllCachedResponses()
+                    completion?(true)
+                } else {
+                    completion?(false)
+                }
         }
     }
-    
-    func getToAppStore() {
-        let appId = "1528460525" // Replace with your appId
-        let appURL = URL.init(string: "itms-apps://itunes.apple.com/app/id" + appId + "?mt=8") //Replace cn for your current country
-        UIApplication.shared.open(appURL!, options:[.universalLinksOnly : false]) { (success) in
 
+    //App上架台灣和越南商店，lookup不帶country會查美國商店而回傳空陣列
+    let appStoreFallbackCountry = "vn"
+    //檢查到需要強制更新，回到App時要再擋一次
+    var needForceUpdate = false
+
+    func checkAppStoreVersion() {
+        let bundleId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
+        let country = Locale.current.regionCode ?? appStoreFallbackCountry
+
+        //先用裝置所在地區查，查不到再用上架地區補查一次
+        lookupAppStoreVersion(BundleId: bundleId, Country: country) { appStoreVersion in
+            if let appStoreVersion = appStoreVersion {
+                self.showUpdateAlertIfNeeded(AppStoreVersion: appStoreVersion)
+                return
+            }
+
+            if country.lowercased() == self.appStoreFallbackCountry {
+                Dlog("checkAppStoreVersion 查無資料, bundleId = \(bundleId), country = \(country)")
+                return
+            }
+
+            self.lookupAppStoreVersion(BundleId: bundleId, Country: self.appStoreFallbackCountry) { appStoreVersion in
+                guard let appStoreVersion = appStoreVersion else {
+                    Dlog("checkAppStoreVersion 查無資料, bundleId = \(bundleId), country = \(country)/\(self.appStoreFallbackCountry)")
+                    return
+                }
+                self.showUpdateAlertIfNeeded(AppStoreVersion: appStoreVersion)
+            }
         }
-        
+    }
+
+    func lookupAppStoreVersion(BundleId bundleId:String, Country country:String, Completion completion:@escaping (String?) -> Void) {
+        Alamofire.request("https://itunes.apple.com/lookup?bundleId=\(bundleId)&country=\(country)").responseJSON { response in
+            guard let json = response.result.value as? NSDictionary, let results = json["results"] as? NSArray, let entry = results.firstObject as? NSDictionary, let appStoreVersion = entry["version"] as? String else {
+                completion(nil)
+                return
+            }
+            completion(appStoreVersion)
+        }
+    }
+
+    func showUpdateAlertIfNeeded(AppStoreVersion appStoreVersion:String) {
+        let appVersionInApp = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)!
+        Dlog("appStoreVersion = \(appStoreVersion), appVersionInApp = \(appVersionInApp)")
+
+        //只有商店版本比較新才擋，避免開發中的版本被自己的更新視窗擋住
+        guard appStoreVersion.compare(appVersionInApp, options: .numeric) == .orderedDescending else {
+            needForceUpdate = false
+            return
+        }
+
+        needForceUpdate = true
+        presentForceUpdateAlert()
+    }
+
+    //回到App時再擋一次，取代原本的exit(0)
+    func presentForceUpdateAlert() {
+        guard needForceUpdate else { return }
+
+        guard let rootVC = UIApplication.shared.keyWindow?.rootViewController else {
+            Dlog("presentForceUpdateAlert 找不到rootViewController")
+            return
+        }
+
+        //找到最上層的VC，並避免重複present
+        var topVC = rootVC
+        while let presentedVC = topVC.presentedViewController {
+            if presentedVC is UIAlertController {
+                return
+            }
+            topVC = presentedVC
+        }
+
+        let alert = UIAlertController(title: "", message: NSLocalizedString("Please Update App", comment: ""), preferredStyle: .alert)
+        let action1 = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler:{(_)-> Void in
+            self.getToAppStore() { success in
+                //沒開成App Store就馬上再擋一次，開成了則等回到App時由becomeActive再擋
+                if !success {
+                    self.presentForceUpdateAlert()
+                }
+            }
+        })
+        alert.addAction(action1)
+        topVC.present(alert ,animated: true,completion: nil)
+    }
+
+    func getToAppStore(Completion completion:((Bool) -> Void)? = nil) {
+        let appId = "1542021003" //GoVn 的 App Store ID
+        let country = Locale.current.regionCode?.lowercased() ?? appStoreFallbackCountry
+
+        //依序試到開得起來為止，最後一個https網址由iOS轉交App Store App
+        let urlStrAry = ["itms-apps://apps.apple.com/\(country)/app/id\(appId)",
+                         "itms-apps://apps.apple.com/app/id\(appId)",
+                         "itms-apps://itunes.apple.com/app/id\(appId)",
+                         "https://apps.apple.com/\(country)/app/id\(appId)"]
+        openAppStoreURL(URLStrAry: urlStrAry, Index: 0, Completion: completion)
+    }
+
+    //模擬器沒有安裝App Store，所有itms-apps網址都會失敗，要在實機測試
+    func openAppStoreURL(URLStrAry urlStrAry:[String], Index index:Int, Completion completion:((Bool) -> Void)?) {
+        guard index < urlStrAry.count, let appURL = URL.init(string: urlStrAry[index]) else {
+            Dlog("getToAppStore 全部網址都開不起來")
+            completion?(false)
+            return
+        }
+
+        UIApplication.shared.open(appURL, options:[.universalLinksOnly : false]) { (success) in
+            Dlog("getToAppStore success = \(success), url = \(urlStrAry[index])")
+            if success {
+                completion?(true)
+            } else {
+                self.openAppStoreURL(URLStrAry: urlStrAry, Index: index + 1, Completion: completion)
+            }
+        }
     }
     
     //MARK: - login
@@ -668,6 +818,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     }
     
     public func rememberAccount(Account account:String, Pass pass:String) {
+        Dlog("rememberAccount = \(account)")
         let userDefaults = UserDefaults.standard
         
         let convertStr = aesWord(OriStr: account, IsEncode: true)
@@ -731,6 +882,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     public func userLogout() {
         hasLogin = false
         sessionToken = ""
+        //removeSavedAccount()
         let userDefaults = UserDefaults.standard
         userDefaults.removeObject(forKey: "sessionToken")
         userDefaults.removeObject(forKey: "bioState")
@@ -807,10 +959,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     }
     
     //MARK: - Change Root
-    public func changeRootOfFunc(Type type:LoginFuncType) {
+    public func changeRootOfFunc(Type type:LoginFuncType, discountForTransfer:String = "", discountCode:String = "") {
         
         var storyboardId = ""
         var navigaterId = ""
+        
+        AppDelegate.shared().discountForTransfer = ""
+        AppDelegate.shared().discountCode = ""
         
         if type == LoginFuncType.main {
             storyboardId = "Main"
@@ -826,6 +981,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
             } else if type == LoginFuncType.transaction {
                 storyboardId = "Member"
                 navigaterId = "TransferMainNC"
+                AppDelegate.shared().discountForTransfer = discountForTransfer
+                AppDelegate.shared().discountCode = discountCode
             } else if type == LoginFuncType.sharing {
                 storyboardId = "Member"
                 var storyboardId = "ShareMainNC"
@@ -1044,13 +1201,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     
     //正在讀取
     func addLoadingView() {
-        PKHUD.sharedHUD.contentView = PKHUDProgressView()
-        PKHUD.sharedHUD.show()
+        //PKHUD.sharedHUD.contentView = PKHUDProgressView()
+        //PKHUD.sharedHUD.show()
+        ZKProgressHUD.show()
     }
     
     //關掉讀取按鈕
     func removeLoadingView() {
-        PKHUD.sharedHUD.hide()
+        //PKHUD.sharedHUD.hide()
+        ZKProgressHUD.dismiss()
     }
     
     //跳出alert

@@ -26,6 +26,7 @@ class RegisterShareInputVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var inputMoreSpaceView: UIView!
     @IBOutlet weak var textBackV: UIView!
     @IBOutlet weak var topScrollView: UIScrollView!
+    @IBOutlet weak var bottomL: UILabel!
     
     var parentVC:RegisterInputVC!
     
@@ -93,10 +94,13 @@ class RegisterShareInputVC: UIViewController, UITextFieldDelegate {
         
         scanL.text = NSLocalizedString("Register Share Input Scan", comment: "")
         scanL.adjustsFontSizeToFitWidth = true
-        msgL.text = NSLocalizedString("Register Share Input Msg", comment: "")
+        msgL.text = ""//NSLocalizedString("Register Share Input Msg", comment: "")
         msgL.adjustsFontSizeToFitWidth = true
         divL.text = NSLocalizedString("Register Share Input Div", comment: "")
         belowL.text = NSLocalizedString("Register Share Input Below", comment: "")
+        
+        bottomL.text = NSLocalizedString("Enter Invitation Code Bottom Words", comment: "")
+        
         
         downBtn.backgroundColor = .clear
         downBtn.setTitleColor(.white, for: .normal)

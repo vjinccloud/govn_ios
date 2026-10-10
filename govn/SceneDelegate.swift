@@ -33,6 +33,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         AppDelegate.shared().hideBlackWindow()
+        //沒去更新就回來的話再擋一次
+        AppDelegate.shared().presentForceUpdateAlert()
     }
 
     @available(iOS 13.0, *)

@@ -51,6 +51,8 @@ let orderTicketTimeLimitSecs:Double = 300
 
 //API後續網址設定
 let API_Promo = ServerURL + "/app/remit/app_photos"
+let API_DeleteMember = ServerURL + "/app/remit/delete_member"
+let API_GetInfo = ServerURL + "/app/get_info"
 let API_Login = ServerURL + "/app/remit/login"
 let API_CheckLogin = ServerURL + "/app/remit/check_token"
 let API_CheckMemExist = ServerURL + "/app/remit/check_mem_exists"
@@ -83,8 +85,26 @@ let API_PassUpdate = ServerURL + "/app/remit/password_update"
 let API_PhoneTokenSet = ServerURL + "/app/remit/phone_token_set"
 let API_Search_recipient = ServerURL + "/app/remit/search_recipient"
 let API_Get_province_district = ServerURL + "/app/remit/get_province_district"
+let API_Get_province_districtDoorToDoor = ServerURL + "/app/remit/get_province_exclude_door_to_door_district"
 let API_Check_recipient_v2 = ServerURL + "/app/remit/check_recipient_v2"
 let API_Search_recipient_ids = ServerURL + "/app/remit/search_recipient_ids"
+
+let API_GetBankCode = ServerURL + "/console/api/getVAccount"
+
+let API_GetQuota = ServerURL + "/app/remit/get_quota"
+
+let API_TransferToday = ServerURL + "/app/remit/money_transfer_today"
+let API_TransferHistoryBeforeToday = ServerURL + "/app/remit/money_transfer_before_today"
+let API_CheckDiscountCode = ServerURL + "/app/remit/check_discount_code"
+
+let API_MemberRecipentsV2 = ServerURL + "/app/remit/member_recipients_v2"
+let API_MemberRecipentsOther_TransferV2 = ServerURL + "/app/remit/member_recipients_others_v2"
+
+let API_TransactionCreateV2 = ServerURL + "/app/remit/create_v2"
+let API_TransactionCreate_OtherV2 = ServerURL + "/app/remit/create_others_v2"
+
+//後台控制 App icon（POST、免參數，回傳 remit_reply 0 <icon名稱>）
+let API_LauncherIcon = ServerURL + "/app/getLauncherIcon.php"
 
 public enum TransferMemberStyle {
     case normal

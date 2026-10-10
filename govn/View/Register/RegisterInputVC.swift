@@ -59,6 +59,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     
     @IBOutlet weak var scanARC: UILabel!
     
+    @IBOutlet weak var expiredBackV: UIView!
+    @IBOutlet weak var arcBackV: UIView!
     @IBOutlet weak var expiredView: UIView!
     var birthDatePicker:UIDatePicker!
     var expiredDatePicker:UIDatePicker!
@@ -86,7 +88,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         AppDelegate.shared().tempRegisterObj = RegisterDataObj()
         //AppDelegate.shared().tempRegisterObj.meImg = meImg
         AppDelegate.shared().tempRegisterObj.account = accountTextfield.text
-        AppDelegate.shared().tempRegisterObj.phoneNum = phoneTextfield.text
+        AppDelegate.shared().tempRegisterObj.phoneNum = "09\(phoneTextfield.text!)"
         AppDelegate.shared().tempRegisterObj.passwaord = passTextField.text
         AppDelegate.shared().tempRegisterObj.arcNum = arcCodeL.text
         if hasSharedCode {
@@ -354,7 +356,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             datePicker.date = dateNow
             datePicker.maximumDate = dateNow
             birthTextfield.inputView = datePicker
-            let doneButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(self.datePickerDone))
+            let doneButton = UIBarButtonItem.init(title: "Xác nhận", style: .done, target: self, action: #selector(self.datePickerDone))
             let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
             toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
             birthTextfield.inputAccessoryView = toolBar
@@ -372,7 +374,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             datePicker.date = dateNow
             datePicker.minimumDate = dateNow
             expiredTextfield.inputView = datePicker
-            let doneButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(self.datePickerDone))
+            let doneButton = UIBarButtonItem.init(title: "Xác nhận", style: .done, target: self, action: #selector(self.datePickerDone))
             let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
             toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
             expiredTextfield.inputAccessoryView = toolBar
@@ -398,6 +400,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             expiredDate = date
             expiredTextfield.text = date.toString()
         }
+        checkNextBtnState(CheckText: true)
     }
     
     //MARK: - Utility
@@ -411,16 +414,18 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         
         //Tel
         var pass = true
-        if !(phoneTextfield.text?.hasPrefix("09"))! {
-            pass = false
-        }
         
-        if phoneTextfield.text?.count != 10 {
+        if phoneTextfield.text?.count != 8 {
             pass = false
         }
         
         if !pass {
-            errorL.text = NSLocalizedString("Register Error Tel", comment: "")
+            if phoneTextfield.text?.count != 8 {
+                errorL.text = NSLocalizedString("Wrong Phone Format", comment: "")
+            } else {
+                errorL.text = NSLocalizedString("Register Error Tel", comment: "")
+            }
+            
             errorView.isHidden = false
             return false
         }
@@ -502,8 +507,29 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         return true
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else{
+            return true
+        }
+        
+        let textLength = text.count + string.count - range.length
+        if textField == phoneTextfield, textLength>8 {
+            return false
+        }
+        
+        return true
+    }
+    
     func checkNextBtnState(CheckText checkNow:Bool) {
         var pass = true
+        
+        if birthTextfield.text!.count == 0 {
+            //birthBtn.backgroundColor = Color_Main_DarkGray
+            //birthTextfield.textColor = .white
+        } else {
+            birthBtn.backgroundColor = Color_Main_LightGray
+            birthTextfield.textColor = .black
+        }
         
         if accountTextfield.text?.count == 0 || birthTextfield.text?.count == 0 || expiredTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
             pass = false
@@ -566,6 +592,12 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
 
         // Do any additional setup after loading the view.
         self.setupHideKeyboardOnTap()
+        arcBackV.layer.cornerRadius = 12
+        arcBackV.layer.borderColor = Color_Main_LightGray.cgColor
+        arcBackV.layer.borderWidth = 0.5
+        expiredBackV.layer.cornerRadius = 12
+        expiredBackV.layer.borderColor = UIColor.yellow.cgColor
+        expiredBackV.layer.borderWidth = 1
         
         backL.text = NSLocalizedString("back", comment: "")
         accountBtn.layer.cornerRadius = accountBtn.frame.size.height/2
@@ -659,7 +691,8 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         if AppDelegate.shared().hasArcResultAndGotoRegister {
             setArcCodeString(Code: AppDelegate.shared().arcScanReulstForRegister)
         }
-        
+        birthBtn.backgroundColor = .clear
+        birthTextfield.textColor = .white
         addDatePicker()
     }
     

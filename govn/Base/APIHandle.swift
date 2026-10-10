@@ -13,6 +13,7 @@ import SwiftyJSON
 public enum ResponseState {
     case failed
     case ok
+    case maxExceed
     case error
     case member_not_exist
     case lack_point
@@ -73,8 +74,22 @@ class APIHandle {
                 return ResponseState.member_not_exist
             } else if apiStr == API_AddRecipient {
                 return ResponseState.error
-            } else if apiStr == API_MemberRecipents && stateStr == "509" {
-                return ResponseState.error
+            } else if apiStr == API_MemberRecipents && (stateStr == "509" || stateStr == "714" || stateStr == "715" || stateStr == "716") {
+                if stateStr == "509" {
+                    getRecipientMaxAmount(DataStr: resultStr, Is509: true)
+                } else {
+                    getRecipientMaxAmount(DataStr: resultStr)
+                }
+                
+                return ResponseState.maxExceed
+            } else if apiStr == API_MemberRecipentsV2 && (stateStr == "509" || stateStr == "714" || stateStr == "715" || stateStr == "716") {
+                if stateStr == "509" {
+                    getRecipientMaxAmount(DataStr: resultStr, Is509: true)
+                } else {
+                    getRecipientMaxAmount(DataStr: resultStr)
+                }
+                
+                return ResponseState.maxExceed
             } else if apiStr == API_BankList {
                 return ResponseState.failed
             } else {
@@ -96,6 +111,9 @@ class APIHandle {
         
         //根據 API 字串處理後續
         switch apiStr {
+        case API_GetInfo:
+            getinfo(DataStr: resultStr)
+            break
         case API_Promo:
             promo(DataStr: resultStr)
             break
@@ -106,6 +124,12 @@ class APIHandle {
             login(DataStr: resultStr)
             break
         case API_Get_province_district:
+            //記住目前這份省份資料是哪一種，才知道要不要重抓
+            AppDelegate.shared().provinceDataIsDoorToDoor = false
+            checkProvinceListByJson(DataStr: resultStr)
+            break
+        case API_Get_province_districtDoorToDoor:
+            AppDelegate.shared().provinceDataIsDoorToDoor = true
             checkProvinceListByJson(DataStr: resultStr)
             break
         case API_CheckMemExist:
@@ -132,6 +156,9 @@ class APIHandle {
         case API_MemberRecipents:
             checkRecipientList(DataStr: resultStr)
             break
+        case API_MemberRecipentsV2:
+            checkRecipientList(DataStr: resultStr)
+            break
         case API_BankList:
             checkBankList(DataStr: resultStr)
             break
@@ -142,6 +169,9 @@ class APIHandle {
             checkTransferOrderCheckList(DataStr: resultStr)
             break
         case API_TransactionCreate:
+            checkTransactionResult(DataStr: resultStr)
+            break
+        case API_TransactionCreateV2:
             checkTransactionResult(DataStr: resultStr)
             break
         case API_AddRecipient:
@@ -162,11 +192,59 @@ class APIHandle {
         case API_BarCode_711, API_BarCode_fami, API_BarCode_ok, API_BarCode_hilife:
             checkBarCode(DataStr: resultStr)
             break
+        case API_TransferToday:
+            checkTransferStateList(DataStr: resultStr)
+            break
+        case API_TransferHistoryBeforeToday:
+            checkTransferStateList(DataStr: resultStr)
+            break
+        case API_GetQuota:
+            checkQuotaResult(DataStr: resultStr)
+            break
+        case API_CheckDiscountCode:
+            checkDiscountCodeResult(DataStr: resultStr)
         default:
             break
         }
         
         return ResponseState.ok
+    }
+    
+    private func checkDiscountCodeResult(DataStr dataStr:String) {
+        
+        //目前直接用zero width空格
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        
+        for i in 0..<ary.count {
+            
+            let subAry = ary[i].components(separatedBy: AppDelegate.shared().subSeperatorStr)
+            if subAry.count < 2 {
+                return
+            }
+            for j in 0..<subAry.count {
+                if j > 5 {
+                    return
+                }
+                Dlog("checkDiscountCodeResult \(j+1). value = \(subAry[j])")
+                AppDelegate.shared().tempDiscountCodeResultAry[j] = subAry[j]
+            }
+        }
+        
+    }
+    
+    private func checkQuotaResult(DataStr dataStr:String) {
+        
+        //目前直接用zero width空格
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        for j in 0..<ary.count {
+            Dlog("checkQuotaResult \(j+1). value = \(ary[j])")
+            if j==0 {
+                AppDelegate.shared().transferQuotaTotal = Int(ary[0]) ?? 0
+            } else if j==1 {
+                AppDelegate.shared().transferQuotaLeft = Int(ary[1]) ?? 0
+            }
+        }
+        
     }
     
     private func updateAddRecipient(DataStr dataStr:String) {
@@ -203,7 +281,7 @@ class APIHandle {
     }
     
     private func checkAddRecipientResult(DataStr dataStr:String) {
-        AppDelegate.shared().tempRecipientObj = RecipientObj()
+        //AppDelegate.shared().tempRecipientObj = RecipientObj()
         
         //目前直接用zero width空格
         let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
@@ -295,7 +373,7 @@ class APIHandle {
                 let obj:RecipientObj = RecipientObj()
                 let str1 = str
                 let aryzone = str1.components(separatedBy: divSubStr)
-                if aryzone.count>=7, aryzone[0].count>0, aryzone[1].count>0 {
+                if aryzone.count >= 8, aryzone[0].count > 0, aryzone[1].count > 0 {
                     obj.recipient_id = aryzone[0]
                     obj.recipient_name = aryzone[1]
                     obj.id_card_no = aryzone[2]
@@ -470,6 +548,9 @@ class APIHandle {
             for j in 0..<subAry.count {
                 obj.setValueByOrder(Order: j, Value: subAry[j])
             }
+            if obj.recipient_type.count == 0 {
+                obj.recipient_type.append(1)
+            }
             obj.printSelf()
             
             //直接先濾掉不是目前範圍的 (1的話必須有銀行資料)
@@ -625,4 +706,46 @@ class APIHandle {
         Dlog("promoUrlAry = \(AppDelegate.shared().promoUrlAry.count)")
     }
     
+    private func getinfo(DataStr dataStr:String) {
+        AppDelegate.shared().getInfoStrAry = []
+        
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        for i in 0..<ary.count {
+            var str = ary[i]
+            str = str.trimmingCharacters(in: .whitespaces)
+            AppDelegate.shared().getInfoStrAry.append(str)
+            
+            Dlog("\(i) str = \(str)")
+        }
+        
+        Dlog("getInfoStrAry = \(AppDelegate.shared().getInfoStrAry.count)")
+    }
+    
+    private func getRecipientMaxAmount(DataStr dataStr:String, Is509 is509:Bool = false) {
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().subSeperatorStr)
+        AppDelegate.shared().transferErrorIs509 = is509
+        for i in 0..<ary.count {
+            if i==0 {
+                AppDelegate.shared().tempTransferMaxWarningStr = ary[i]
+            } else if i==1 {
+                let str = ary[i]
+                if is509 {
+                    AppDelegate.shared().tempTransferMaxAmountStr = str
+                    AppDelegate.shared().tempTransferMaxAmount = Int(str) ?? 0
+                } else {
+                    AppDelegate.shared().tempTransferLeftAmount = Int(str) ?? 0
+                }
+            } else if i==2 {
+                let str = ary[i]
+                if is509 {
+                    AppDelegate.shared().tempTransferLeftAmount = Int(str) ?? 0
+                } else {
+                    AppDelegate.shared().tempTransferMaxAmount = Int(str) ?? 0
+                }
+                
+            }
+        }
+        
+        Dlog("str = \(AppDelegate.shared().tempTransferMaxWarningStr), left = \(AppDelegate.shared().tempTransferLeftAmount), max = \(AppDelegate.shared().tempTransferMaxAmount)")
+    }
 }

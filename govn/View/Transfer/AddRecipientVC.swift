@@ -104,7 +104,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
         cell.bankIconImgV.kf.setImage(with: urlhaed)
         cell.bankL.text = cellData.bank_name
-        
+        Dlog("bank code = \(cellData.bank_code), \(cellData.bank_name)")
         cell.backgroundColor = .white
         cell.selectionStyle = .none
         return cell
@@ -181,6 +181,16 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         closeAll()
         return false
     }
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        if textField == bankCodeTextfield {
+            textField.text = ""
+            bankListTableView.isHidden = false
+            reloadDataAndTable(Str: "")
+            checkBtnState()
+            return false
+        }
+        return true
+    }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         hideTextBtn.isHidden = false
         if textField == bankCodeTextfield {
@@ -207,14 +217,14 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
             return true
         }
         
-        if textField == accountTextfield {
+        if textField == bankCodeTextfield {
             if !string.checkAlphabetDigit() {
                 return false
             }
         }
         
-        if textField == bankCodeTextfield {
-            if !string.checkNumber() {
+        if textField == accountTextfield {
+            if !string.checkAlphabetDigit() {
                 return false
             }
         }
@@ -233,6 +243,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     //MARK: - API
+    /*
     func addRecipient() {
         //找出 bank code
         let serchBankobj = UtilityTool().searchBankObj(BankName: bankCodeTextfield.text!)
@@ -333,9 +344,8 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                     
                 }
         }
-    }
+    }*/
     
-    //改成先檢查才會新增
     func checkRecipient() {
         //找出 bank code
         let serchBankobj = UtilityTool().searchBankObj(BankName: bankCodeTextfield.text!)
@@ -392,8 +402,8 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                             if AppDelegate.shared().checkRecipientName == "" {
                                 //先進去下一頁，然後給改
                                 AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
-                                
                                 nextVC!.canEnterName = true
+                                return
                             } else {
                                 self.tempRecipientObj.recipient_name = AppDelegate.shared().checkRecipientName
                             }
@@ -408,11 +418,15 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                             nextVC!.canSelectForTransfer = self.canSelectForTransfer
                             self.navigationController?.pushViewController(nextVC!, animated: true)
                         }
-                    } else {
+                    } else {//050107953611 (no)  2122205111736 (yes)
                         self.navigationController?.popViewController(animated: true)
                     }
                     
                 } else if result == ResponseState.failed {
+                    //改成不給過
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                    return
+                    /*
                     if self.topBarSelectIdx==0 {
                         //先進去下一頁，然後給改
                         AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
@@ -437,7 +451,12 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                     } else {
                         AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                     }
+                     */
                 } else if result == ResponseState.error {
+                    //改成不給過
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                    return
+                    /*
                     //先進去下一頁，然後給改
                     AppDelegate.shared().showAlertViewWithTitle(Title: NSLocalizedString("Enter Account Special Error Title", comment: ""), Message: NSLocalizedString("Enter Account Special Error Msg", comment: ""), ConfrimStr: NSLocalizedString("cancelForError", comment: ""))
                     self.tempRecipientObj.bank_acc = self.accountTextfield.text!
@@ -458,7 +477,7 @@ class AddRecipientVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                             self.navigationController?.pushViewController(nextVC!, animated: true)
                         }
                     }
-                    
+                    */
                 }
         }
     }

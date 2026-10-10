@@ -30,7 +30,7 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
     }
     
     func scanNext(Code code:String) {
-        
+        /*
         //檢查限制為 C,D,8,9 其餘跳出格式錯誤
         //"scan format wrong"
         var checkedWrong = true
@@ -50,6 +50,19 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
         }
         
         if checkedWrong {
+            
+            let window = UIApplication.shared.keyWindow
+            let customAlert = CustomAlertView.init(frame: self.view.frame)
+            customAlert.initSimpleAlert(Title: "", Content: NSLocalizedString("scan format wrong" , comment: ""), NextBtn1Str: NSLocalizedString("ok2" , comment: ""))
+            window!.addSubview(customAlert)
+            customAlert.customDelegate = self
+            return
+        }*/
+        
+        let sanitizedCode = code.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        
+        // 第一碼:英文；第二碼:英文或數字；第三到第十碼:數字
+        guard isValidARCFormat(sanitizedCode) else {
             
             let window = UIApplication.shared.keyWindow
             let customAlert = CustomAlertView.init(frame: self.view.frame)
@@ -132,6 +145,12 @@ class ARCInputVC: UIViewController, UITextFieldDelegate, CustomAlertDelegate {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
         }
+    }
+    
+    private func isValidARCFormat(_ code: String) -> Bool {
+        // 第一碼:英文；第二碼:英文或數字；第三到第十碼:數字
+        let pattern = "^[A-Z][A-Z0-9][0-9]{8}$"
+        return code.range(of: pattern, options: .regularExpression) != nil
     }
     
     //MARK: - Button-Action

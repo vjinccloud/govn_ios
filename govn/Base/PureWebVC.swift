@@ -28,8 +28,45 @@ class PureWebVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = .nonPersistent()
+
+        guard let oldWebView = webView,
+              let superview = oldWebView.superview else {
+            return
+        }
+
+        let newWebView = WKWebView(frame: .zero, configuration: config)
+        newWebView.translatesAutoresizingMaskIntoConstraints = false
+
+        superview.insertSubview(newWebView, aboveSubview: oldWebView)
+
+        let constraintsToCopy = superview.constraints.filter { constraint in
+            (constraint.firstItem as AnyObject?) === oldWebView ||
+            (constraint.secondItem as AnyObject?) === oldWebView
+        }
+
+        for constraint in constraintsToCopy {
+            let firstItem = ((constraint.firstItem as AnyObject?) === oldWebView) ? newWebView : constraint.firstItem
+            let secondItem = ((constraint.secondItem as AnyObject?) === oldWebView) ? newWebView : constraint.secondItem
+
+            let newConstraint = NSLayoutConstraint(
+                item: firstItem as Any,
+                attribute: constraint.firstAttribute,
+                relatedBy: constraint.relation,
+                toItem: secondItem,
+                attribute: constraint.secondAttribute,
+                multiplier: constraint.multiplier,
+                constant: constraint.constant
+            )
+            newConstraint.priority = constraint.priority
+            newConstraint.shouldBeArchived = constraint.shouldBeArchived
+            newConstraint.identifier = constraint.identifier
+            newConstraint.isActive = true
+        }
+
+        oldWebView.removeFromSuperview()
+        self.webView = newWebView
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -37,6 +74,7 @@ class PureWebVC: UIViewController {
         
         backL.text = backTitle
         let url = URL(string: urlStr)
+        Dlog("urlStr = \(urlStr)")
         let request = URLRequest(url: url!)
         webView.load(request)
     }

@@ -214,9 +214,15 @@ class TransactionPayVC: UIViewController {
             storeStr = "HiLife"
         }
         
-        upIntoL.text = NSLocalizedString("Transfer PayStep Up Intro", comment: "") + storeStr + NSLocalizedString("Transfer PayStep Up Intro2", comment: "")
+        //upIntoL.text = NSLocalizedString("Transfer PayStep Up Intro", comment: "") + storeStr + NSLocalizedString("Transfer PayStep Up Intro2", comment: "")
+        upIntoL.text = NSLocalizedString("Transfer PayStep Up Intro", comment: "") + "\n" + NSLocalizedString("Transfer PayStep Up Intro2", comment: "")
+        
         upIntoL.textAlignment = .center
-        warnL.text = NSLocalizedString("Transfer PayStep Warn", comment: "")
+        var str = NSLocalizedString("Transfer PayStep Warn", comment: "")
+        if chosedStyle == StoreType.familymart {
+            str = str.replacingOccurrences(of: "10", with: "20")
+        }
+        warnL.text = str
         paymentInfoL.text = payment_info
         totalTWDL.text = NSLocalizedString("Total NTD", comment: "") + " \(transferStateObj.total.stringToIntDecimalString())"
         minDownL.text = NSLocalizedString("Transfer PayStep Min Title", comment: "")

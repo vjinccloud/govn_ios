@@ -50,6 +50,15 @@ class TransferStateType1TableViewCell: UITableViewCell {
     @IBOutlet weak var downType2L3: UILabel!
     @IBOutlet weak var downType2L4: UILabel!
     @IBOutlet weak var downType2L5: UILabel!
+    @IBOutlet weak var downType2LAddress: UILabel!
+    
+    @IBOutlet weak var downType3V: UIView!
+    @IBOutlet weak var down3IconIgV: UIImageView!
+    @IBOutlet weak var down3NameL: UILabel!
+    @IBOutlet weak var down3IDL: UILabel!
+    @IBOutlet weak var down3ValueL: UILabel!
+    @IBOutlet weak var down3Type2L4: UILabel!
+    @IBOutlet weak var down3Type2L5: UILabel!
     
     @IBOutlet weak var failV: UIView!
     @IBOutlet weak var failIconIgV: UIImageView!

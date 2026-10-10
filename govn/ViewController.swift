@@ -10,12 +10,16 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import Firebase
+import WebKit
 
-class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewControllerDataSource, UITextFieldDelegate, CustomAlertDelegate {
+class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewControllerDataSource, UITextFieldDelegate, CustomAlertDelegate, WKNavigationDelegate {
     
     @IBOutlet weak var accountBtn: UIButton!
     @IBOutlet weak var accountTextfield: UITextField!
     
+    @IBOutlet weak var warnWebV: WKWebView!
+    @IBOutlet weak var midAddressL: UILabel!
+    @IBOutlet weak var midNumL: UILabel!
     @IBOutlet weak var passBtn: UIButton!
     @IBOutlet weak var passTextField: UITextField!
     
@@ -313,6 +317,63 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         }
     }
     
+    func getInfo() {
+        
+        let parameters:Parameters = ["token":"dxeqD0g9aq/XApD3rZMJKQ==", "timestamp":"ajhkhdfs"]
+        let headers: HTTPHeaders = [:]
+        
+        Dlog("parameters=\(parameters)")
+        
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_GetInfo;
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                //Dlog("responseStr = \(responseStr ?? "")")
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    var str = ""
+                    if AppDelegate.shared().getInfoStrAry.count>=8 {
+                        for i in 0...3 {
+                            if i>0 {
+                                str += "\n"
+                            }
+                            str += AppDelegate.shared().getInfoStrAry[i]
+                        }
+                        
+                        str += "\n" + AppDelegate.shared().getInfoStrAry[7]
+                        str += "\n" + AppDelegate.shared().getInfoStrAry[8]
+                        
+                        self.midNumL.text = AppDelegate.shared().getInfoStrAry[5]
+                        self.midAddressL.text = AppDelegate.shared().getInfoStrAry[4] + "\n" + AppDelegate.shared().getInfoStrAry[6]
+                        self.introL.text = str
+                        self.bottomL.text = AppDelegate.shared().getInfoStrAry[7] + "\n" + AppDelegate.shared().getInfoStrAry[8]
+                    }
+                    
+                    let userDefaults = UserDefaults.standard
+                    if !AppDelegate.shared().firstOpenApp, self.accountTextfield.text != "", userDefaults.value(forKey: "sessionToken") != nil {
+                        self.loginNext()
+                    }
+                    
+                    AppDelegate.shared().firstOpenApp = true
+                    
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+    }
+    
     //MARK: - Page
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         // 取得當前頁數的 index(未翻頁前)
@@ -419,6 +480,9 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         promoView.isHidden = true
         promoPageCtrl.isHidden = true
         
+        bottomL.isHidden = true
+        midNumL.textColor = Color_Main_Red
+        
         accountBtn.layer.cornerRadius = accountBtn.frame.height/2
         passBtn.layer.cornerRadius = passBtn.frame.height/2
         loginBtn.layer.cornerRadius = loginBtn.frame.height/2
@@ -460,7 +524,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         passTextField.delegate = self
         
         if DevMode {
-            accountTextfield.text = "XC00000060" //XX00000026
+            accountTextfield.text = "ZD66666666" //XX00000026
             passTextField.text = "123456"
         }
         
@@ -471,6 +535,11 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         
         introL.text = "Digital Idea Multi-Media Co., Ltd.\nSố Giấy phép kinh doanh: xxxxxx\nThời hạn: dd/mm/yyyy\nNgân hàng bảo lãnh: Ngân hàng Thương mại Yuanta\nTỷ giá USD và NTD tham khảo theo giá niêm yết của ngân hàng Đài Loan\nTỷ giá USD và VND tham khảo theo giá niêm yết của ngân hàng Sacombank"
         introL.adjustsFontSizeToFitWidth = true
+        if let url = URL(string: "https://govnprod.indogo.link/anti_fraud.php") {
+            let request = URLRequest(url: url)
+            warnWebV.navigationDelegate = self
+            warnWebV.load(request)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -490,7 +559,8 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         if self.view.frame.size.width < 380 || (ratio<0.57 && ratio>0.56)  {
             AppDelegate.shared().deviceSmall = true
             let bnumber = Bundle.main.buildNumber
-            remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: "") + " " + bnumber + "", for: .normal)
+            //remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: "") + " " + bnumber + "", for: .normal)
+            remeberBtn.setTitle(" " + NSLocalizedString("remmber me", comment: ""), for: .normal)
         }
         
         loadOnce = true
@@ -507,6 +577,7 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         if AppDelegate.shared().getHasReadPromo() == "" {
            getPromo()
         }
+        getInfo()
         
         //自動登入(取消)
         /*
@@ -532,6 +603,23 @@ class ViewController: UIViewController,UIPageViewControllerDelegate,UIPageViewCo
         }
         
         return true
+    }
+
+    // MARK: - WKNavigationDelegate
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+        let scheme = url.scheme?.lowercased() ?? ""
+        // Only intercept user-tapped HTTP/HTTPS links; allow initial load and programmatic navigations.
+        if (scheme == "http" || scheme == "https"),
+           navigationAction.navigationType == .linkActivated {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            decisionHandler(.cancel)
+            return
+        }
+        decisionHandler(.allow)
     }
 }
 

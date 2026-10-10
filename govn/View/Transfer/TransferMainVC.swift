@@ -12,7 +12,7 @@ import SwiftyJSON
 import Kingfisher
 import KingfisherWebP
 
-class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var boxV: UIView!
     @IBOutlet weak var upNameL: UILabel!
@@ -38,13 +38,21 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     @IBOutlet weak var downTypeL: UILabel!
     
     @IBOutlet weak var headTitleL: UILabel!
-    
+    @IBOutlet weak var promteShowL: UILabel!
     @IBOutlet weak var topBarImg1: UIImageView!
     @IBOutlet weak var topBarL1: UILabel!
     @IBOutlet weak var topBarImg2: UIImageView!
     @IBOutlet weak var topBarL2: UILabel!
     @IBOutlet weak var topBarImg3: UIImageView!
     @IBOutlet weak var topBarL3: UILabel!
+    
+    @IBOutlet weak var topbox_barLength: NSLayoutConstraint!
+    @IBOutlet weak var topbox_barbackV: UIView!
+    @IBOutlet weak var topbox_barV: UIView!
+    @IBOutlet weak var topbox_titleL: UILabel!
+    @IBOutlet weak var topbox_MoneyL: UILabel!
+    @IBOutlet weak var leftBtn: UIButton!
+    @IBOutlet weak var rightBtn: UIButton!
     
     var moneyType:[String] = []
     var choseMoneyType = 0
@@ -63,6 +71,25 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     var decresedCharge = 0
     var decresedChargeUnit = 50
     var totalChage = 0
+    var statusNow = 0
+    var discountCodeValue = 0
+    private var isManualRefreshing = false
+    private let manualRefreshTriggerDistance: CGFloat = 90
+    private lazy var manualRefreshIndicator: UIActivityIndicatorView = {
+        let indicator: UIActivityIndicatorView
+        if #available(iOS 13.0, *) {
+            indicator = UIActivityIndicatorView(style: .large)
+        } else {
+            indicator = UIActivityIndicatorView(style: .whiteLarge)
+        }
+        indicator.color = .white
+        indicator.hidesWhenStopped = true
+        indicator.isHidden = true
+        return indicator
+    }()
+    private var manualRefreshIndicatorTopConstraint: NSLayoutConstraint?
+    private var manualRefreshIndicatorBaseOffset: CGFloat = 8
+    private var currentPullDistance: CGFloat = 0
     
     //MARK: - TopBar
     func initTopBar() {
@@ -271,9 +298,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     }
     
     func justCalculateValue(UseStyle style:Int, NweString newString:String) {
-        
-        //--should-- 20210608 把這函數所有 ceil 改成 round
-        
+
         var upValue = Int(newString.replacingOccurrences(of: ",", with: ""))
         var downValue = Int(newString.replacingOccurrences(of: ",", with: ""))
          
@@ -291,7 +316,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 downTextField.text = "1"
                 downValue = 1
             }
-            upValue = Int(round(Double(downValue!) / kursValue))
+            upValue = calculateNtdValue(from: downValue!)
             if upValue! < 1 {
                 upValue! = 1
             }
@@ -308,13 +333,6 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     
     func checkAndCalculateValue(UseStyle style:Int, NweString newString:String) {
         setUpKursValue()
-
-        //--should-- 20210608 把這函數所有 ceil 改成 round
-        /*
-        let value = Double(AppDelegate.shared().memberData["remit_point"]!)!
-        if value < 200 {
-            serviceCharge = Int(value)
-        }*/
         
         var string = newString
         
@@ -335,7 +353,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                 downTextField.text = "1"
                 downValue = 1
             }
-            upValue = Int(round(Double(downValue!) / kursValue))
+            upValue = calculateNtdValue(from: downValue!)
             if upValue! < 1 {
                 upValue! = 1
             }
@@ -355,7 +373,7 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             }
             
             downValue = Int(string)
-            upValue = Int(round(Double(downValue!) / kursValue))
+            upValue = calculateNtdValue(from: downValue!)
             if upValue! < 1 {
                 upValue! = 1
             }
@@ -373,6 +391,15 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         }
         
         valueL.text = "\(serviceCharge)"
+        let totalDiscount:Int = decresedCharge + discountCodeValue
+        
+        if totalDiscount == 0 {
+            pointLeftL.text = "\(totalDiscount)"
+        } else {
+            pointLeftL.text = "-\(totalDiscount)"
+        }
+        //20260504 舊的
+        /*
         if decresedCharge == 0 {
             pointLeftL.text = "\(decresedCharge)"
         } else {
@@ -380,12 +407,42 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         }
         
         totalChage = (upValue ?? 1) + serviceCharge - decresedCharge
+         */
+        
+        totalChage = upValue! + serviceCharge - decresedCharge - discountCodeValue
         totalNTDL.text = "\(totalChage)".stringToIntDecimalString()
         
         Dlog("totalChage=\(totalChage), serviceCharge=\(serviceCharge), decresedCharge=\(decresedCharge)")
     }
+
+    private func calculateNtdValue(from targetValue: Int) -> Int {
+        let rawNtdValue = Double(targetValue) / kursValue
+
+        if choseMoneyType == 0 { // VND 反算 NTD 時無條件進位
+            return Int(ceil(rawNtdValue))
+        }
+
+        return Int(round(rawNtdValue))
+    }
     
     //MARK: - Button Action
+    private func updateUsePointButtonAppearance() {
+        let isUsingPoints = decresedCharge > 0
+        let availablePoints = Int(AppDelegate.shared().memberData["remit_point"]!) ?? 0
+        leftTotalPL.text = "\(availablePoints - decresedCharge)"
+        leftBgV.layer.backgroundColor = isUsingPoints ? UIColor.white.cgColor : UIColor.clear.cgColor
+        leftDownL.textColor = isUsingPoints ? .black : .white
+        leftTotalPL.textColor = isUsingPoints ? .black : .white
+    }
+
+    @IBAction func leftBtnDown(_ sender: Any) {
+        updateUsePointButtonAppearance()
+    }
+    
+    @IBAction func leftBtnOutside(_ sender: Any) {
+        updateUsePointButtonAppearance()
+    }
+    
     @IBAction func leftBtnAction(_ sender: Any) {
         let value = Int(AppDelegate.shared().memberData["remit_point"]!)!
         
@@ -411,10 +468,12 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         }
         
         checkAndCalculateValue(UseStyle: 0, NweString: "")
+        updateUsePointButtonAppearance()
     }
     
     func clearCharge() {
         decresedCharge = 0
+        updateUsePointButtonAppearance()
     }
 
     @IBAction func rightBtnAction(_ sender: Any) {
@@ -460,21 +519,70 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         let downValue = Int(round(Double(AppDelegate.shared().transactionObj.ntdValue) * kursValue))
         AppDelegate.shared().transactionObj.targetValue = downValue
         AppDelegate.shared().transactionObj.feeValue = serviceCharge
-        AppDelegate.shared().transactionObj.usePoint = decresedCharge
+        AppDelegate.shared().transactionObj.usePoint = decresedCharge + discountCodeValue
         AppDelegate.shared().transactionObj.totalNtdValue = totalChage
         AppDelegate.shared().transactionObj.recipient_type = topBarSelectIdx + 1
         AppDelegate.shared().transactionObj.currency = moneyType[choseMoneyType]
         
         //先檢查有無省份資料
+        //20231217 改成都要檢查，因為省份有分
+        getProvinceData(NeedNExt: true)
+        
+        /*
         if !AppDelegate.shared().hasProvinceData {
             getProvinceData(NeedNExt: true)
         } else {
             //送出前要查詢是否超過金額
             checkAmount()
-        }
+        }*/
     }
     
     //MARK: - API
+    public func callMemberData(completion: (() -> Void)? = nil) {
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "req_timestamp":Date.giveCurrentDateString()]
+        let headers: HTTPHeaders = [:]
+        
+        if !isManualRefreshing {
+            AppDelegate.shared().addLoadingView()
+        }
+        
+        let todoEndpoint: String = API_CheckLogin;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { [weak self] response in
+                defer {
+                    completion?()
+                }
+                
+                let shouldHideLoading = !(self?.isManualRefreshing ?? false)
+                if shouldHideLoading {
+                    AppDelegate.shared().removeLoadingView()
+                }
+                
+                guard let self = self else { return }
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("responseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    self.setUpKursValue()
+                } else if result == ResponseState.failed {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                }
+        }
+    }
+    
     public func callMemberData() {
         let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
         let headers: HTTPHeaders = [:]
@@ -518,7 +626,11 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         closeAll()
         AppDelegate.shared().addLoadingView()
         
-        let todoEndpoint: String = API_Get_province_district;
+        var todoEndpoint: String = API_Get_province_district
+        
+        if topBarSelectIdx == 2 {
+            todoEndpoint = API_Get_province_districtDoorToDoor
+        }
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
@@ -558,13 +670,29 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
     }
     
     public func checkAmount() {
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":AppDelegate.shared().transactionObj.totalNtdValue, "use_remit_point":1]
+        
+        //20231115
+        var use_remit_point = 0
+        if decresedCharge > 0 {
+            use_remit_point = 1
+        }
+        
+        //檢查金額要扣掉手續費
+        let charge = Int(upTextField.text!.replacingOccurrences(of: ",", with: ""))!
+        
+        //let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":AppDelegate.shared().transactionObj.totalNtdValue, "use_remit_point":1]
+        var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":charge, "use_remit_point":use_remit_point, "recipient_type":topBarSelectIdx + 1]
+        var todoEndpoint: String = API_MemberRecipents;
+        
+        if AppDelegate.shared().discountForTransfer != "" {
+            todoEndpoint = API_MemberRecipentsV2
+            parameters["discount_code"] = AppDelegate.shared().discountCode
+            parameters["discount_amt"] = AppDelegate.shared().discountForTransfer
+        }
         
         let headers: HTTPHeaders = [:]
         closeAll()
         AppDelegate.shared().addLoadingView()
-        
-        let todoEndpoint: String = API_MemberRecipents;
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
@@ -596,6 +724,72 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
                     AppDelegate.shared().showAlertWithWindow(self, Message:msg)
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                } else if result == ResponseState.maxExceed {
+                    Dlog("AppDelegate.shared().tempTransferLeftAmount = \(AppDelegate.shared().tempTransferLeftAmount)")
+                    self.upTextField.text = "\(AppDelegate.shared().tempTransferLeftAmount)"
+                    self.justCalculateValue(UseStyle: 0, NweString: "\(AppDelegate.shared().tempTransferLeftAmount)")
+                    let customAlert = CustomAlertView.init(frame: self.view.bounds)
+                    customAlert.initAmountAlert(Title: NSLocalizedString("Exceed Maximun Amout Title", comment: ""), is509: AppDelegate.shared().transferErrorIs509)
+                    self.view.addSubview(customAlert)
+                    self.checkAndCalculateValue(UseStyle: 0, NweString: "")
+                }
+        }
+    }
+    
+    func plotQuotaState() {
+        topbox_MoneyL.text = String.stringToOnlyIntString(Number: AppDelegate.shared().transferQuotaLeft) + " NTD"
+        
+        if AppDelegate.shared().transferQuotaLeft == 0 || AppDelegate.shared().transferQuotaTotal == 0 {
+            topbox_barLength.constant = 1
+        } else {
+            topbox_barLength.constant = topbox_barbackV.frame.width * (Double(AppDelegate.shared().transferQuotaLeft)/Double(AppDelegate.shared().transferQuotaTotal))
+        }
+    }
+    
+    public func getQuota(completion: (() -> Void)? = nil) {
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
+        let headers: HTTPHeaders = [:]
+        if !isManualRefreshing {
+            AppDelegate.shared().addLoadingView()
+        }
+        
+        let todoEndpoint: String = API_GetQuota;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { [weak self] response in
+                guard let self = self else {
+                    completion?()
+                    return
+                }
+                
+                defer {
+                    completion?()
+                }
+                
+                let shouldHideLoading = !self.isManualRefreshing
+                if shouldHideLoading {
+                    AppDelegate.shared().removeLoadingView()
+                }
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
+                Dlog("responseStr = \(responseStr ?? "")")
+                
+                let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok {
+                    self.plotQuotaState()
+                    //self.getRecipents()
+                } else if result == ResponseState.failed {
+                    //AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
         }
     }
@@ -615,10 +809,16 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         closePicker()
         if textField == upTextField {
             upTextField.text = upTextField.text!.replacingOccurrences(of: ",", with: "")
-            upTextField.selectAll(nil)
+            if upTextField.text == "1" {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self, self.upTextField.isFirstResponder, self.upTextField.text == "1" else {
+                        return
+                    }
+                    self.upTextField.selectAll(nil)
+                }
+            }
         } else if textField == downTextField {
             downTextField.text = downTextField.text!.replacingOccurrences(of: ",", with: "")
-            downTextField.selectAll(nil)
         }
     }
     
@@ -643,6 +843,13 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
             isEmpty = true
             newString = "1"
         }
+
+        let numericCharacters = CharacterSet(charactersIn: "0123456789")
+        guard newString.rangeOfCharacter(from: numericCharacters.inverted) == nil,
+              Int(newString) != nil else {
+            return false
+        }
+
         if textField == upTextField {
             justCalculateValue(UseStyle: 0, NweString: newString)
         } else if textField == downTextField {
@@ -750,11 +957,18 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         downChangeBtn.layer.borderWidth = 0.5
         downChangeBtn.layer.borderColor = UIColor.white.cgColor
         
+        topbox_barbackV.layer.cornerRadius = topbox_barbackV.frame.size.height/2
+        topbox_barbackV.layer.borderWidth = 1
+        topbox_barbackV.layer.borderColor = Color_Main_LightGray.cgColor
+        topbox_barV.layer.cornerRadius = topbox_barV.frame.size.height/2
+        topbox_barV.layer.backgroundColor = Color_Main_Red.cgColor
+        
         upTextField.keyboardType = .numberPad
         downTextField.keyboardType = .numberPad
         upTextField.delegate = self
         downTextField.delegate = self
         
+        topbox_titleL.text = NSLocalizedString("Transfer Main Top Box Title", comment: "")
         upNameL.text = NSLocalizedString("Transfer Main Box Up Title", comment: "")
         downNameL.text = NSLocalizedString("Transfer Main Box Down Title", comment: "")
         kirimL.text = NSLocalizedString("Transfer Main Charge Title", comment: "")
@@ -766,6 +980,32 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         headTitleL.text = NSLocalizedString("Transfer Head Title", comment: "")
         //--should--
         leftTotalPL.text = AppDelegate.shared().memberData["remit_point"]!
+        
+        promteShowL.textAlignment = .center
+        promteShowL.text = NSLocalizedString("Promo Shoiw Capt", comment: "")
+        promteShowL.backgroundColor = .clear
+        promteShowL.layer.backgroundColor = Color_Main_Red.cgColor
+        promteShowL.layer.cornerRadius = promteShowL.frame.size.height/2
+        
+        if AppDelegate.shared().discountForTransfer == "" {
+            promteShowL.isHidden = true
+        } else {
+            promteShowL.isHidden = false
+        }
+        
+        if AppDelegate.shared().discountForTransfer != "" {
+            discountCodeValue = Int(AppDelegate.shared().discountForTransfer) ?? 0
+            leftBgV.isUserInteractionEnabled = false
+            leftBtn.isUserInteractionEnabled = false
+            
+        } else {
+            discountCodeValue = 0
+            leftBgV.isUserInteractionEnabled = true
+            leftBtn.isUserInteractionEnabled = true
+        }
+
+        updateUsePointButtonAppearance()
+        
         checkAndCalculateValue(UseStyle:0, NweString: "")
         
         moneyType.append("VND")
@@ -775,6 +1015,8 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         initTopBar()
         
         addPickerView()
+        setupManualRefreshGesture()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -782,14 +1024,16 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         
         if loadOnce {
             //這邊每次都要重新設定
-            setUpKursValue()
-            callMemberData()
+            //setUpKursValue()
+            //callMemberData()
+            refreshTransferData()
             AppDelegate.shared().showTopButton()
             return
         }
         
         loadOnce = true
-        callMemberData()
+        //callMemberData()
+        refreshTransferData()
         //頂部兩個按鈕
         AppDelegate.shared().topMargin = self.view.safeAreaInsets.top
         AppDelegate.shared().addTopButton()
@@ -797,10 +1041,155 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         AppDelegate.shared().nowBottomMenuType = .transaction
         AppDelegate.shared().bottomMenu.paintMenu()
         
+        /*
         if !AppDelegate.shared().hasProvinceData {
             getProvinceData(NeedNExt: false)
+        }*/
+        
+    }
+    
+    private func setupManualRefreshGesture() {
+        manualRefreshIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(manualRefreshIndicator)
+        if #available(iOS 11.0, *) {
+            manualRefreshIndicatorBaseOffset = 8
+            manualRefreshIndicatorTopConstraint = manualRefreshIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: manualRefreshIndicatorBaseOffset)
+        } else {
+            manualRefreshIndicatorBaseOffset = 28
+            manualRefreshIndicatorTopConstraint = manualRefreshIndicator.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: manualRefreshIndicatorBaseOffset)
+        }
+        NSLayoutConstraint.activate([
+            manualRefreshIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            manualRefreshIndicatorTopConstraint!
+        ])
+        view.bringSubviewToFront(manualRefreshIndicator)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleFullScreenPan(_:)))
+        panGesture.delegate = self
+        panGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(panGesture)
+    }
+    
+    private func showIndicatorIfNeeded() {
+        if manualRefreshIndicator.isHidden {
+            manualRefreshIndicator.isHidden = false
+        }
+        if !manualRefreshIndicator.isAnimating {
+            manualRefreshIndicator.startAnimating()
+        }
+    }
+    
+    private func updateIndicatorPosition(for pullDistance: CGFloat) {
+        guard let topConstraint = manualRefreshIndicatorTopConstraint else { return }
+        let effectiveDistance = min(pullDistance, manualRefreshTriggerDistance * 1.3)
+        topConstraint.constant = manualRefreshIndicatorBaseOffset + effectiveDistance * 0.5
+        UIView.performWithoutAnimation {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func resetIndicator(animated: Bool) {
+        guard let topConstraint = manualRefreshIndicatorTopConstraint else { return }
+        let animations = {
+            topConstraint.constant = self.manualRefreshIndicatorBaseOffset
+            self.view.layoutIfNeeded()
+        }
+        let completion = {
+            self.manualRefreshIndicator.stopAnimating()
+            self.manualRefreshIndicator.isHidden = true
         }
         
+        if animated {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState, .curveEaseOut], animations: animations) { _ in
+                completion()
+            }
+        } else {
+            animations()
+            completion()
+        }
+    }
+    
+    private func snapIndicatorToBase() {
+        guard let topConstraint = manualRefreshIndicatorTopConstraint else { return }
+        topConstraint.constant = manualRefreshIndicatorBaseOffset
+        UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    @objc private func handleFullScreenPan(_ gesture: UIPanGestureRecognizer) {
+        if isManualRefreshing {
+            return
+        }
+        
+        let translation = gesture.translation(in: view)
+        let pullDistance = max(0, translation.y)
+        
+        switch gesture.state {
+        case .began:
+            currentPullDistance = 0
+            if pullDistance == 0 {
+                resetIndicator(animated: false)
+            }
+        case .changed:
+            currentPullDistance = pullDistance
+            if pullDistance > 0 {
+                showIndicatorIfNeeded()
+                updateIndicatorPosition(for: pullDistance)
+            } else {
+                resetIndicator(animated: false)
+            }
+        case .ended, .cancelled, .failed:
+            gesture.setTranslation(.zero, in: view)
+            if currentPullDistance >= manualRefreshTriggerDistance {
+                beginManualRefresh()
+            } else {
+                resetIndicator(animated: true)
+            }
+            currentPullDistance = 0
+        default:
+            break
+        }
+    }
+    
+    private func beginManualRefresh() {
+        guard !isManualRefreshing else { return }
+        isManualRefreshing = true
+        manualRefreshIndicator.isHidden = false
+        manualRefreshIndicator.startAnimating()
+        snapIndicatorToBase()
+        refreshTransferData { [weak self] in
+            guard let self = self else { return }
+            self.isManualRefreshing = false
+            self.resetIndicator(animated: true)
+            let newValue = (Int(AppDelegate.shared().memberData["remit_point"]!) ?? 0) - decresedCharge
+            leftTotalPL.text = "\(newValue)"
+            //self.justCalculateValue(UseStyle: 0, NweString: "")
+            checkAndCalculateValue(UseStyle: 0, NweString: "")
+        }
+    }
+    
+    private func refreshTransferData(completion: (() -> Void)? = nil) {
+        setUpKursValue()
+        let group = DispatchGroup()
+        self.upTextField.text = "1"
+        decresedCharge = 0
+        updateUsePointButtonAppearance()
+        group.enter()
+        callMemberData {
+            group.leave()
+        }
+        
+        group.enter()
+        getQuota {
+            group.leave()
+        }
+        
+        AppDelegate.shared().showTopButton()
+        
+        group.notify(queue: .main) {
+            completion?()
+        }
     }
 
     /*

@@ -18,11 +18,22 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     @IBOutlet weak var searchTextfield: UITextField!
     @IBOutlet weak var myTable: UITableView!
     
+    @IBOutlet weak var leftV: UIView!
+    @IBOutlet weak var leftL: UILabel!
+    @IBOutlet weak var rightV: UIView!
+    @IBOutlet weak var rightL: UILabel!
+    
+    @IBOutlet weak var leftBtn: UIButton!
+    @IBOutlet weak var rightBtn: UIButton!
+    
     var showDataList:[TransferStateObj] = []
     var showOrderCheckDataList:[TransferOrderCheckObj] = []
     var searchShowIndex:[Int] = []
     var cellBarColor:[UIColor] = []
     var loadOnce = false
+    
+    var lastReadDetailIdx = 0
+    var choseState = 0
     
     //MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -57,6 +68,7 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
             cell.barV.backgroundColor = cellBarColor[colorIdx]
         }
         
+        cell.downType3V.isHidden = true
         cell.failV.isHidden = true
         cell.failType2V.isHidden = true
         cell.downV.isHidden = true
@@ -64,6 +76,7 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         cell.upV.isHidden = false
         cell.pureTextV.isHidden = false
         cell.midL.isHidden = false
+        cell.midL.text = NSLocalizedString("Transfer State Mid Text Title", comment: "")
         
         if cellOrderCheckData.order_status != "5" {
             if cellData.recipient_type == "1" {
@@ -87,20 +100,34 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
                 cell.downType2V.isHidden = false
                 
                 if cellData.recipient_type == "2" {
+                    cell.downType3V.isHidden = false
+                    cell.down3NameL.text = cellData.recipient_name
+                    cell.down3IDL.text = NSLocalizedString("Cash ID No", comment: "") + cellData.id_card_no
+                    cell.down3ValueL.text = NSLocalizedString("Cash Phone No", comment: "") + cellData.phone
                     cell.midL.text = NSLocalizedString("Transfer State Mid Text Title2", comment: "")
+                    cell.downNameL.text = "" //cellData.recipient_name
+                    cell.downIDL.text = "" //cellData.to_acc
+                    cell.downValueL.text = "VND " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                    let imgurl = serchBankobj.bank_photo!
+                    let urlhaed = URL(string: imgurl.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
+                    cell.down3IconIgV.kf.setImage(with: urlhaed)
+                    cell.downNoteL.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
+                    cell.down3Type2L4.text = "VND " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                    cell.down3Type2L5.text = NSLocalizedString("Transfer State Down Kurs Value Title", comment: "") + " " + cellData.kurs_value
                 } else if cellData.recipient_type == "3" {
                     cell.midL.text = NSLocalizedString("Transfer State Mid Text Title3", comment: "")
                 }
                 
+                cell.downType2L1.font = UIFont.boldSystemFont(ofSize: 15)
                 cell.downType2L1.text = ""
                 //--shoud--
-                let str = cellData.recipient_name + "  CMND: " + cellData.id_card_no
-                let attributedString = NSMutableAttributedString(string: str);
-                attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 14), range: NSMakeRange(0, cellData.recipient_name.count));
-                cell.downType2L1.attributedText = attributedString
+                let str = cellData.recipient_name
+                cell.downType2L1.text = str
                 
-                cell.downType2L2.text = cellData.phone
-                cell.downType2L3.text = cellData.address//計算越南盾
+                cell.downType2L2.text = NSLocalizedString("Cash ID No", comment: "") + cellData.id_card_no
+                cell.downType2L3.text = NSLocalizedString("Cash Phone No", comment: "") + cellData.phone
+                cell.downType2LAddress.text = NSLocalizedString("Cash Address No", comment: "") + cellData.address
+                //計算越南盾
                 let totalvnd = Int((cellData.kurs_value as NSString).floatValue * (cellData.transfer_amount_idr as NSString).floatValue)
                 let totalstr = "\(totalvnd)"
                 
@@ -246,6 +273,27 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
             cell.upValueL.text = "NTD " + cellData.total.stringToIntDecimalString()
             cell.upNoteL.text = cellData.payment_info
             
+            /*
+            if cellOrderCheckData.order_status == "4" {
+                cell.downV.isHidden = false
+                cell.downType2V.isHidden = true
+
+                let imgurl = serchBankobj.bank_photo!
+                let url = URL(
+                    string: imgurl.addingPercentEncoding(
+                        withAllowedCharacters: .urlQueryAllowed
+                    )!
+                )
+                cell.downIconIgV.kf.setImage(with: url)
+                cell.midL.text = NSLocalizedString("Transfer State Mid Text Title", comment: "")
+                cell.downNameL.text = cellData.recipient_name
+                cell.downIDL.text = cellData.to_acc
+                cell.downValueL.text = "VND " + cellData.transfer_amount_idr.stringToIntDecimalString()
+                cell.downNoteL.text =
+                    NSLocalizedString("Transfer State Down Kurs Value Title", comment: "")
+                    + " " + cellData.kurs_value
+            }*/
+            
         }
         
         cell.backgroundColor = .clear
@@ -276,6 +324,7 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     //MARK: - API
     public func getAllOrdersDetail() {
         if AppDelegate.shared().transferStateListObjs.count==0 {
+            reloadDataAndTable(Str: "")
             return
         }
         
@@ -366,12 +415,17 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }*/
     
     public func getTransferList() {
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken]
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "transfered":choseState]
         let headers: HTTPHeaders = [:]
         closeAll()
         AppDelegate.shared().addLoadingView()
         
-        let todoEndpoint: String = API_TransferHistory;
+        var todoEndpoint: String = ""//API_TransferHistory;
+        if choseState == 0 {
+            todoEndpoint = API_TransferToday
+        } else if choseState == 1 {
+            todoEndpoint = API_TransferHistoryBeforeToday
+        }
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
@@ -402,6 +456,22 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     //MARK: - Button-Action
+    @IBAction func leftAction(_ sender: Any) {
+        choseState = 0
+        lastReadDetailIdx = 0
+        AppDelegate.shared().transferStateListObjs = []
+        AppDelegate.shared().transferOrderCheckListObjs = []
+        btnStateAndAction(Next: true)
+    }
+    
+    @IBAction func rightAction(_ sender: Any) {
+        choseState = 1
+        lastReadDetailIdx = 0
+        AppDelegate.shared().transferStateListObjs = []
+        AppDelegate.shared().transferOrderCheckListObjs = []
+        btnStateAndAction(Next: true)
+    }
+    
     @IBAction func searchAction(_ sender: Any) {
         closeAll()
         reloadDataAndTable(Str: searchTextfield.text!)
@@ -456,11 +526,48 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     //MARK: - Utility
+    func btnStateAndAction(Next next:Bool = false) {
+        leftV.layer.borderColor = Color_Main_Red.cgColor
+        leftV.layer.borderWidth = 1
+        rightV.layer.borderColor = Color_Main_Red.cgColor
+        rightV.layer.borderWidth = 1
+        if choseState == 0 {
+            leftV.backgroundColor = Color_Main_Red
+            leftL.textColor = UIColor.white
+            rightV.backgroundColor = UIColor.clear
+            rightL.textColor = Color_Main_Red
+        } else {
+            rightV.backgroundColor = Color_Main_Red
+            rightL.textColor = UIColor.white
+            leftV.backgroundColor = UIColor.clear
+            leftL.textColor = Color_Main_Red
+        }
+        
+        if next {
+            getTransferList()
+        }
+    }
+    
     func reloadDataAndTable(Str str:String) {
         //根據search字串過濾
         searchShowIndex = []
-        showDataList = AppDelegate.shared().transferStateListObjs
-        showOrderCheckDataList = AppDelegate.shared().transferOrderCheckListObjs
+        showDataList = []
+        showOrderCheckDataList = []
+        
+        //orders_check 回傳順序不保證跟送出的 payment_info 順序一致，改用 payment_info 對應，不能用 index 對應
+        var orderCheckDict:[String:TransferOrderCheckObj] = [:]
+        for obj in AppDelegate.shared().transferOrderCheckListObjs {
+            orderCheckDict[obj.payment_info] = obj
+        }
+        
+        for obj in AppDelegate.shared().transferStateListObjs {
+            guard let orderCheckObj = orderCheckDict[obj.payment_info] else {
+                Dlog("orders_check 沒有回傳 payment_info = \(obj.payment_info ?? "") 的資料，略過")
+                continue
+            }
+            showDataList.append(obj)
+            showOrderCheckDataList.append(orderCheckObj)
+        }
         
         if str == "" {
             for i in 0..<showDataList.count {
@@ -494,6 +601,13 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         myTable.backgroundColor = .clear
         myTable.separatorStyle = .none
         
+        leftV.layer.cornerRadius = 5
+        rightV.layer.cornerRadius = 5
+        leftL.text = NSLocalizedString("Transfer State Left Btn", comment: "")
+    
+        rightL.text = NSLocalizedString("Transfer State Right Btn", comment: "")
+        btnStateAndAction()
+        
         searchTextfield.keyboardType = .default
         searchTextfield.returnKeyType = .search
         searchTextfield.delegate = self
@@ -506,6 +620,7 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         super.viewDidAppear(animated)
         
         if loadOnce {
+            btnStateAndAction(Next: true)
             AppDelegate.shared().showTopButton()
             return
         }
@@ -519,7 +634,8 @@ class TransferListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate
         cellBarColor.append(UtilityTool().hexStringToUIColor(hex: "#706F6F"))
         
         //nowPage = 1
-        getTransferList()
+        //getTransferList()
+        btnStateAndAction(Next: true)
         
         //頂部兩個按鈕
         AppDelegate.shared().topMargin = self.view.safeAreaInsets.top

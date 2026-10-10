@@ -136,35 +136,17 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
             cell.adrTL.text = NSLocalizedString("Person List Chose Field4", comment: "")
             
             cell.nameL.text = cellData.recipient_name
-            cell.idL.text = cellData.id_card_no + " "
-            cell.phoneL.text = cellData.phone_no + " "
+            cell.idL.text = (cellData.id_card_no ?? "") + " "
+            cell.phoneL.text = (cellData.phone_no ?? "") + " "
             
-            var address = cellData.address + " "
-            if cellData.province_id != nil, cellData.province_id.count != 0 {
-                var choseProvinceIdx = Int(cellData.province_id)!
-                
-                //比對省份
-                var ori = cellData.province_id
-                var provinceName = ""
-                for i in 0..<AppDelegate.shared().provinceData.count {
-                    let str = AppDelegate.shared().provinceData[i].province_id
-                    if ori == str {
-                        choseProvinceIdx = i
-                        provinceName = AppDelegate.shared().provinceData[i].province_name
-                        break
-                    }
+            var address = (cellData.address ?? "") + " "
+            if let provinceID = cellData.province_id,
+               let province = AppDelegate.shared().provinceData.first(where: { $0.province_id == provinceID }) {
+                if let districtID = cellData.district_id,
+                   let district = province.allZone.first(where: { $0.district_id == districtID }) {
+                    address += " " + district.district_name
                 }
-                
-                ori = AppDelegate.shared().tempRecipientObj.district_id
-                for i in 0..<AppDelegate.shared().provinceData[choseProvinceIdx].allZone.count {
-                    let str = AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_id
-                    if ori == str {
-                        address += " " + AppDelegate.shared().provinceData[choseProvinceIdx].allZone[i].district_name
-                        break
-                    }
-                }
-                
-                address += " " + provinceName
+                address += " " + province.province_name
             }
             
             cell.adrL.text = address
@@ -292,6 +274,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     
     
     func searchRecipient() {
+        let recipientType = AppDelegate.shared().transactionObj.recipient_type
         var paymentAry:[String] = []
         
         for i in 0..<AppDelegate.shared().recipientShownListObjs.count {
@@ -316,6 +299,11 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
+
+                //使用者可能已切換到其他受款方式，舊回應不可覆蓋新清單
+                guard AppDelegate.shared().transactionObj.recipient_type == recipientType else {
+                    return
+                }
                 
                 guard response.result.error == nil else {
                     // got an error in getting the data, need to handle it
@@ -450,6 +438,38 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     }
     
     public func getRecipents() {
+        let recipientType = AppDelegate.shared().transactionObj.recipient_type
+        let needDoorToDoor = (recipientType == 3)
+
+        //從會員首頁進入時不一定有省份資料；而宅配與其他方式使用不同清單
+        if AppDelegate.shared().provinceData.isEmpty || AppDelegate.shared().provinceDataIsDoorToDoor != needDoorToDoor {
+            AppDelegate.shared().addLoadingView()
+            AppDelegate.shared().getProvinceData(RecipientType: recipientType) { [weak self] success in
+                AppDelegate.shared().removeLoadingView()
+                guard let self = self else { return }
+
+                //載入期間若切換頁籤，改為確保新頁籤所需的省份清單
+                guard AppDelegate.shared().transactionObj.recipient_type == recipientType else {
+                    let currentNeedDoorToDoor = (AppDelegate.shared().transactionObj.recipient_type == 3)
+                    if AppDelegate.shared().provinceData.isEmpty || AppDelegate.shared().provinceDataIsDoorToDoor != currentNeedDoorToDoor {
+                        self.getRecipents()
+                    }
+                    return
+                }
+
+                if success {
+                    self.requestRecipents(RecipientType: recipientType)
+                } else {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                }
+            }
+            return
+        }
+
+        requestRecipents(RecipientType: recipientType)
+    }
+
+    private func requestRecipents(RecipientType recipientType:Int) {
         var parameters:Parameters = [:]
         if canSelectForTransfer {
             parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":AppDelegate.shared().transactionObj.totalNtdValue, "use_remit_point":1]
@@ -461,13 +481,24 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         closeAll()
         AppDelegate.shared().addLoadingView()
         
-        let todoEndpoint: String = API_MemberRecipents;
+        var todoEndpoint: String = API_MemberRecipents;
+        
+        if AppDelegate.shared().discountForTransfer != "" {
+            todoEndpoint = API_MemberRecipentsV2
+            parameters["discount_code"] = AppDelegate.shared().discountCode
+            parameters["discount_amt"] = AppDelegate.shared().discountForTransfer
+        }
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         
         AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
             .responseString(encoding: String.Encoding.utf8)  { response in
                 AppDelegate.shared().removeLoadingView()
+
+                //忽略切換頁籤前發出的舊請求
+                guard AppDelegate.shared().transactionObj.recipient_type == recipientType else {
+                    return
+                }
                 
                 guard response.result.error == nil else {
                     // got an error in getting the data, need to handle it
@@ -505,6 +536,8 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     func goAddRecipient() {
         AppDelegate.shared().tempRecipientObj = RecipientObj()
         AppDelegate.shared().tempRecipientObj.recipient_type.append(AppDelegate.shared().transactionObj.recipient_type)
+        AppDelegate.shared().transactionObj.recipientObj = RecipientObj()
+        AppDelegate.shared().checkRecipientName = ""
         
         //如果是 To Bank Account
         if AppDelegate.shared().transactionObj.recipient_type == 1 {
@@ -633,7 +666,43 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         
         AppDelegate.shared().tempTransferChoseMode = false
         AppDelegate.shared().hideTopButton()
-        getRecipents()
+        
+        if canSelectForTransfer {
+            goNextStep()
+        } else {
+            getRecipents()
+        }
+    }
+    
+    func goNextStep() {
+        let recipientType = AppDelegate.shared().transactionObj.recipient_type
+        let needDoorToDoor = (recipientType == 3)
+        if AppDelegate.shared().provinceData.isEmpty || AppDelegate.shared().provinceDataIsDoorToDoor != needDoorToDoor {
+            AppDelegate.shared().addLoadingView()
+            AppDelegate.shared().getProvinceData(RecipientType: recipientType) { [weak self] success in
+                AppDelegate.shared().removeLoadingView()
+                guard let self = self,
+                      AppDelegate.shared().transactionObj.recipient_type == recipientType else {
+                    return
+                }
+
+                if success {
+                    self.goNextStep()
+                } else {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                }
+            }
+            return
+        }
+
+        if AppDelegate.shared().recipientShownListObjs.count == 0, self.hasGotoAddRecipient == false {
+            self.hasGotoAddRecipient = true
+            self.goAddRecipient()
+        } else {
+            //再去取得所有的細節
+            self.searchRecipient()
+        }
+        URLCache.shared.removeAllCachedResponses()
     }
 
     /*

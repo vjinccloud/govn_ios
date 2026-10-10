@@ -129,6 +129,13 @@ extension AES256Crypter: Randomizer {
 }
 
 extension String {
+    func base64EncodedString() -> String? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+        return data.base64EncodedString()
+    }
+    
     func utf8DecodedString()-> String {
         let data = self.data(using: .utf8)
         if let message = String(data: data!, encoding: .nonLossyASCII){
@@ -218,12 +225,43 @@ extension String {
         return formattedStr
     }
     
+    //每幾個字加入某字
+    //使用
+    /*
+    let x = "11231245"
+    print (x.separate(every:2, with: ":")
+
+    $ 11:23:12:45
+    */
+    func separate(every stride: Int = 4, with separator: Character = " ") -> String {
+        return String(enumerated().map { $0 > 0 && $0 % stride == 0 ? [separator, $1] : [$1]}.joined())
+    }
+    
+    func separateSpecialForIndoGo() -> String {
+        var str:String = self
+        str.insert(" ", at: str.index(str.startIndex, offsetBy: 9))
+        str.insert(" ", at: str.index(str.startIndex, offsetBy: 3))
+        return str
+    }
+    
     func checkAlphabetDigit() -> Bool {
         let allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
         let allowedCharacterSet = CharacterSet(charactersIn: allowedCharacters)
         let typedCharacterSet = CharacterSet(charactersIn: self)
         let alphabet = allowedCharacterSet.isSuperset(of: typedCharacterSet)
         return alphabet
+    }
+    
+    //將數字轉成千分位的數字再回傳字傳
+    static func stringToOnlyIntString(Number num:Int) -> String {
+        
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.positiveFormat = "#,##0"
+        //let formattedStr: String = formatter.string(from: NSNumber(value: Double(num)))!
+        let formattedStr: String = formatter.string(for: num)!
+        
+        return formattedStr
     }
     
     func checkAlphabetDigitAndSpace() -> Bool {

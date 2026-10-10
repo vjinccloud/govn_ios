@@ -5,3 +5,5 @@
   Created by Wang Jen Chung on 2024/7/23.
   Copyright © 2024 DIM. All rights reserved.
 */
+NSCameraUsageDescription = "Cho phép GoVn truy cập vào máy ảnh để thực hiện quá trình xác minh danh tính tìm hiểu khách hàng.";
+NSPhotoLibraryUsageDescription = "Xin vui lòng cho phép GoVn truy cập vào thư viện hình ảnh để đặt hình ảnh đại diện.";

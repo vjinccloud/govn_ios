@@ -305,7 +305,7 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     func checkLeagleCharacter() -> Bool {
         var pass = true
         let words = field1.text
-        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 _,./-]+")
         pass = pred.evaluate(with: words)
         
         if field1.text?.count==0 {
@@ -601,10 +601,10 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         pickBackView = UIView(frame: CGRect(x: 0, y: (tempWindow?.frame.height)!, width: view.frame.width, height: 260))
         
         // Toolbar
-        let btnDone = UIBarButtonItem(title: "  確定  ", style: .plain, target: self, action: #selector(finishSelect))
+        let btnDone = UIBarButtonItem(title: " Xác nhận ", style: .plain, target: self, action: #selector(finishSelect))
         //UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(finishSelect))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let cancelButton = UIBarButtonItem(title: "  取消  ", style: .plain, target: self, action: #selector(closePicker))
+        let cancelButton = UIBarButtonItem(title: " Huỷ ", style: .plain, target: self, action: #selector(closePicker))
         
         let barAccessory = UIToolbar(frame: CGRect(x: 0, y: 0, width: pickBackView.frame.width, height: 44))
         barAccessory.barStyle = .default

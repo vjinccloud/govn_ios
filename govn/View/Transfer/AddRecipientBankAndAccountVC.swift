@@ -176,6 +176,16 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
         closeAll()
         return false
     }
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        if textField == bankCodeTextfield {
+            textField.text = ""
+            bankListTableView.isHidden = false
+            reloadDataAndTable(Str: "")
+            checkBtnState()
+            return false
+        }
+        return true
+    }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         hideTextBtn.isHidden = false
         if textField == bankCodeTextfield {
@@ -247,7 +257,7 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
     func checkLeagleCharacter() -> Bool {
         var pass = true
         let words = accTextfield.text
-        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 ]+")
+        let pred = NSPredicate(format:"SELF MATCHES %@", "[A-Za-z0-9 _,./-]+")
         pass = pred.evaluate(with: words)
         
         if accTextfield.text?.count==0 {
@@ -257,6 +267,18 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
     }
     
     //MARK: - API
+    func goNextStepNow() {
+        AppDelegate.shared().tempRecipientObj.bank_code = AppDelegate.shared().transactionObj.recipientObj.bank_code!
+        AppDelegate.shared().tempRecipientObj.bank_acc = AppDelegate.shared().transactionObj.recipientObj.bank_acc!
+        
+        AppDelegate.shared().tempRecipientObj.recipient_name = self.accTextfield.text
+        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "AddReciptientInfoVC") as? AddReciptientInfoVC
+        nextVC!.canSelectForTransfer = self.canSelectForTransfer
+        nextVC!.canEditName = self.accTextfield.isEnabled
+        self.navigationController?.pushViewController(nextVC!, animated: true)
+    }
+    /*
+    //改成下一階段呼叫
     func addRecipient() {
         let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "bank_code":AppDelegate.shared().transactionObj.recipientObj.bank_code!, "bank_acc":AppDelegate.shared().transactionObj.recipientObj.bank_acc!]
         let headers: HTTPHeaders = [:]
@@ -298,7 +320,8 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }
         }
-    }
+    }*/
+    
     /*
     func addRecipient() {
         //找出 bank code
@@ -362,7 +385,8 @@ class AddRecipientBankAndAccountVC: UIViewController, UITextFieldDelegate, UITab
             showNameAlert()
             return
         }
-        addRecipient()
+            //addRecipient()
+        goNextStepNow()
     }
     
     @IBAction func hideTextAction(_ sender: Any) {

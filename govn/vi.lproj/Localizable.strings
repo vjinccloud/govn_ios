@@ -109,7 +109,7 @@
 "Register Input Pass" = "Mật khẩu";
 "Register Input rePass" = "Nhập lại mật khẩu";
 "Register Input ARC Placehold" = "Bạn có mã giới thiệu không ?";
-"Register Input Scan Label" = "Quét mã thẻ cư trú";  //更改
+"Register Input Scan Label" = "NHẤN ĐỂ QUÉT MÃ THẺ CƯ TRÚ";  //更改
 
 //註冊輸入分享碼and Scan
 "Register Share Input Title" = "Nhập mã giới thiệu";
@@ -164,6 +164,8 @@
 "Profile Main Terms" = "Điều khoản và Điều lệ";
 "Profile Main Faq" = "Câu hỏi thường gặp";
 "Profile Main Logout" = "Đăng xuất";
+"Profile Main eReciept" = "Hóa đơn của bạn / Quà May Mắn";
+"Profile Main eRecieptB" = "Vé Xem Ca Nhạc";
 
 "Notice Main Title" = "THÔNG BÁO";
 
@@ -183,7 +185,7 @@
 "Relation Type 4" = "KHÁC";
 
 "Input Bank Person Info Field1" = "Họ tên";
-"Input Bank Person Info Field2" = "Số CMND";
+"Input Bank Person Info Field2" = "Số CMND/CCCD";
 "Input Bank Person Info Field3" = "Số điện thoại";
 "Input Bank Person Info Field4" = "Mối quan hệ";
 
@@ -266,8 +268,8 @@
 "Transfer Result Pay Title" = "THANH TOÁN BẰNG MÃ VẠCH"; // 更改
 
 "Transfer PayStep Title" = "MÃ PIN";
-"Transfer PayStep Up Intro" = "Vui lòng đến cửa hàng ";
-"Transfer PayStep Up Intro2" = " gần nhất\nđể thanh toán"; // 更改
+"Transfer PayStep Up Intro" = "Vui lòng đưa mã cho nhân ";
+"Transfer PayStep Up Intro2" = " viên để thanh toán"; // 更改
 "Transfer PayStep Min Title" = "phút";
 "Transfer PayStep Sec Title" = "giây";
 "Transfer PayStep Warn" = "Mã vạch sẽ hết hạn sau 10 phút \ Bạn có thể lấy lại\nmã vạch bằng cách nhấn nút ở trên"; // 更改
@@ -282,7 +284,7 @@
 "Top Bar L2" = "Nhận tại quầy";
 "Top Bar L3" = "Giao tận nhà";
  
-"Share Add Poin" = "Cộng điểm"; // 更改
+"Share Add Poin" = "Mời bạn"; // 更改
 "Share Poin Transfer" = "Chuyển điểm"; // 更改
 "Share Poin History" = "Lịch sử hoạt động";  // 更改
 
@@ -326,3 +328,33 @@
 "Register Btn Birth" = "Ngày tháng năm sinh";
 "Register Expired Title" = "Thời hạn cư trú";
 "Register Expired Date" = "Ngày | Tháng | Năm";
+"Delete Sting 1" = "Nếu bạn muốn xóa tài khoản này, vui lòng ";
+"Delete Sting 2" = "ấn vào đây";
+
+"Exceed Maximun Amout Title" = "Lưu ý số tiền chuyển";
+"Exceed Maximun Amout Content" = "Tổng số tiền không được vượt quá NTD ";
+"Enter Invitation Code Bottom Words" = "Nếu không có mã giới thiệu, vui lòng để trống và bỏ qua bước này";
+"New Function Btn Words" = "MỚI";
+"New Function Promo Words" = "Mã khuyến mãi";
+
+"Pre TransferAccount Head" = "Mã khuyến mãi";
+"Pre TransferAccount Title" = "Nhập mã khuyến mãi";
+"Pre TransferAccount Wrong" = "Mã khuyến mãi sai / không khả dụng";
+"Pre TransferAccount Bottom Title" = "Mã khuyến mãi khả dụng";
+"Pre TransferAccount Bottom Amount Pre" = "GIẢM";
+"Pre TransferAccount Bottom Amount" = "PHÍ CHUYỂN TIỀN";
+"Pre TransferAccount Bottom Time" = "HSD: ";
+"Pre TransferAccount Bottom Available" = "SỬ DỤNG";
+"Pre TransferAccount Bottom Used" = "ĐÃ SỬ DỤNG";
+"Pre TransferAccount Bottom Expired" = "HẾT HẠN";
+"Transfer State Left Btn" = "Hôm nay";
+"Transfer State Right Btn" = "Lịch sử";
+"Wrong Phone Format" = "Vui lòng nhập đúng số điện thoại di động của bạn
+Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
+"Transfer Main Top Box Title" = "Giới hạn giao dịch còn lại trong Tháng";
+"Promo Shoiw Capt" = "MÃ KHUYẾN MÃI";
+"Transfer New bank expire" = "Thời gian thanh toán:\n";
+"Transfer New bank copy success" = "Đã sao chép số tài khoản thành công";
+"Cash ID No" = "CMND: ";
+"Cash Phone No" = "SĐT: ";
+"Cash Address No" = "Địa chỉ: ";

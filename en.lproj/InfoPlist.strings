@@ -5,3 +5,6 @@
   Created by Wang Jen Chung on 2024/7/23.
   Copyright © 2024 DIM. All rights reserved.
 */
+
+NSCameraUsageDescription = "Allow GoVn to access your camera to verify your identity as part of our know your customer procedures.";
+NSPhotoLibraryUsageDescription = "Allow GoVn to access your gallery to set your profile photo.";

@@ -50,11 +50,15 @@ class RegisterIDCameraVC: UIViewController, UINavigationControllerDelegate, AVCa
         self.tempImg = UIImage.init(named: "close.png")
         self.nextStep()
         #else
+        guard let photoOutPut = photoOutPut else {
+            checkCameraPermission()
+            return
+        }
         let settings = AVCapturePhotoSettings()
         photoOutPut.capturePhoto(with: settings, delegate: self)
         #endif
     }
-    
+
     func nextStep() {
         guard let viewControllers = self.navigationController?.viewControllers else {
             return
@@ -173,6 +177,8 @@ class RegisterIDCameraVC: UIViewController, UINavigationControllerDelegate, AVCa
                 
                 //start video capture
                 self.captureSession?.startRunning()
+                self.setContinuousAutoFocus()
+                self.setZoomFactor(2.0) // 放大2倍
             }
             
                    
@@ -183,23 +189,69 @@ class RegisterIDCameraVC: UIViewController, UINavigationControllerDelegate, AVCa
         }
     }
     
+    func setContinuousAutoFocus() {
+        guard let device = self.captureDevice else { return }
+        do {
+            try device.lockForConfiguration()
+            if device.isFocusModeSupported(.continuousAutoFocus) {
+                device.focusMode = .continuousAutoFocus
+            }
+            if device.isExposureModeSupported(.continuousAutoExposure) {
+                device.exposureMode = .continuousAutoExposure
+            }
+            device.unlockForConfiguration()
+        } catch {
+            print("Error Unable to lock configuration: \(error.localizedDescription)")
+        }
+    }
+    
+    func setZoomFactor(_ zoomFactor: CGFloat) {
+        guard let device = AVCaptureDevice.default(for: .video) else { return }
+        do {
+            try device.lockForConfiguration()
+            device.videoZoomFactor = min(max(zoomFactor, 1.0), device.activeFormat.videoMaxZoomFactor)
+            device.unlockForConfiguration()
+        } catch {
+            print("Error setting zoom factor: \(error)")
+        }
+    }
+    
     //MARK: - Utility
     //檢查相機權限
     func checkCameraPermission() {
-        AVCaptureDevice.requestAccess(for: AVMediaType.video) { (access) in
-            print("access = \(access)")
-            let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-            switch authStatus {
-            case .authorized:
-                self.initCamera()
-                break
-            case .denied, .restricted, .notDetermined:
-                AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("Camera Photo Request Agreement", comment: ""))
-                break
-            default:
-                break
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch authStatus {
+        case .authorized:
+            self.initCamera()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { (access) in
+                DispatchQueue.main.async {
+                    if access {
+                        self.initCamera()
+                    } else {
+                        self.showCameraPermissionAlert()
+                    }
+                }
             }
+        case .denied, .restricted:
+            self.showCameraPermissionAlert()
+        default:
+            break
         }
+    }
+
+    //相機權限被拒絕時,提示前往設定,不開相機
+    func showCameraPermissionAlert() {
+        let alert = UIAlertController(title: "Camera Access Required",
+                                      message: "Camera access is required to take the photo. Please enable camera permission in Settings.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Go to Settings", style: .default, handler: { _ in
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     //MARK: - View-Life
     override func viewDidLoad() {

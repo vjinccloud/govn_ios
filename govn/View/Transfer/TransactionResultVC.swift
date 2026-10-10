@@ -224,6 +224,54 @@ class TransactionResultVC: UIViewController {
         }
     }
     
+    public func getBankCode() {
+        
+        let parameters:Parameters = ["app_token":AppDelegate.shared().sessionToken, "payment_info":payment_info]
+        let headers: HTTPHeaders = [:]
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_GetBankCode;
+        
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: JSONEncoding.default, headers:headers)
+            .responseJSON { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print("error calling on \(todoEndpoint)")
+                    print(response.result.error!)
+                    return
+                }
+                
+                do {
+                    
+                    let json = try JSON(data: response.data!)
+                    Dlog("todoEndpoint=\(todoEndpoint)\njson=\(json)")
+                    
+                    if json["status"] != JSON.null {
+                        if json["status"].intValue == 1 {
+                            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransactionBankVC") as? TransactionBankVC
+                            nextVC?.payment_info = self.payment_info
+                            nextVC?.transferStateObj = self.transferStateObj
+                            nextVC?.bankInfoJSON = json["data"]
+                            self.navigationController?.pushViewController(nextVC!, animated: true)
+                        } else {
+                            AppDelegate.shared().showAlertWithWindow(self, Message: json["errMsg"].stringValue)
+                            return
+                        }
+                    } else {
+                        
+                    }
+                    
+                    
+                } catch {
+                    AppDelegate.shared().showAlertWithWindow(self, Message: Lang_APIDecodeFail)
+                }
+        }
+    }
+    
     //MARK: - Button-Action
     @IBAction func backAction(_ sender: Any) {
         self.navigationController?.popToRootViewController(animated: true)
@@ -271,6 +319,10 @@ class TransactionResultVC: UIViewController {
         //showBottomBtnAndTeachPic(StoreStyle: .hiLife)
         //直接條碼頁
         getBarCode()
+    }
+    
+    @IBAction func openBank(_ sender: Any) {
+        getBankCode()
     }
     
     @IBAction func openMapAction(_ sender: Any) {

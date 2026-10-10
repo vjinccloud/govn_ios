@@ -48,13 +48,13 @@ class TransactionBankVC: UIViewController {
 
         // Do any additional setup after loading the view.
         backL.text = NSLocalizedString("Transfer PayStep Title", comment: "")
-        paymentInfoL.text = payment_info.separateSpecialForIndoGo()
+        //paymentInfoL.text = payment_info.separateSpecialForIndoGo()
         
-        bankCodeTL.text = NSLocalizedString("Transfer New bank code", comment: "")
-        bankAccTL.text = NSLocalizedString("Transfer New bank acc", comment: "")
-        bankTotalTL.text = NSLocalizedString("Transfer New bank total", comment: "")
-        expireTL.text = NSLocalizedString("Transfer New bank expire 2", comment: "")
-        expireETL.text = NSLocalizedString("Transfer New bank expire 3", comment: "")
+        //bankCodeTL.text = NSLocalizedString("Transfer New bank code", comment: "")
+        //bankAccTL.text = NSLocalizedString("Transfer New bank acc", comment: "")
+        //bankTotalTL.text = NSLocalizedString("Transfer New bank total", comment: "")
+        //expireTL.text = NSLocalizedString("Transfer New bank expire 2", comment: "")
+        //expireETL.text = NSLocalizedString("Transfer New bank expire 3", comment: "")
         
         expireBackV.layer.borderWidth = 0.5
         expireBackV.layer.borderColor = Color_Main_Red.cgColor
@@ -62,6 +62,7 @@ class TransactionBankVC: UIViewController {
         expireETL.adjustsFontSizeToFitWidth = true
         copyCodeBtn.layer.cornerRadius = 8
         
+        paymentInfoL.text = transferStateObj.payment_info
         bankCodeL.text = bankInfoJSON["bank_code"].stringValue
         bankAccL.text = bankInfoJSON["account"].stringValue.separate(every:4, with: " ")
 
@@ -74,9 +75,9 @@ class TransactionBankVC: UIViewController {
         expireL.attributedText = firstString
         expireL.adjustsFontSizeToFitWidth = true
         
-        let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
-        let underlineAttributedString = NSAttributedString(string: bankInfoJSON["expired_date_id_id"].stringValue, attributes: underlineAttribute)
-        expireEL.attributedText = underlineAttributedString
+        //let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
+        //let underlineAttributedString = NSAttributedString(string: bankInfoJSON["expired_date_id_id"].stringValue, attributes: underlineAttribute)
+        //expireEL.attributedText = underlineAttribute
         
         bankTotalL.text = "TWD \(transferStateObj.total.stringToIntDecimalString())"
     }

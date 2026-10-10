@@ -108,6 +108,11 @@ class TransactionInfoConfirmVC: UIViewController {
     
     //MARK: - View-Life
     func recalculateTargetMoneyAndGoNext() {
+        //202311 改成不重新計算
+        //改成直接到結果頁
+        createTransaction()
+        
+        /*
         let obj = AppDelegate.shared().transactionObj
         var kursValue = Double(AppDelegate.shared().memberData["kurs_value"]!)!
         if AppDelegate.shared().transactionObj.currency! == "USD" {
@@ -124,6 +129,7 @@ class TransactionInfoConfirmVC: UIViewController {
         
         //改成直接到結果頁
         createTransaction()
+        */
         
         /*
         let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: "TransactionAgreeMentVC") as? TransactionAgreeMentVC
@@ -149,7 +155,12 @@ class TransactionInfoConfirmVC: UIViewController {
         
         AppDelegate.shared().addLoadingView()
         
-        let todoEndpoint: String = API_TransactionCreate;
+        var todoEndpoint: String = API_TransactionCreate;
+        if AppDelegate.shared().discountForTransfer != "" {
+            todoEndpoint = API_TransactionCreateV2
+            parameters["discount_code"] = AppDelegate.shared().discountCode
+            parameters["discount_amt"] = AppDelegate.shared().discountForTransfer
+        }
         
         Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
         

@@ -170,6 +170,8 @@
 "Profile Main Terms" = "Terms & Conditions";
 "Profile Main Faq" = "FAQ";
 "Profile Main Logout" = "Sign Out";
+"Profile Main eReciept" = "eReciept";
+"Profile Main eRecieptB" = "Ticket";
 
 "Notice Main Title" = "NOTIFICATION";
 
@@ -237,7 +239,7 @@
 
 "Transfer State Pure Text Title" = "Please make a payment";
 "Transfer State 1 KODE PIN" = "PIN code";
-"Transfer State Mid Text Title" = "To Bank Account:";
+"Transfer State Mid Text Title" = "Transfer to Bank Account:";
 "Transfer State Mid Text Title2" = "Cash Pick-up:";
 "Transfer State Mid Text Title3" = "Delivery to Home:";
 
@@ -276,8 +278,8 @@
 "Transfer Result Pay Title" = "GO TO CASHIER";
 
 "Transfer PayStep Title" = "Your PIN Code";
-"Transfer PayStep Up Intro" = "Please go to the nearest ";
-"Transfer PayStep Up Intro2" = "\nand make a payment";
+"Transfer PayStep Up Intro" = "Please give the barcode to staff ";
+"Transfer PayStep Up Intro2" = "to make the payment";
 "Transfer PayStep Min Title" = "Minute";
 "Transfer PayStep Sec Title" = "Second";
 "Transfer PayStep Warn" = "The barcode will expire after 10 minutes\nYou can request again barcode by pressing\nthe button above";
@@ -292,7 +294,7 @@
 "Top Bar L2" = "Cash Pick-up";
 "Top Bar L3" = "Deliver to Home";
 
-"Share Add Poin" = "Add Point";
+"Share Add Poin" = "Invite Friends";
 "Share Poin Transfer" = "Point Transfer";
 "Share Poin History" = "Point History";
 
@@ -336,3 +338,33 @@
 "Register Btn Birth" = "Birthday";
 "Register Expired Title" = "Expired Day";
 "Register Expired Date" = "Day | Month | Year";
+"Delete Sting 1" = "Nếu bạn muốn xóa tài khoản này, vui lòng ";
+"Delete Sting 2" = "ấn vào đây";
+
+"Exceed Maximun Amout Title" = "Transfer Amount Warning";
+"Exceed Maximun Amout Content" = "Total payment cannot exceed NTD ";
+"Enter Invitation Code Bottom Words" = "Nếu không có mã giới thiệu, vui lòng để trống và bỏ qua bước này";
+"New Function Btn Words" = "MỚI";
+"New Function Promo Words" = "Mã khuyến mãi";
+
+"Pre TransferAccount Head" = "Mã khuyến mãi";
+"Pre TransferAccount Title" = "Nhập mã khuyến mãi";
+"Pre TransferAccount Wrong" = "Mã khuyến mãi sai / không khả dụng";
+"Pre TransferAccount Bottom Title" = "Mã khuyến mãi khả dụng";
+"Pre TransferAccount Bottom Amount Pre" = "GIẢM";
+"Pre TransferAccount Bottom Amount" = "PHÍ CHUYỂN TIỀN";
+"Pre TransferAccount Bottom Time" = "HSD: ";
+"Pre TransferAccount Bottom Available" = "SỬ DỤNG";
+"Pre TransferAccount Bottom Used" = "ĐÃ SỬ DỤNG";
+"Pre TransferAccount Bottom Expired" = "HẾT HẠN";
+"Transfer State Left Btn" = "Hôm nay";
+"Transfer State Right Btn" = "Lịch sử";
+"Wrong Phone Format" = "Vui lòng nhập đúng số điện thoại di động của bạn
+Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
+"Transfer Main Top Box Title" = "Giới hạn giao dịch còn lại trong Tháng";
+"Promo Shoiw Capt" = "MÃ KHUYẾN MÃI";
+"Transfer New bank expire" = "Thời gian thanh toán:\n";
+"Transfer New bank copy success" = "Đã sao chép số tài khoản thành công";
+"Cash ID No" = "ID: ";
+"Cash Phone No" = "Phone No: ";
+"Cash Address No" = "Address: ";

@@ -161,6 +161,16 @@ class AddRecipientBankVC: UIViewController, UITextFieldDelegate, UITableViewDele
         closeAll()
         return false
     }
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        if textField == bankCodeTextfield {
+            textField.text = ""
+            bankListTableView.isHidden = false
+            reloadDataAndTable(Str: "")
+            checkBtnState()
+            return false
+        }
+        return true
+    }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         hideTextBtn.isHidden = false
         if textField == bankCodeTextfield {

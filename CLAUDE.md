@@ -11,7 +11,7 @@
 2. 防詐提醒。
 3. 匯款目的（從 `../gopadala_ios/Gopadala/` 移植，規格裡有來源檔案對照表）。
 
-分支 `feature/compliance-202610` 已開好，直接在上面 commit。不 push、不合 main。
+分支 `feature/compliance-202610` 已開好，直接在上面 commit。不 push、不合 main。**commit 訊息用中文，不可出現 Claude、AI、Co-Authored-By 等署名。**
 
 ## 專案結構
 

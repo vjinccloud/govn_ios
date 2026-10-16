@@ -713,6 +713,12 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         expiredIntroL.text = NSLocalizedString("Register Expired Title", comment: "")
         expiredPlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
         issueIntroL.text = NSLocalizedString("Register Issue Date Title", comment: "")
+        //標籤置中偏左 80，可用寬度約 98pt；英文「ARC ISSUE DATE」較長，超出外框時縮小字級
+        var issueFontSize:CGFloat = 15
+        while issueFontSize > 10, (issueIntroL.text! as NSString).size(withAttributes: [.font: UIFont.systemFont(ofSize: issueFontSize)]).width > 98 {
+            issueFontSize -= 0.5
+        }
+        issueIntroL.font = UIFont.systemFont(ofSize: issueFontSize)
         issuePlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
         
         accountTextfield.inputAccessoryView = generateToolBar()

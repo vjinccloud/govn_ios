@@ -112,8 +112,9 @@ let API_TransactionCreate_OtherV2 = ServerURL + "/app/remit/create_others_v2"
 //匯款目的清單（compliance-202610，移植自 GoPadala），回傳 id(30)name(31)id(30)name...
 let API_GetPurpose = ServerURL + "/app/remit/transfer_purpose"
 
-//新增收款人前的防詐提醒（compliance-202610；網址真的有 .php），回傳 remit_reply 0 <message>
-let API_FraudMessage = ServerURL + "/app/remit/fraud_message.php"
+//新增收款人前的防詐提醒（compliance-202610），回傳 remit_reply 0 <message>
+//路徑不帶 .php，三款 App 統一（見規格決定紀錄 2026-10-17）
+let API_FraudMessage = ServerURL + "/app/remit/fraud_message"
 
 //後台控制 App icon（POST、免參數，回傳 remit_reply 0 <icon名稱>）
 let API_LauncherIcon = ServerURL + "/app/getLauncherIcon.php"

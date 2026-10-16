@@ -43,7 +43,7 @@ let AppId = 1
 // ---- 環境切換（由 CTO 維護；見 ../docs/工作流程.md）----
 // Debug build（開發、QA）打測試機；Release / Archive 打正式機。不要再用註解切換。
 let ProdServerURL = "https://govnprod.indogo.link"
-let TestServerURL = "https://govnprod.indogo.link"   // TODO(CTO): 等客戶提供測試機網址後換掉。git 歷史曾用過 http://govndev.indogo.link，目前連不上
+let TestServerURL = "https://test-govnprod.indogo.link"   // 測試機（後端 2026-10-16 提供）。上線 Archive 用 Release，自動走 ProdServerURL
 #if DEBUG
 let ServerURL = TestServerURL
 #else

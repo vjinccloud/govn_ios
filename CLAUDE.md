@@ -7,7 +7,7 @@
 
 需求代號 `compliance-202610`，規格：`../docs/spec/三國合規更新.md`。GoVN 三個需求都要做：
 
-1. ARC 發證日期。**注意 GoVN 沒有 `register_step_1`**，註冊是一步式走 `API_Register`，在 `govn/View/Register/RegisterIDSignVC.swift`。參數照規格加到這支。
+1. ARC 發證日期。**注意 GoVN iOS 目前沒有 `register_step_1`**，註冊是一步式走 `API_Register`（`/app/remit/register`），在 `govn/View/Register/RegisterIDSignVC.swift`。Android 的 GoVN 走的是 `register_step_1`。本輪先把 `arc_issue_date` 加進 `API_Register`，用測試機實測後端有沒有收；若後端拒收，回報使用者轉 CTO，不要自己改成兩步式。
 2. 防詐提醒。
 3. 匯款目的（從 `../gopadala_ios/Gopadala/` 移植，規格裡有來源檔案對照表）。
 

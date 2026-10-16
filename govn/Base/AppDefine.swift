@@ -109,6 +109,9 @@ let API_MemberRecipentsOther_TransferV2 = ServerURL + "/app/remit/member_recipie
 let API_TransactionCreateV2 = ServerURL + "/app/remit/create_v2"
 let API_TransactionCreate_OtherV2 = ServerURL + "/app/remit/create_others_v2"
 
+//匯款目的清單（compliance-202610，移植自 GoPadala），回傳 id(30)name(31)id(30)name...
+let API_GetPurpose = ServerURL + "/app/remit/transfer_purpose"
+
 //新增收款人前的防詐提醒（compliance-202610；網址真的有 .php），回傳 remit_reply 0 <message>
 let API_FraudMessage = ServerURL + "/app/remit/fraud_message.php"
 

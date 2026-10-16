@@ -374,6 +374,9 @@
 		049DB77D24BED018006CB436 /* ForgotPassScanVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DB77C24BED018006CB436 /* ForgotPassScanVC.swift */; };
 		04AC3EE524FEB5E200E48622 /* TransferMainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AC3EE424FEB5E200E48622 /* TransferMainVC.swift */; };
 		04AC3EE7250020B800E48622 /* TransactionObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AC3EE6250020B800E48622 /* TransactionObj.swift */; };
+		22038308F62E8B16B67137C4 /* TransferPurposeEmbededVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA1EEE258E3491C7FD471CFF /* TransferPurposeEmbededVC.xib */; };
+		AE4125185ECA7424A1F70C7E /* TransferPurposeEmbededVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46B07BA4CBE040EC1A83A25 /* TransferPurposeEmbededVC.swift */; };
+		FD0BCB3D057AB951EF64BC2C /* TransferPurposeObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D970B9B4B8BA9DD69EE6A96 /* TransferPurposeObj.swift */; };
 		04AC3EE92500251000E48622 /* TransactionInfoConfirmVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AC3EE82500251000E48622 /* TransactionInfoConfirmVC.swift */; };
 		04AC3EEB2500A38B00E48622 /* TransactionAgreeMentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AC3EEA2500A38B00E48622 /* TransactionAgreeMentVC.swift */; };
 		04AC3EEE25013D7900E48622 /* TransactionResultVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AC3EED25013D7900E48622 /* TransactionResultVC.swift */; };
@@ -938,6 +941,9 @@
 		049DB77C24BED018006CB436 /* ForgotPassScanVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassScanVC.swift; sourceTree = "<group>"; };
 		04AC3EE424FEB5E200E48622 /* TransferMainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMainVC.swift; sourceTree = "<group>"; };
 		04AC3EE6250020B800E48622 /* TransactionObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionObj.swift; sourceTree = "<group>"; };
+		AA1EEE258E3491C7FD471CFF /* TransferPurposeEmbededVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferPurposeEmbededVC.xib; sourceTree = "<group>"; };
+		E46B07BA4CBE040EC1A83A25 /* TransferPurposeEmbededVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPurposeEmbededVC.swift; sourceTree = "<group>"; };
+		8D970B9B4B8BA9DD69EE6A96 /* TransferPurposeObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPurposeObj.swift; sourceTree = "<group>"; };
 		04AC3EE82500251000E48622 /* TransactionInfoConfirmVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionInfoConfirmVC.swift; sourceTree = "<group>"; };
 		04AC3EEA2500A38B00E48622 /* TransactionAgreeMentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionAgreeMentVC.swift; sourceTree = "<group>"; };
 		04AC3EED25013D7900E48622 /* TransactionResultVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionResultVC.swift; sourceTree = "<group>"; };
@@ -1818,6 +1824,9 @@
 				0420CEA924FD0B11000CCC08 /* TransferStateType1TableViewCell.xib */,
 				04AC3EE424FEB5E200E48622 /* TransferMainVC.swift */,
 				04AC3EE6250020B800E48622 /* TransactionObj.swift */,
+				AA1EEE258E3491C7FD471CFF /* TransferPurposeEmbededVC.xib */,
+				E46B07BA4CBE040EC1A83A25 /* TransferPurposeEmbededVC.swift */,
+				8D970B9B4B8BA9DD69EE6A96 /* TransferPurposeObj.swift */,
 				04AC3EE82500251000E48622 /* TransactionInfoConfirmVC.swift */,
 				04AC3EEA2500A38B00E48622 /* TransactionAgreeMentVC.swift */,
 				04AC3EED25013D7900E48622 /* TransactionResultVC.swift */,
@@ -2100,6 +2109,7 @@
 				043AE03324E1468A00E0892E /* face_icon@3x.png in Resources */,
 				043AE00D24E1468A00E0892E /* edit@3x.png in Resources */,
 				04D9835524F9684D007D1269 /* RecipientTableViewCell.xib in Resources */,
+				22038308F62E8B16B67137C4 /* TransferPurposeEmbededVC.xib in Resources */,
 				043AE03424E1468A00E0892E /* medium_logo@2x.png in Resources */,
 				04C2DE3D2614F96A0036BD49 /* phone2@3x.png in Resources */,
 				0454E57D256EDC8500B9A1AD /* man_with_id_-4@3x.png in Resources */,
@@ -2504,6 +2514,8 @@
 				0436E71A24EC55D3008A38E9 /* PointHistorySingleObj.swift in Sources */,
 				04E82A7424DD3A0F00E25DCD /* ImagePickerStatus.swift in Sources */,
 				04AC3EE7250020B800E48622 /* TransactionObj.swift in Sources */,
+				AE4125185ECA7424A1F70C7E /* TransferPurposeEmbededVC.swift in Sources */,
+				FD0BCB3D057AB951EF64BC2C /* TransferPurposeObj.swift in Sources */,
 				04AC3EEB2500A38B00E48622 /* TransactionAgreeMentVC.swift in Sources */,
 				0436E73124F6D84D008A38E9 /* TransferMemberChoseTableViewCell.swift in Sources */,
 				047B89312522F00500CC0809 /* RegisterIDAndSelfPhotoStep2VC.swift in Sources */,

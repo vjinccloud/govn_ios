@@ -203,6 +203,9 @@ class APIHandle {
             break
         case API_CheckDiscountCode:
             checkDiscountCodeResult(DataStr: resultStr)
+        case API_GetPurpose:
+            checkPurpose(DataStr: resultStr)
+            break
         case API_FraudMessage:
             //整段文字直接保存（可能含換行）
             AppDelegate.shared().fraudMessageStr = resultStr
@@ -212,6 +215,26 @@ class APIHandle {
         }
         
         return ResponseState.ok
+    }
+    
+    //匯款目的：列用 seperatorStr 分，列內 id / name 用 subSeperatorStr 分
+    private func checkPurpose(DataStr dataStr:String) {
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        for i in 0..<ary.count {
+            
+            let subAry = ary[i].components(separatedBy: AppDelegate.shared().subSeperatorStr)
+            
+            let obj:TransferPurposeObj = TransferPurposeObj()
+            for j in 0..<subAry.count {
+                obj.setValueByOrder(Order: j, Value: subAry[j])
+            }
+            
+            if obj.name != "" {
+                Dlog("== \(i) =========")
+                obj.printSelf()
+                AppDelegate.shared().purposeObj.append(obj)
+            }
+        }
     }
     
     private func checkDiscountCodeResult(DataStr dataStr:String) {

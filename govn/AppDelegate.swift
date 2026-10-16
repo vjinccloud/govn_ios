@@ -101,6 +101,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var shareContent = ""
     
     var apiBackContentStr = ""
+    //匯款目的清單（API_GetPurpose）
+    var purposeObj:[TransferPurposeObj] = []
+    var hasPurpose = false
     //防詐提醒文字（API_FraudMessage）
     var fraudMessageStr = ""
     
@@ -655,6 +658,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
                     URLCache.shared.removeAllCachedResponses()
                     completion?(true)
                 } else {
+                    completion?(false)
+                }
+        }
+    }
+
+    //取得匯款目的清單（移植自 GoPadala）。GoPadala 失敗時會無限重試，GoVN 改成回報結果，由呼叫端決定
+    func getPurposeList(Completion completion:((Bool) -> Void)? = nil) {
+        if AppDelegate.shared().hasPurpose, AppDelegate.shared().purposeObj.count > 0 {
+            completion?(true)
+            return
+        }
+        
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "mobile_type":"iphone", "req_timestamp":Date.giveCurrentDateString()]
+        let headers: HTTPHeaders = [:]
+        
+        let todoEndpoint: String = API_GetPurpose;
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                
+                guard response.result.error == nil, let data = response.data, let responseStr = String.init(data: data, encoding: String.Encoding.utf8) else {
+                    print("error calling on \(todoEndpoint)")
+                    completion?(false)
+                    return
+                }
+                
+                Dlog("(\(todoEndpoint), responseStr = \(responseStr)")
+                
+                AppDelegate.shared().purposeObj = []
+                let result = APIHandle().getResponseState(ResponseStr: responseStr, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok, AppDelegate.shared().purposeObj.count > 0 {
+                    self.hasPurpose = true
+                    completion?(true)
+                } else {
+                    self.hasPurpose = false
                     completion?(false)
                 }
         }

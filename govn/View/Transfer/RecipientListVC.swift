@@ -186,13 +186,8 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
             let cell = tableView.cellForRow(at: indexPath) as! RecipientTableViewCell
             cell.checkImgV.image = UIImage.init(named: "choosen_checklist")
             
-            var storyboardId = "TransactionInfoConfirmVC"
-            if AppDelegate.shared().deviceSmall {
-                storyboardId = "TransactionInfoConfirmVCSmall"
-            }
-            let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
-            nextVC!.topBarSelectIdx = topBarSelectIdx
-            self.navigationController?.pushViewController(nextVC!, animated: true)
+            //先選匯款目的，再進交易確認頁（compliance-202610）
+            self.showTransferPurposeThenConfirm(TopBarSelectIdx: self.topBarSelectIdx)
             
         } else {
             

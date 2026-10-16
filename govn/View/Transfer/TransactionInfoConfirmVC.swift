@@ -142,7 +142,7 @@ class TransactionInfoConfirmVC: UIViewController {
         let recipient_id = AppDelegate.shared().transactionObj.recipientObj.recipient_id!
         //let total_payment = obj.ntdValue + obj.feeValue -
         var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":obj.ntdValue,"kurs_lm_time":AppDelegate.shared().memberData["kurs_lm_time"]!, "service_charge":obj.feeValue, "total_payment":obj.totalNtdValue, "transfer_idr":
-                                        obj.targetValue, "recipient_id":recipient_id, "pin_code_mode":PinCodeMode, "recipient_type":AppDelegate.shared().transactionObj.recipient_type,"currency":AppDelegate.shared().transactionObj.currency!]
+                                        obj.targetValue, "recipient_id":recipient_id, "purposes_id":obj.purposes_id, "pin_code_mode":PinCodeMode, "recipient_type":AppDelegate.shared().transactionObj.recipient_type,"currency":AppDelegate.shared().transactionObj.currency!]
         
         if obj.usePoint == 0 {
             parameters["use_remit_point"] = 0

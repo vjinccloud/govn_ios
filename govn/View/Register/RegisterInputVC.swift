@@ -399,13 +399,14 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             }
         }
         
-        //ARC 發證日期：不可晚於今天
+        //ARC 發證日期：最晚今天、最早往前 10 年（與 Android 一致，見規格決定紀錄 2026-10-16）
         if true {
             let datePicker = UIDatePicker.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
             datePicker.datePickerMode = .date
             
             datePicker.date = dateNow
             datePicker.maximumDate = dateNow
+            datePicker.minimumDate = Calendar.current.date(byAdding: .year, value: -10, to: dateNow)
             issueTextfield.inputView = datePicker
             let doneButton = UIBarButtonItem.init(title: "Xác nhận", style: .done, target: self, action: #selector(self.datePickerDone))
             let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))

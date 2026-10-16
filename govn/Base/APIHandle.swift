@@ -52,9 +52,12 @@ class APIHandle {
             var endIndex = resStr.index(resStr.startIndex, offsetBy: 13)
             stateStr = String(resStr[startIndex..<endIndex])
             
-            startIndex = resStr.index(resStr.startIndex, offsetBy: 14)
-            endIndex = resStr.endIndex
-            resultStr = String(resStr[startIndex..<endIndex]).trimmingCharacters(in: .whitespaces)
+            //回傳剛好是「remit_reply 0」、後面沒有內容時，第 14 個字元不存在，直接取會閃退
+            if resStr.count > 14 {
+                startIndex = resStr.index(resStr.startIndex, offsetBy: 14)
+                endIndex = resStr.endIndex
+                resultStr = String(resStr[startIndex..<endIndex]).trimmingCharacters(in: .whitespaces)
+            }
         }
         
         Dlog("resultStr = \(resultStr), stateStr = -\(stateStr)-")

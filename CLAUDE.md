@@ -24,6 +24,10 @@
 
 其他在 handoff 第 3 節列的待確認事項，CTO 都已接受（決定寫在規格檔最下方的決定紀錄），不用改。
 
+## 第四輪：註冊改兩步式（2026-10-17）
+
+前三輪都已通過。新增需求 4，規格在 `../docs/spec/三國合規更新.md` 的「需求 4」一節，請完整照做：`RegisterInputVC` 送 `register_step_1` → 簡訊頁 → 拍照、簽名 → `RegisterIDSignVC` 送 `register_step_2`，自拍欄位名改 `self`，移除舊 `API_Register`。來源照 GoPadala。做完更新 handoff（加「第四輪」段落與新流程的截圖），回 CTO 訊息「GoVN 第四輪已交付」。
+
 ## 專案結構
 
 - 開 `govn.xcworkspace`，scheme `govn`。CocoaPods 的 `Pods/` 已進版控，**不要跑 `pod install`**。Podfile 用的是舊的 `Firebase/Core` 寫法，本輪不要升級套件。

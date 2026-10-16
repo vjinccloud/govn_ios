@@ -376,8 +376,8 @@ Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
 "Register Error Issue Date After Expired" = "ARC issue date cannot be later than the expiry date";
 
 //compliance-202610 防詐提醒
-"Fraud Alert Title" = "Anti-Fraud Reminder";
-"Fraud Alert Confirm" = "I UNDERSTAND";
+"Fraud Alert Title" = "Warning";
+"Fraud Alert Confirm" = "I Understand";
 
 //compliance-202610 匯款目的
 "Purpose Select Title" = "Purpose of Remittance";

@@ -366,8 +366,8 @@ Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
 "Register Error Issue Date After Expired" = "Ngày cấp thẻ không được sau ngày hết hạn";
 
 //compliance-202610 防詐提醒
-"Fraud Alert Title" = "Cảnh báo lừa đảo";
-"Fraud Alert Confirm" = "TÔI ĐÃ HIỂU";
+"Fraud Alert Title" = "Cảnh báo";
+"Fraud Alert Confirm" = "Đã hiểu";
 
 //compliance-202610 匯款目的
 "Purpose Select Title" = "Mục đích chuyển tiền";

@@ -579,7 +579,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
             return
         }
         let customAlert = CustomAlertView.init(frame: window.bounds)
-        customAlert.initScrollContentAlert(Title: NSLocalizedString("Fraud Alert Title", comment: ""), Content: msg, NextBtn1Str: NSLocalizedString("Fraud Alert Confirm", comment: ""), CancelBtn1Str: NSLocalizedString("cancel", comment: ""))
+        customAlert.initScrollContentAlert(Title: NSLocalizedString("Fraud Alert Title", comment: ""), Content: msg, NextBtn1Str: NSLocalizedString("Fraud Alert Confirm", comment: ""))
         customAlert.customDelegate = self
         window.addSubview(customAlert)
     }
@@ -591,7 +591,7 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         pushAddRecipientPage()
     }
     
-    //按取消：關閉，不進新增收款人頁
+    //CustomAlertDelegate 必要方法；防詐視窗只有一顆確認鈕，不會走到這裡
     func customAlertnextActionSecond(Ref obj: CustomAlertView) {
         obj.removeFromSuperview()
         isShowingFraudAlert = false

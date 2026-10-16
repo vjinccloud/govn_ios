@@ -432,8 +432,9 @@ class CustomAlertView: UIView {
         
     }
     
-    //內容可捲動的確認視窗：內容過長時限制高度並可上下捲動（用於後台給的長段文字，如防詐提醒）
-    public func initScrollContentAlert(Title title:String, Content content:String, NextBtn1Str btnStr1:String, CancelBtn1Str btnStr2:String) {
+    //內容可捲動、只有一顆確認鈕的視窗：內容過長時限制高度並可上下捲動（用於後台給的長段文字，如防詐提醒）
+    //不能點背景關閉，只能按確認
+    public func initScrollContentAlert(Title title:String, Content content:String, NextBtn1Str btnStr1:String) {
         self.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.8)
         let divX:CGFloat = 30
         let centerY:CGFloat = self.frame.size.height/2
@@ -494,18 +495,7 @@ class CustomAlertView: UIView {
         centerView.addSubview(nextBtn)
         nextBtn.addTarget(self, action: #selector(nextAction), for: .touchUpInside)
         
-        startY += nextBtn.frame.size.height + 10
-        
-        let cancelBtn = UIButton.init(frame: CGRect.init(x: divX2, y: startY, width: width-2*divX2, height: 35))
-        cancelBtn.setTitle(btnStr2, for: .normal)
-        cancelBtn.layer.borderColor = Color_Main_Red.cgColor
-        cancelBtn.layer.borderWidth = 1
-        cancelBtn.setTitleColor(Color_Main_Red, for: .normal)
-        cancelBtn.layer.cornerRadius = cancelBtn.frame.size.height/2
-        centerView.addSubview(cancelBtn)
-        cancelBtn.addTarget(self, action: #selector(nextActionSecond), for: .touchUpInside)
-        
-        startY += cancelBtn.frame.size.height + 20
+        startY += nextBtn.frame.size.height + 20
         
         //最後位置調整
         centerView.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width-2*divX, height: startY)

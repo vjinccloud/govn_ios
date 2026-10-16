@@ -13,6 +13,17 @@
 
 分支 `feature/compliance-202610` 已開好，直接在上面 commit。不 push、不合 main。**commit 訊息用中文，不可出現 Claude、AI、Co-Authored-By 等署名。**
 
+## 第二輪修正（2026-10-17，CTO 審閱 handoff 後退回）
+
+第一輪三個需求都做了，品質不錯，只有下面四點和規格不符，修完更新 `../_handoff/govn-compliance-202610.md` 再交付：
+
+1. **發證日期列的位置**：規格要求放在「Thời hạn cư trú（到期日）」那列的**上方**，現在在下方。改 `Register.storyboard`。
+2. **防詐視窗只留一顆按鈕**：拿掉「HỦY」取消鈕。規格是「只有一顆確認鈕，點外面不能關」。
+3. **防詐視窗文字改成和 Android 一致**：標題 vi「Cảnh báo」／en「Warning」，按鈕 vi「Đã hiểu」／en「I Understand」。改 `Localizable.strings` 的 `Fraud Alert Title`、`Fraud Alert Confirm`。
+4. **`API_FraudMessage` 去掉 `.php`**：測試機兩種路徑都通，三款 App 統一用 `/app/remit/fraud_message`。
+
+其他在 handoff 第 3 節列的待確認事項，CTO 都已接受（決定寫在規格檔最下方的決定紀錄），不用改。
+
 ## 專案結構
 
 - 開 `govn.xcworkspace`，scheme `govn`。CocoaPods 的 `Pods/` 已進版控，**不要跑 `pod install`**。Podfile 用的是舊的 `Firebase/Core` 寫法，本輪不要升級套件。

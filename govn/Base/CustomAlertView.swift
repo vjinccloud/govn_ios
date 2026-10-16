@@ -432,6 +432,88 @@ class CustomAlertView: UIView {
         
     }
     
+    //內容可捲動的確認視窗：內容過長時限制高度並可上下捲動（用於後台給的長段文字，如防詐提醒）
+    public func initScrollContentAlert(Title title:String, Content content:String, NextBtn1Str btnStr1:String, CancelBtn1Str btnStr2:String) {
+        self.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.8)
+        let divX:CGFloat = 30
+        let centerY:CGFloat = self.frame.size.height/2
+        
+        //此視窗不允許點背景關閉，只能按按鈕
+        let centerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: self.frame.size.width-2*divX, height: 0))
+        self.addSubview(centerView)
+        centerView.backgroundColor = .white
+        let width = centerView.frame.size.width
+        var startY:CGFloat = 0
+        
+        let divX2:CGFloat = 20
+        let labelTitleL = UILabel.init(frame: CGRect.init(x:divX2 , y: startY+12, width: width-2*divX2, height: 0))
+        labelTitleL.textAlignment = .center
+        labelTitleL.textColor = .white
+        labelTitleL.font = UIFont.systemFont(ofSize: 22)
+        labelTitleL.text = title
+        labelTitleL.numberOfLines = 0
+        labelTitleL.sizeToFit()
+        labelTitleL.frame.size.width = width-2*divX2
+        
+        startY += 24 + labelTitleL.frame.size.height
+        
+        //標題列
+        let barView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: width, height: startY))
+        barView.addSubview(labelTitleL)
+        barView.backgroundColor = Color_Main_Red
+        centerView.addSubview(barView)
+        
+        //內容（可捲動）
+        startY += 12
+        let labelContentL = UILabel.init(frame: CGRect.init(x: 0, y: 0, width: width-2*divX2, height: 0))
+        labelContentL.textColor = .black
+        labelContentL.font = UIFont.systemFont(ofSize: 15)
+        labelContentL.text = content
+        labelContentL.numberOfLines = 0
+        labelContentL.sizeToFit()
+        labelContentL.frame.size.width = width-2*divX2
+        
+        let maxContentHeight = self.frame.size.height * 0.5
+        let contentHeight = min(labelContentL.frame.size.height, maxContentHeight)
+        let contentScrollV = UIScrollView.init(frame: CGRect.init(x: divX2, y: startY, width: width-2*divX2, height: contentHeight))
+        contentScrollV.addSubview(labelContentL)
+        contentScrollV.contentSize = labelContentL.frame.size
+        contentScrollV.showsVerticalScrollIndicator = true
+        centerView.addSubview(contentScrollV)
+        if labelContentL.frame.size.height > maxContentHeight {
+            contentScrollV.flashScrollIndicators()
+        }
+        
+        //按鈕
+        startY += contentHeight + 20
+        let nextBtn = UIButton.init(frame: CGRect.init(x: divX2, y: startY, width: width-2*divX2, height: 35))
+        nextBtn.setTitle(btnStr1, for: .normal)
+        nextBtn.backgroundColor = Color_Main_Red
+        nextBtn.setTitleColor(.white, for: .normal)
+        nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
+        centerView.addSubview(nextBtn)
+        nextBtn.addTarget(self, action: #selector(nextAction), for: .touchUpInside)
+        
+        startY += nextBtn.frame.size.height + 10
+        
+        let cancelBtn = UIButton.init(frame: CGRect.init(x: divX2, y: startY, width: width-2*divX2, height: 35))
+        cancelBtn.setTitle(btnStr2, for: .normal)
+        cancelBtn.layer.borderColor = Color_Main_Red.cgColor
+        cancelBtn.layer.borderWidth = 1
+        cancelBtn.setTitleColor(Color_Main_Red, for: .normal)
+        cancelBtn.layer.cornerRadius = cancelBtn.frame.size.height/2
+        centerView.addSubview(cancelBtn)
+        cancelBtn.addTarget(self, action: #selector(nextActionSecond), for: .touchUpInside)
+        
+        startY += cancelBtn.frame.size.height + 20
+        
+        //最後位置調整
+        centerView.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width-2*divX, height: startY)
+        centerView.center = CGPoint(x: self.frame.size.width/2, y: centerY-20)
+        centerView.layer.cornerRadius = 15
+        centerView.clipsToBounds = true
+    }
+    
     @objc func nextAction() {
         customDelegate?.customAlertnextAction(Ref: self)
     }

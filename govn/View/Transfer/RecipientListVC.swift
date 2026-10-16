@@ -12,7 +12,7 @@ import SwiftyJSON
 import Kingfisher
 import KingfisherWebP
 
-class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
+class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, CustomAlertDelegate {
 
     @IBOutlet weak var searchBgV: UIView!
     @IBOutlet weak var backL: UILabel!
@@ -31,6 +31,8 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
     var showDataList:[RecipientObj] = []
     //因為怕會重複一直進入而產生無法返回的迴圈
     var hasGotoAddRecipient = false
+    //防詐提醒：取得文字中或彈窗顯示中，擋住重複點擊
+    var isShowingFraudAlert = false
     
     //MARK: - TopBar
     func initTopBar() {
@@ -533,7 +535,74 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
         }
     }
     
+    //MARK: - 防詐提醒（compliance-202610）
+    //新增收款人的唯一入口：先取防詐提醒文字並彈窗，使用者按確認才進新增收款人頁
+    //API 失敗時顯示連線錯誤，不放行（見規格決定紀錄 2026-10-15）
     func goAddRecipient() {
+        if isShowingFraudAlert {
+            return
+        }
+        isShowingFraudAlert = true
+        
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "mobile_type":"iphone", "req_timestamp":Date.giveCurrentDateString()]
+        let headers: HTTPHeaders = [:]
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_FraudMessage;
+        Dlog("todoEndpoint=\(todoEndpoint)\nparameters=\(parameters)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil, let data = response.data, let responseStr = String.init(data: data, encoding: String.Encoding.utf8) else {
+                    print("error calling on \(todoEndpoint)")
+                    self.isShowingFraudAlert = false
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                Dlog("responseStr = \(responseStr)")
+                AppDelegate.shared().fraudMessageStr = ""
+                let result = APIHandle().getResponseState(ResponseStr: responseStr, APIStr: todoEndpoint, SubStr: "")
+                if result == ResponseState.ok, AppDelegate.shared().fraudMessageStr != "" {
+                    self.showFraudAlert(Message: AppDelegate.shared().fraudMessageStr)
+                } else {
+                    self.isShowingFraudAlert = false
+                    var msg = AppDelegate.shared().apiBackContentStr
+                    if result == ResponseState.ok || msg == "" {
+                        msg = NSLocalizedString("API Timeout", comment: "")
+                    }
+                    AppDelegate.shared().showAlertWithWindow(self, Message: msg)
+                }
+        }
+    }
+    
+    func showFraudAlert(Message msg:String) {
+        guard let window = UIApplication.shared.keyWindow else {
+            isShowingFraudAlert = false
+            return
+        }
+        let customAlert = CustomAlertView.init(frame: window.bounds)
+        customAlert.initScrollContentAlert(Title: NSLocalizedString("Fraud Alert Title", comment: ""), Content: msg, NextBtn1Str: NSLocalizedString("Fraud Alert Confirm", comment: ""), CancelBtn1Str: NSLocalizedString("cancel", comment: ""))
+        customAlert.customDelegate = self
+        window.addSubview(customAlert)
+    }
+    
+    //按確認：進新增收款人頁
+    func customAlertnextAction(Ref obj: CustomAlertView) {
+        obj.removeFromSuperview()
+        isShowingFraudAlert = false
+        pushAddRecipientPage()
+    }
+    
+    //按取消：關閉，不進新增收款人頁
+    func customAlertnextActionSecond(Ref obj: CustomAlertView) {
+        obj.removeFromSuperview()
+        isShowingFraudAlert = false
+    }
+    
+    func pushAddRecipientPage() {
         AppDelegate.shared().tempRecipientObj = RecipientObj()
         AppDelegate.shared().tempRecipientObj.recipient_type.append(AppDelegate.shared().transactionObj.recipient_type)
         AppDelegate.shared().transactionObj.recipientObj = RecipientObj()

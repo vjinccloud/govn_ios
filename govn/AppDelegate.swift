@@ -101,6 +101,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WKNavigationDelegate {
     var shareContent = ""
     
     var apiBackContentStr = ""
+    //防詐提醒文字（API_FraudMessage）
+    var fraudMessageStr = ""
     
     var transactionObj:TransactionObj = TransactionObj()
     var noticeNotReadNum = 0

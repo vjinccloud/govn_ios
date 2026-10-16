@@ -203,6 +203,10 @@ class APIHandle {
             break
         case API_CheckDiscountCode:
             checkDiscountCodeResult(DataStr: resultStr)
+        case API_FraudMessage:
+            //整段文字直接保存（可能含換行）
+            AppDelegate.shared().fraudMessageStr = resultStr
+            break
         default:
             break
         }

@@ -109,6 +109,9 @@ let API_MemberRecipentsOther_TransferV2 = ServerURL + "/app/remit/member_recipie
 let API_TransactionCreateV2 = ServerURL + "/app/remit/create_v2"
 let API_TransactionCreate_OtherV2 = ServerURL + "/app/remit/create_others_v2"
 
+//新增收款人前的防詐提醒（compliance-202610；網址真的有 .php），回傳 remit_reply 0 <message>
+let API_FraudMessage = ServerURL + "/app/remit/fraud_message.php"
+
 //後台控制 App icon（POST、免參數，回傳 remit_reply 0 <icon名稱>）
 let API_LauncherIcon = ServerURL + "/app/getLauncherIcon.php"
 

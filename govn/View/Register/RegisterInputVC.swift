@@ -295,7 +295,10 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
         } else if textField == issueTextfield {
             nowTextIdx = 2
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
+            //issueView 包在容器裡，frame 是相對座標，要換算成捲動區座標，讓欄位停在日期選擇器上方
+            let fieldY = issueView.convert(CGPoint.zero, to: topScrollView).y
+            let maxOffsetY = max(0, topScrollView.contentSize.height - topScrollView.bounds.size.height + 300)
+            topScrollView.contentOffset = CGPoint.init(x: 0, y: min(max(0, fieldY - 200), maxOffsetY))
         }
     }
     

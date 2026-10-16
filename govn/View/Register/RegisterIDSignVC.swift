@@ -62,6 +62,7 @@ class RegisterIDSignVC: UIViewController {
             multipartFormData.append(obj.shareCode.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "share_member_id")
             
             multipartFormData.append(obj.arcDay.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "arc_expire_date")
+            multipartFormData.append(obj.arcIssueDay.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "arc_issue_date")
             multipartFormData.append(obj.birthday.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "birthday")
             
             multipartFormData.append(obj.frontImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "arc", fileName: "arc.jpg", mimeType: "image/jpg")

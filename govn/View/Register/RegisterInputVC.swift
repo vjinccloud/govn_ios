@@ -62,8 +62,15 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     @IBOutlet weak var expiredBackV: UIView!
     @IBOutlet weak var arcBackV: UIView!
     @IBOutlet weak var expiredView: UIView!
+    //ARC 發證日期（compliance-202610）
+    @IBOutlet weak var issueBackV: UIView!
+    @IBOutlet weak var issueView: UIView!
+    @IBOutlet weak var issueTextfield: UITextField!
+    @IBOutlet weak var issueIntroL: UILabel!
+    @IBOutlet weak var issuePlaceholderL: UILabel!
     var birthDatePicker:UIDatePicker!
     var expiredDatePicker:UIDatePicker!
+    var issueDatePicker:UIDatePicker!
     var nowTextIdx = 0
     
     var hasSharedCode = false
@@ -72,6 +79,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     
     var birthDate:Date = Date()
     var expiredDate:Date = Date()
+    var issueDate:Date = Date()
     
     @IBOutlet weak var expiredIntroL: UILabel!
     @IBOutlet weak var expiredPlaceholderL: UILabel!
@@ -98,6 +106,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         }
         AppDelegate.shared().tempRegisterObj.birthday = birthTextfield.text!
         AppDelegate.shared().tempRegisterObj.arcDay = expiredTextfield.text!
+        AppDelegate.shared().tempRegisterObj.arcIssueDay = issueTextfield.text!
         
         let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterIDTakePhotoVC") as? RegisterIDTakePhotoVC
         self.navigationController?.pushViewController(nextVC!, animated: true)
@@ -284,6 +293,9 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         } else if textField == expiredTextfield {
             nowTextIdx = 1
             topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
+        } else if textField == issueTextfield {
+            nowTextIdx = 2
+            topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
         }
     }
     
@@ -384,11 +396,30 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             }
         }
         
+        //ARC 發證日期：不可晚於今天
+        if true {
+            let datePicker = UIDatePicker.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            datePicker.datePickerMode = .date
+            
+            datePicker.date = dateNow
+            datePicker.maximumDate = dateNow
+            issueTextfield.inputView = datePicker
+            let doneButton = UIBarButtonItem.init(title: "Xác nhận", style: .done, target: self, action: #selector(self.datePickerDone))
+            let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
+            toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
+            issueTextfield.inputAccessoryView = toolBar
+            issueDatePicker = datePicker
+            if #available(iOS 14, *) {
+                datePicker.preferredDatePickerStyle = .wheels
+            }
+        }
+        
     }
     
     @objc func datePickerDone() {
         birthTextfield.resignFirstResponder()
         expiredTextfield.resignFirstResponder()
+        issueTextfield.resignFirstResponder()
         
         if nowTextIdx == 0 {
             let date = birthDatePicker.date
@@ -399,6 +430,11 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             expiredPlaceholderL.isHidden = true
             expiredDate = date
             expiredTextfield.text = date.toString()
+        } else if nowTextIdx == 2 {
+            let date = issueDatePicker.date
+            issuePlaceholderL.isHidden = true
+            issueDate = date
+            issueTextfield.text = date.toString()
         }
         checkNextBtnState(CheckText: true)
     }
@@ -503,6 +539,27 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             return false
         }
         
+        //ARC 發證日期：必填、不可晚於今天、不可晚於到期日（格式皆為 yyyy-MM-dd，可直接比字串）
+        let issueStr = issueTextfield.text ?? ""
+        if issueStr.count == 0 {
+            errorL.text = NSLocalizedString("Register Error Issue Date Empty", comment: "")
+            errorView.isHidden = false
+            return false
+        }
+        
+        if issueStr > Date().toString() {
+            errorL.text = NSLocalizedString("Register Error Issue Date Future", comment: "")
+            errorView.isHidden = false
+            return false
+        }
+        
+        let expiredStr = expiredTextfield.text ?? ""
+        if expiredStr.count > 0, issueStr > expiredStr {
+            errorL.text = NSLocalizedString("Register Error Issue Date After Expired", comment: "")
+            errorView.isHidden = false
+            return false
+        }
+        
         errorView.isHidden = true
         return true
     }
@@ -531,7 +588,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             birthTextfield.textColor = .black
         }
         
-        if accountTextfield.text?.count == 0 || birthTextfield.text?.count == 0 || expiredTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
+        if accountTextfield.text?.count == 0 || birthTextfield.text?.count == 0 || expiredTextfield.text?.count == 0 || issueTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
             pass = false
         } else if passTextField.text != rePassTextField.text {
             pass = false
@@ -598,6 +655,9 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         expiredBackV.layer.cornerRadius = 12
         expiredBackV.layer.borderColor = UIColor.yellow.cgColor
         expiredBackV.layer.borderWidth = 1
+        issueBackV.layer.cornerRadius = 12
+        issueBackV.layer.borderColor = UIColor.yellow.cgColor
+        issueBackV.layer.borderWidth = 1
         
         backL.text = NSLocalizedString("back", comment: "")
         accountBtn.layer.cornerRadius = accountBtn.frame.size.height/2
@@ -642,12 +702,15 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         rePassTextField.delegate = self
         arcTextfield.isEnabled = false
         expiredTextfield.delegate = self
+        issueTextfield.delegate = self
         
         birthTextfield.inputAccessoryView = generateToolBar()
         expiredTextfield.inputAccessoryView = generateToolBar()
         
         expiredIntroL.text = NSLocalizedString("Register Expired Title", comment: "")
         expiredPlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
+        issueIntroL.text = NSLocalizedString("Register Issue Date Title", comment: "")
+        issuePlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
         
         accountTextfield.inputAccessoryView = generateToolBar()
         phoneTextfield.inputAccessoryView = generateToolBar()

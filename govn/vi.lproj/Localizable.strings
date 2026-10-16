@@ -358,3 +358,9 @@ Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
 "Cash ID No" = "CMND: ";
 "Cash Phone No" = "SĐT: ";
 "Cash Address No" = "Địa chỉ: ";
+
+//compliance-202610 ARC 發證日期
+"Register Issue Date Title" = "Ngày cấp thẻ";
+"Register Error Issue Date Empty" = "Vui lòng chọn ngày cấp thẻ";
+"Register Error Issue Date Future" = "Ngày cấp thẻ không được sau ngày hôm nay";
+"Register Error Issue Date After Expired" = "Ngày cấp thẻ không được sau ngày hết hạn";

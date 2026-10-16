@@ -22,4 +22,5 @@ class RegisterDataObj: NSObject {
     var signImg:UIImage!
     var birthday:String = ""
     var arcDay:String = ""
+    var arcIssueDay:String = ""
 }

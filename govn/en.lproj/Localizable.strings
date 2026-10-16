@@ -368,3 +368,9 @@ Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
 "Cash ID No" = "ID: ";
 "Cash Phone No" = "Phone No: ";
 "Cash Address No" = "Address: ";
+
+//compliance-202610 ARC 發證日期
+"Register Issue Date Title" = "ARC ISSUE DATE";
+"Register Error Issue Date Empty" = "Please select the ARC issue date";
+"Register Error Issue Date Future" = "ARC issue date cannot be later than today";
+"Register Error Issue Date After Expired" = "ARC issue date cannot be later than the expiry date";

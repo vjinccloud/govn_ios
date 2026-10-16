@@ -141,7 +141,10 @@ class APIHandle {
         case API_SendSMS:
             sendSMS(DataStr: resultStr)
             break
-        case API_Register, API_ResendRegisterSMS:
+        case API_RegisterStep1:
+            registerStep1Result(DataStr: resultStr)
+            break
+        case API_ResendRegisterSMS:
             sendRegisterSMS(DataStr: resultStr)
             break
         case API_NoticeRecordList:
@@ -598,8 +601,18 @@ class APIHandle {
         AppDelegate.shared().forgotPassTempSMS = dataStr
     }
     
+    //重寄註冊簡訊：取第一欄為驗證碼（若後端也帶了 member_id，切掉才不會比對失敗）
     private func sendRegisterSMS(DataStr dataStr:String) {
-        AppDelegate.shared().forgotPassTempSMS = dataStr
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        AppDelegate.shared().forgotPassTempSMS = ary[0]
+    }
+    
+    //register_step_1：sms_code(31)member_id
+    private func registerStep1Result(DataStr dataStr:String) {
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        AppDelegate.shared().forgotPassTempSMS = ary[0]
+        AppDelegate.shared().tempRegisterObj.memberId = ary.count > 1 ? ary[1] : ""
+        Dlog("register_step_1 member_id = \(AppDelegate.shared().tempRegisterObj.memberId)")
     }
     
     private func checkMemExist(DataStr dataStr:String) {

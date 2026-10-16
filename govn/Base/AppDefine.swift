@@ -63,7 +63,10 @@ let API_Login = ServerURL + "/app/remit/login"
 let API_CheckLogin = ServerURL + "/app/remit/check_token"
 let API_CheckMemExist = ServerURL + "/app/remit/check_mem_exists"
 let API_SendSMS = ServerURL + "/app/remit/password_forget_sms"
-let API_Register = ServerURL + "/app/remit/register"
+//註冊兩步式（compliance-202610 需求 4，照 GoPadala / Android）
+//step_1 純文字送資料，回 remit_reply 0 sms_code(31)member_id；step_2 驗完簡訊後 multipart 上傳四張圖
+let API_RegisterStep1 = ServerURL + "/app/remit/register_step_1"
+let API_RegisterStep2 = ServerURL + "/app/remit/register_step_2"
 let API_ResendRegisterSMS = ServerURL + "/app/remit/request_sms_code"
 let API_VerifyRegisterSMS = ServerURL + "/app/remit/verify_sms_code"
 let API_NoticeRecordList = ServerURL + "/app/remit/notification_record"

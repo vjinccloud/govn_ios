@@ -108,8 +108,56 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         AppDelegate.shared().tempRegisterObj.arcDay = expiredTextfield.text!
         AppDelegate.shared().tempRegisterObj.arcIssueDay = issueTextfield.text!
         
-        let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterIDTakePhotoVC") as? RegisterIDTakePhotoVC
-        self.navigationController?.pushViewController(nextVC!, animated: true)
+        registerStep1()
+    }
+    
+    //MARK: - API
+    //註冊第一步：送文字資料（含 arc_issue_date），成功後進簡訊驗證頁
+    func registerStep1() {
+        let obj = AppDelegate.shared().tempRegisterObj
+        let parameters:Parameters = ["name":obj.account!,
+                                     "phone":obj.phoneNum!,
+                                     "arc_no":obj.arcNum!,
+                                     "password":UtilityTool().sha256(Code: obj.passwaord!),
+                                     "share_member_id":obj.shareCode,
+                                     "arc_expire_date":obj.arcDay,
+                                     "arc_issue_date":obj.arcIssueDay,
+                                     "birthday":obj.birthday]
+        let headers: HTTPHeaders = [:]
+        
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_RegisterStep1;
+        //不印參數，避免密碼雜湊出現在 log
+        Dlog("todoEndpoint=\(todoEndpoint)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil, let data = response.data, let responseStr = String.init(data: data, encoding: String.Encoding.utf8) else {
+                    print("error calling on \(todoEndpoint)")
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                Dlog("responseStr = \(responseStr)")
+                let result = APIHandle().getResponseState(ResponseStr: responseStr, APIStr: todoEndpoint, SubStr: "")
+                
+                if result == ResponseState.ok {
+                    //簡訊頁顯示的手機號碼
+                    AppDelegate.shared().forgotPassTempPhone = obj.phoneNum!
+                    let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterEnterSMSCodeVC") as? RegisterEnterSMSCodeVC
+                    self.navigationController?.pushViewController(nextVC!, animated: true)
+                } else {
+                    //6001 帳號不存在、6002 已註冊或使用中等，顯示後端訊息
+                    var msg = AppDelegate.shared().apiBackContentStr
+                    if msg == "" {
+                        msg = NSLocalizedString("API Timeout", comment: "")
+                    }
+                    AppDelegate.shared().showAlertWithWindow(self, Message: msg)
+                }
+        }
     }
     
     @IBAction func cancelAction(_ sender: Any) {

@@ -23,4 +23,6 @@ class RegisterDataObj: NSObject {
     var birthday:String = ""
     var arcDay:String = ""
     var arcIssueDay:String = ""
+    //register_step_1 回傳的 member_id
+    var memberId:String = ""
 }

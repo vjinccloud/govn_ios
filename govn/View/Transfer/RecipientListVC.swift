@@ -560,12 +560,19 @@ class RecipientListVC: UIViewController, UITextFieldDelegate, UITableViewDelegat
                 Dlog("responseStr = \(responseStr)")
                 AppDelegate.shared().fraudMessageStr = ""
                 let result = APIHandle().getResponseState(ResponseStr: responseStr, APIStr: todoEndpoint, SubStr: "")
-                if result == ResponseState.ok, AppDelegate.shared().fraudMessageStr != "" {
-                    self.showFraudAlert(Message: AppDelegate.shared().fraudMessageStr)
+                if result == ResponseState.ok {
+                    //成功但文字是空的（含只有空白或換行）：不跳窗，直接進新增頁（規格需求 2 第 4 點）
+                    if AppDelegate.shared().fraudMessageStr.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        self.isShowingFraudAlert = false
+                        self.pushAddRecipientPage()
+                    } else {
+                        self.showFraudAlert(Message: AppDelegate.shared().fraudMessageStr)
+                    }
                 } else {
+                    //失敗：顯示後端訊息（沒有訊息時顯示連線錯誤），不放行
                     self.isShowingFraudAlert = false
                     var msg = AppDelegate.shared().apiBackContentStr
-                    if result == ResponseState.ok || msg == "" {
+                    if msg == "" {
                         msg = NSLocalizedString("API Timeout", comment: "")
                     }
                     AppDelegate.shared().showAlertWithWindow(self, Message: msg)

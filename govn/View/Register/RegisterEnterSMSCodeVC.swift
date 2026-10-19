@@ -26,7 +26,7 @@ class RegisterEnterSMSCodeVC: UIViewController, UITextFieldDelegate {
     
     //MARK: - API
     func sendSMS() {
-        let parameters:Parameters = ["arc_no":AppDelegate.shared().tempRegisterObj.arcNum!]
+        let parameters:Parameters = ["arc_no":AppDelegate.shared().tempRegisterObj.arcNum!, "phone_no":AppDelegate.shared().tempRegisterObj.phoneNum!]
         let headers: HTTPHeaders = [:]
         
         Dlog("parameters=\(parameters)")
@@ -111,21 +111,9 @@ class RegisterEnterSMSCodeVC: UIViewController, UITextFieldDelegate {
                 let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
                 
                 if result == ResponseState.ok {
-                    //回首頁，並帶入帳密
-                    guard let viewControllers = self.navigationController?.viewControllers else {
-                        return
-                    }
-                    
-                    for firstViewController in viewControllers {
-                        if firstViewController is ViewController {
-                            let obj = AppDelegate.shared().tempRegisterObj
-                            let vc = firstViewController as! ViewController
-                            vc.accountTextfield.text = obj.arcNum
-                            vc.passTextField.text = obj.passwaord
-                            break
-                        }
-                    }
-                    self.navigationController?.popToRootViewController(animated: true)
+                    //兩步式：簡訊驗證通過後才拍證件、自拍、簽名，最後在 RegisterIDSignVC 送 register_step_2
+                    let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterIDTakePhotoVC") as? RegisterIDTakePhotoVC
+                    self.navigationController?.pushViewController(nextVC!, animated: true)
                 } else if result == ResponseState.failed {
                     AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
                 }

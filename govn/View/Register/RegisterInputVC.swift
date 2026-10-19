@@ -62,8 +62,15 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     @IBOutlet weak var expiredBackV: UIView!
     @IBOutlet weak var arcBackV: UIView!
     @IBOutlet weak var expiredView: UIView!
+    //ARC 發證日期（compliance-202610）
+    @IBOutlet weak var issueBackV: UIView!
+    @IBOutlet weak var issueView: UIView!
+    @IBOutlet weak var issueTextfield: UITextField!
+    @IBOutlet weak var issueIntroL: UILabel!
+    @IBOutlet weak var issuePlaceholderL: UILabel!
     var birthDatePicker:UIDatePicker!
     var expiredDatePicker:UIDatePicker!
+    var issueDatePicker:UIDatePicker!
     var nowTextIdx = 0
     
     var hasSharedCode = false
@@ -72,6 +79,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     
     var birthDate:Date = Date()
     var expiredDate:Date = Date()
+    var issueDate:Date = Date()
     
     @IBOutlet weak var expiredIntroL: UILabel!
     @IBOutlet weak var expiredPlaceholderL: UILabel!
@@ -98,9 +106,58 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         }
         AppDelegate.shared().tempRegisterObj.birthday = birthTextfield.text!
         AppDelegate.shared().tempRegisterObj.arcDay = expiredTextfield.text!
+        AppDelegate.shared().tempRegisterObj.arcIssueDay = issueTextfield.text!
         
-        let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterIDTakePhotoVC") as? RegisterIDTakePhotoVC
-        self.navigationController?.pushViewController(nextVC!, animated: true)
+        registerStep1()
+    }
+    
+    //MARK: - API
+    //註冊第一步：送文字資料（含 arc_issue_date），成功後進簡訊驗證頁
+    func registerStep1() {
+        let obj = AppDelegate.shared().tempRegisterObj
+        let parameters:Parameters = ["name":obj.account!,
+                                     "phone":obj.phoneNum!,
+                                     "arc_no":obj.arcNum!,
+                                     "password":UtilityTool().sha256(Code: obj.passwaord!),
+                                     "share_member_id":obj.shareCode,
+                                     "arc_expire_date":obj.arcDay,
+                                     "arc_issue_date":obj.arcIssueDay,
+                                     "birthday":obj.birthday]
+        let headers: HTTPHeaders = [:]
+        
+        AppDelegate.shared().addLoadingView()
+        
+        let todoEndpoint: String = API_RegisterStep1;
+        //不印參數，避免密碼雜湊出現在 log
+        Dlog("todoEndpoint=\(todoEndpoint)")
+        
+        AppDelegate.shared().alamofireManagerWithTimeout.requestWithoutCache(todoEndpoint,method: .post,parameters: parameters,encoding: URLEncoding.default, headers:headers)
+            .responseString(encoding: String.Encoding.utf8)  { response in
+                AppDelegate.shared().removeLoadingView()
+                
+                guard response.result.error == nil, let data = response.data, let responseStr = String.init(data: data, encoding: String.Encoding.utf8) else {
+                    print("error calling on \(todoEndpoint)")
+                    AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
+                    return
+                }
+                
+                Dlog("responseStr = \(responseStr)")
+                let result = APIHandle().getResponseState(ResponseStr: responseStr, APIStr: todoEndpoint, SubStr: "")
+                
+                if result == ResponseState.ok {
+                    //簡訊頁顯示的手機號碼
+                    AppDelegate.shared().forgotPassTempPhone = obj.phoneNum!
+                    let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterEnterSMSCodeVC") as? RegisterEnterSMSCodeVC
+                    self.navigationController?.pushViewController(nextVC!, animated: true)
+                } else {
+                    //6001 帳號不存在、6002 已註冊或使用中等，顯示後端訊息
+                    var msg = AppDelegate.shared().apiBackContentStr
+                    if msg == "" {
+                        msg = NSLocalizedString("API Timeout", comment: "")
+                    }
+                    AppDelegate.shared().showAlertWithWindow(self, Message: msg)
+                }
+        }
     }
     
     @IBAction func cancelAction(_ sender: Any) {
@@ -284,6 +341,12 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         } else if textField == expiredTextfield {
             nowTextIdx = 1
             topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
+        } else if textField == issueTextfield {
+            nowTextIdx = 2
+            //issueView 包在容器裡，frame 是相對座標，要換算成捲動區座標，讓欄位停在日期選擇器上方
+            let fieldY = issueView.convert(CGPoint.zero, to: topScrollView).y
+            let maxOffsetY = max(0, topScrollView.contentSize.height - topScrollView.bounds.size.height + 300)
+            topScrollView.contentOffset = CGPoint.init(x: 0, y: min(max(0, fieldY - 200), maxOffsetY))
         }
     }
     
@@ -384,11 +447,31 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             }
         }
         
+        //ARC 發證日期：最晚今天、最早往前 10 年（與 Android 一致，見規格決定紀錄 2026-10-16）
+        if true {
+            let datePicker = UIDatePicker.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            datePicker.datePickerMode = .date
+            
+            datePicker.date = dateNow
+            datePicker.maximumDate = dateNow
+            datePicker.minimumDate = Calendar.current.date(byAdding: .year, value: -10, to: dateNow)
+            issueTextfield.inputView = datePicker
+            let doneButton = UIBarButtonItem.init(title: "Xác nhận", style: .done, target: self, action: #selector(self.datePickerDone))
+            let toolBar = UIToolbar.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
+            toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
+            issueTextfield.inputAccessoryView = toolBar
+            issueDatePicker = datePicker
+            if #available(iOS 14, *) {
+                datePicker.preferredDatePickerStyle = .wheels
+            }
+        }
+        
     }
     
     @objc func datePickerDone() {
         birthTextfield.resignFirstResponder()
         expiredTextfield.resignFirstResponder()
+        issueTextfield.resignFirstResponder()
         
         if nowTextIdx == 0 {
             let date = birthDatePicker.date
@@ -399,6 +482,11 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             expiredPlaceholderL.isHidden = true
             expiredDate = date
             expiredTextfield.text = date.toString()
+        } else if nowTextIdx == 2 {
+            let date = issueDatePicker.date
+            issuePlaceholderL.isHidden = true
+            issueDate = date
+            issueTextfield.text = date.toString()
         }
         checkNextBtnState(CheckText: true)
     }
@@ -503,6 +591,27 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             return false
         }
         
+        //ARC 發證日期：必填、不可晚於今天、不可晚於到期日（格式皆為 yyyy-MM-dd，可直接比字串）
+        let issueStr = issueTextfield.text ?? ""
+        if issueStr.count == 0 {
+            errorL.text = NSLocalizedString("Register Error Issue Date Empty", comment: "")
+            errorView.isHidden = false
+            return false
+        }
+        
+        if issueStr > Date().toString() {
+            errorL.text = NSLocalizedString("Register Error Issue Date Future", comment: "")
+            errorView.isHidden = false
+            return false
+        }
+        
+        let expiredStr = expiredTextfield.text ?? ""
+        if expiredStr.count > 0, issueStr > expiredStr {
+            errorL.text = NSLocalizedString("Register Error Issue Date After Expired", comment: "")
+            errorView.isHidden = false
+            return false
+        }
+        
         errorView.isHidden = true
         return true
     }
@@ -531,7 +640,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
             birthTextfield.textColor = .black
         }
         
-        if accountTextfield.text?.count == 0 || birthTextfield.text?.count == 0 || expiredTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
+        if accountTextfield.text?.count == 0 || birthTextfield.text?.count == 0 || expiredTextfield.text?.count == 0 || issueTextfield.text?.count == 0 || phoneTextfield.text?.count == 0 || passTextField.text?.count == 0 || rePassTextField.text?.count == 0 || arcCodeL.text?.count == 0 {
             pass = false
         } else if passTextField.text != rePassTextField.text {
             pass = false
@@ -598,6 +707,9 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         expiredBackV.layer.cornerRadius = 12
         expiredBackV.layer.borderColor = UIColor.yellow.cgColor
         expiredBackV.layer.borderWidth = 1
+        issueBackV.layer.cornerRadius = 12
+        issueBackV.layer.borderColor = UIColor.yellow.cgColor
+        issueBackV.layer.borderWidth = 1
         
         backL.text = NSLocalizedString("back", comment: "")
         accountBtn.layer.cornerRadius = accountBtn.frame.size.height/2
@@ -642,12 +754,21 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         rePassTextField.delegate = self
         arcTextfield.isEnabled = false
         expiredTextfield.delegate = self
+        issueTextfield.delegate = self
         
         birthTextfield.inputAccessoryView = generateToolBar()
         expiredTextfield.inputAccessoryView = generateToolBar()
         
         expiredIntroL.text = NSLocalizedString("Register Expired Title", comment: "")
         expiredPlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
+        issueIntroL.text = NSLocalizedString("Register Issue Date Title", comment: "")
+        //標籤置中偏左 80，可用寬度約 98pt；英文「ARC ISSUE DATE」較長，超出外框時縮小字級
+        var issueFontSize:CGFloat = 15
+        while issueFontSize > 10, (issueIntroL.text! as NSString).size(withAttributes: [.font: UIFont.systemFont(ofSize: issueFontSize)]).width > 98 {
+            issueFontSize -= 0.5
+        }
+        issueIntroL.font = UIFont.systemFont(ofSize: issueFontSize)
+        issuePlaceholderL.text = NSLocalizedString("Register Expired Date", comment: "")
         
         accountTextfield.inputAccessoryView = generateToolBar()
         phoneTextfield.inputAccessoryView = generateToolBar()

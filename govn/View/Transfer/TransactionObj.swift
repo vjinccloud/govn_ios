@@ -17,4 +17,6 @@ class TransactionObj: NSObject {
     var recipient_type = 0
     var currency:String! = ""
     var recipientObj:RecipientObj = RecipientObj()
+    //匯款目的 id（transfer_purpose），送 create / create_v2 / 委託書
+    var purposes_id = "0"
 }

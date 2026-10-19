@@ -51,24 +51,16 @@ class RegisterIDSignVC: UIViewController {
         
         AppDelegate.shared().addLoadingView()
         
-        let todoEndpoint: String = API_Register;
+        //註冊第二步：簡訊已驗過，上傳 arc_no 與四張圖（欄位名照規格：arc、arc_back、sign、self）
+        let todoEndpoint: String = API_RegisterStep2;
         
         Alamofire.upload(multipartFormData: { (multipartFormData) in
             
-            multipartFormData.append(obj.account!.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "name")
-            multipartFormData.append(obj.phoneNum!.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "phone")
             multipartFormData.append(obj.arcNum!.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "arc_no")
-            multipartFormData.append(UtilityTool().sha256(Code: obj.passwaord!).data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "password")
-            multipartFormData.append(obj.shareCode.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "share_member_id")
-            
-            multipartFormData.append(obj.arcDay.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "arc_expire_date")
-            multipartFormData.append(obj.birthday.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "birthday")
             
             multipartFormData.append(obj.frontImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "arc", fileName: "arc.jpg", mimeType: "image/jpg")
             multipartFormData.append(obj.backImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "arc_back", fileName: "arc_back.jpg", mimeType: "image/jpg")
             multipartFormData.append(obj.signImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "sign", fileName: "sign.jpg", mimeType: "image/jpg")
-            multipartFormData.append(obj.faceImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "address", fileName: "address.jpg", mimeType: "image/jpg")
-            //multipartFormData.append(obj.passportImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "id_card", fileName: "id_card.jpg", mimeType: "image/jpg")
             multipartFormData.append(obj.faceImg.ImgPress(LimitInBytes: ImageLimitInBytes), withName: "self", fileName: "self.jpg", mimeType: "image/jpg")
             
         }, usingThreshold: UInt64.init(), to: todoEndpoint, method: .post, headers: headers) { (result) in
@@ -78,29 +70,44 @@ class RegisterIDSignVC: UIViewController {
                 upload.response { response in
                     
                     AppDelegate.shared().removeLoadingView()
-                    AppDelegate.shared().forgotPassTempPhone = obj.phoneNum!
                     
-                    guard response.error == nil else {
-                        // got an error in getting the data, need to handle it
+                    guard response.error == nil, let data = response.data, let responseStr = String.init(data: data, encoding: String.Encoding.utf8) else {
                         print("error calling on \(todoEndpoint), response = \(response)")
-                        print(response.error!)
+                        AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
                         return
                     }
                     
-                    //下一步，簡訊
-                    let responseStr = String.init(data: response.data!, encoding: String.Encoding.utf8)
-                    Dlog("responseStr = \(responseStr ?? "")")
-                    let result = APIHandle().getResponseState(ResponseStr: responseStr!, APIStr: todoEndpoint, SubStr: "")
+                    Dlog("responseStr = \(responseStr)")
+                    let result = APIHandle().getResponseState(ResponseStr: responseStr, APIStr: todoEndpoint, SubStr: "")
                     
                     if result == ResponseState.ok {
-                        let nextVC = UIStoryboard(name: "Register", bundle: nil).instantiateViewController(withIdentifier: "RegisterEnterSMSCodeVC") as? RegisterEnterSMSCodeVC
-                        self.navigationController?.pushViewController(nextVC!, animated: true)
-                    } else if result == ResponseState.failed {
-                        AppDelegate.shared().showAlertWithWindow(self, Message: AppDelegate.shared().apiBackContentStr)
+                        //註冊完成：回首頁，並帶入帳密
+                        guard let viewControllers = self.navigationController?.viewControllers else {
+                            return
+                        }
+                        
+                        for firstViewController in viewControllers {
+                            if firstViewController is ViewController {
+                                let obj = AppDelegate.shared().tempRegisterObj
+                                let vc = firstViewController as! ViewController
+                                vc.accountTextfield.text = obj.arcNum
+                                vc.passTextField.text = obj.passwaord
+                                break
+                            }
+                        }
+                        self.navigationController?.popToRootViewController(animated: true)
+                    } else {
+                        var msg = AppDelegate.shared().apiBackContentStr
+                        if msg == "" {
+                            msg = NSLocalizedString("API Timeout", comment: "")
+                        }
+                        AppDelegate.shared().showAlertWithWindow(self, Message: msg)
                     }
                 }
             case .failure(let error):
+                AppDelegate.shared().removeLoadingView()
                 print("Error in upload: \(error.localizedDescription)")
+                AppDelegate.shared().showAlertWithWindow(self, Message: NSLocalizedString("API Timeout", comment: ""))
             }
         }
         

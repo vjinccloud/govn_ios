@@ -40,9 +40,16 @@ let Lang_APIDecodeFail = NSLocalizedString("API DecodeFail", comment: "伺服器
 let AppVersion = "1.0"
 let AppId = 1
 //正式
-let ServerURL = "https://govnprod.indogo.link"
-//測試機
-//let ServerURL = "http://govndev.indogo.link"
+// ---- 環境切換（由 CTO 維護；見 ../docs/工作流程.md）----
+// Debug build（開發、QA）打測試機；Release / Archive 打正式機。不要再用註解切換。
+// 要打「測試機版」上 TestFlight：用 scripts/archive-staging.sh（Release 加 -D TESTSERVER），不要手改這裡。
+let ProdServerURL = "https://govnprod.indogo.link"
+let TestServerURL = "https://test-govnprod.indogo.link"   // 測試機（後端 2026-10-16 提供）。上線 Archive 用 Release，自動走 ProdServerURL
+#if DEBUG || TESTSERVER
+let ServerURL = TestServerURL
+#else
+let ServerURL = ProdServerURL
+#endif
 
 let PinCodeMode = 2
 
@@ -57,7 +64,10 @@ let API_Login = ServerURL + "/app/remit/login"
 let API_CheckLogin = ServerURL + "/app/remit/check_token"
 let API_CheckMemExist = ServerURL + "/app/remit/check_mem_exists"
 let API_SendSMS = ServerURL + "/app/remit/password_forget_sms"
-let API_Register = ServerURL + "/app/remit/register"
+//註冊兩步式（compliance-202610 需求 4，照 GoPadala / Android）
+//step_1 純文字送資料，回 remit_reply 0 sms_code(31)member_id；step_2 驗完簡訊後 multipart 上傳四張圖
+let API_RegisterStep1 = ServerURL + "/app/remit/register_step_1"
+let API_RegisterStep2 = ServerURL + "/app/remit/register_step_2"
 let API_ResendRegisterSMS = ServerURL + "/app/remit/request_sms_code"
 let API_VerifyRegisterSMS = ServerURL + "/app/remit/verify_sms_code"
 let API_NoticeRecordList = ServerURL + "/app/remit/notification_record"
@@ -102,6 +112,13 @@ let API_MemberRecipentsOther_TransferV2 = ServerURL + "/app/remit/member_recipie
 
 let API_TransactionCreateV2 = ServerURL + "/app/remit/create_v2"
 let API_TransactionCreate_OtherV2 = ServerURL + "/app/remit/create_others_v2"
+
+//匯款目的清單（compliance-202610，移植自 GoPadala），回傳 id(30)name(31)id(30)name...
+let API_GetPurpose = ServerURL + "/app/remit/transfer_purpose"
+
+//新增收款人前的防詐提醒（compliance-202610），回傳 remit_reply 0 <message>
+//路徑不帶 .php，三款 App 統一（見規格決定紀錄 2026-10-17）
+let API_FraudMessage = ServerURL + "/app/remit/fraud_message"
 
 //後台控制 App icon（POST、免參數，回傳 remit_reply 0 <icon名稱>）
 let API_LauncherIcon = ServerURL + "/app/getLauncherIcon.php"

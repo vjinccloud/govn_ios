@@ -941,6 +941,9 @@ class TransferMainVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegat
         self.setupHideKeyboardOnTap()
         //self.view.backgroundColor = //Color_Main_
         
+        //先抓匯款目的清單，選完收款人時直接用（抓不到時選單那邊會再抓一次）
+        AppDelegate.shared().getPurposeList()
+        
         upTextLineV.isHidden = true
         downTextLineV.isHidden = true
         boxV.layer.borderWidth = 1

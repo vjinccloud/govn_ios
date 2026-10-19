@@ -52,9 +52,12 @@ class APIHandle {
             var endIndex = resStr.index(resStr.startIndex, offsetBy: 13)
             stateStr = String(resStr[startIndex..<endIndex])
             
-            startIndex = resStr.index(resStr.startIndex, offsetBy: 14)
-            endIndex = resStr.endIndex
-            resultStr = String(resStr[startIndex..<endIndex]).trimmingCharacters(in: .whitespaces)
+            //回傳剛好是「remit_reply 0」、後面沒有內容時，第 14 個字元不存在，直接取會閃退
+            if resStr.count > 14 {
+                startIndex = resStr.index(resStr.startIndex, offsetBy: 14)
+                endIndex = resStr.endIndex
+                resultStr = String(resStr[startIndex..<endIndex]).trimmingCharacters(in: .whitespaces)
+            }
         }
         
         Dlog("resultStr = \(resultStr), stateStr = -\(stateStr)-")
@@ -138,7 +141,10 @@ class APIHandle {
         case API_SendSMS:
             sendSMS(DataStr: resultStr)
             break
-        case API_Register, API_ResendRegisterSMS:
+        case API_RegisterStep1:
+            registerStep1Result(DataStr: resultStr)
+            break
+        case API_ResendRegisterSMS:
             sendRegisterSMS(DataStr: resultStr)
             break
         case API_NoticeRecordList:
@@ -203,11 +209,38 @@ class APIHandle {
             break
         case API_CheckDiscountCode:
             checkDiscountCodeResult(DataStr: resultStr)
+        case API_GetPurpose:
+            checkPurpose(DataStr: resultStr)
+            break
+        case API_FraudMessage:
+            //整段文字直接保存（可能含換行）
+            AppDelegate.shared().fraudMessageStr = resultStr
+            break
         default:
             break
         }
         
         return ResponseState.ok
+    }
+    
+    //匯款目的：列用 seperatorStr 分，列內 id / name 用 subSeperatorStr 分
+    private func checkPurpose(DataStr dataStr:String) {
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        for i in 0..<ary.count {
+            
+            let subAry = ary[i].components(separatedBy: AppDelegate.shared().subSeperatorStr)
+            
+            let obj:TransferPurposeObj = TransferPurposeObj()
+            for j in 0..<subAry.count {
+                obj.setValueByOrder(Order: j, Value: subAry[j])
+            }
+            
+            if obj.name != "" {
+                Dlog("== \(i) =========")
+                obj.printSelf()
+                AppDelegate.shared().purposeObj.append(obj)
+            }
+        }
     }
     
     private func checkDiscountCodeResult(DataStr dataStr:String) {
@@ -568,8 +601,18 @@ class APIHandle {
         AppDelegate.shared().forgotPassTempSMS = dataStr
     }
     
+    //重寄註冊簡訊：取第一欄為驗證碼（若後端也帶了 member_id，切掉才不會比對失敗）
     private func sendRegisterSMS(DataStr dataStr:String) {
-        AppDelegate.shared().forgotPassTempSMS = dataStr
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        AppDelegate.shared().forgotPassTempSMS = ary[0]
+    }
+    
+    //register_step_1：sms_code(31)member_id
+    private func registerStep1Result(DataStr dataStr:String) {
+        let ary = dataStr.components(separatedBy: AppDelegate.shared().seperatorStr)
+        AppDelegate.shared().forgotPassTempSMS = ary[0]
+        AppDelegate.shared().tempRegisterObj.memberId = ary.count > 1 ? ary[1] : ""
+        Dlog("register_step_1 member_id = \(AppDelegate.shared().tempRegisterObj.memberId)")
     }
     
     private func checkMemExist(DataStr dataStr:String) {

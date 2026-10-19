@@ -458,13 +458,8 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
                     if self.canSelectForTransfer {
                         AppDelegate.shared().transactionObj.recipientObj = AppDelegate.shared().tempRecipientObj
                         
-                        var storyboardId = "TransactionInfoConfirmVC"
-                        if AppDelegate.shared().deviceSmall {
-                            storyboardId = "TransactionInfoConfirmVCSmall"
-                        }
-                        let nextVC = UIStoryboard(name: "Member", bundle: nil).instantiateViewController(withIdentifier: storyboardId) as? TransactionInfoConfirmVC
-                        nextVC!.topBarSelectIdx = topBarSelectIdx
-                        self.navigationController?.pushViewController(nextVC!, animated: true)
+                        //先選匯款目的，再進交易確認頁（compliance-202610）
+                        self.showTransferPurposeThenConfirm(TopBarSelectIdx: self.topBarSelectIdx)
                     } else {
                         //回到list頁面
                         guard let viewControllers = self.navigationController?.viewControllers else {

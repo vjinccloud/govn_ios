@@ -29,7 +29,7 @@ class TransactionAgreeMentVC: UIViewController {
             recipient_id = AppDelegate.shared().tempRecipientObj.recipient_id
         }
         
-        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "doc_name":"外籍勞工薪資結匯申報委託書", "recipient_id":recipient_id, "transfer_amount_ntd":obj.ntdValue+obj.feeValue,"recipient_type":AppDelegate.shared().tempRecipientObj.recipient_type[0]]
+        let parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "doc_name":"外籍勞工薪資結匯申報委託書", "recipient_id":recipient_id, "transfer_amount_ntd":obj.ntdValue+obj.feeValue, "purposes_id":obj.purposes_id, "recipient_type":AppDelegate.shared().tempRecipientObj.recipient_type[0]]
         let headers: HTTPHeaders = [:]
         
         AppDelegate.shared().addLoadingView()
@@ -67,7 +67,7 @@ class TransactionAgreeMentVC: UIViewController {
         let recipient_id = AppDelegate.shared().transactionObj.recipientObj.recipient_id!
         //let total_payment = obj.ntdValue + obj.feeValue -
         var parameters:Parameters = ["token":AppDelegate.shared().sessionToken, "amount_ntd":obj.ntdValue,"kurs_lm_time":AppDelegate.shared().memberData["kurs_lm_time"]!, "service_charge":obj.feeValue, "total_payment":obj.totalNtdValue, "transfer_idr":
-                                        obj.targetValue, "recipient_id":recipient_id, "pin_code_mode":2, "recipient_type":AppDelegate.shared().transactionObj.recipient_type,"currency":AppDelegate.shared().transactionObj.currency!]
+                                        obj.targetValue, "recipient_id":recipient_id, "purposes_id":obj.purposes_id, "pin_code_mode":2, "recipient_type":AppDelegate.shared().transactionObj.recipient_type,"currency":AppDelegate.shared().transactionObj.currency!]
         
         if obj.usePoint == 0 {
             parameters["use_remit_point"] = 0

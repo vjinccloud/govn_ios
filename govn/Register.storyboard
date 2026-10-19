@@ -632,7 +632,7 @@ berada dalam kotak yang ditentukan</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sTW-Ng-eHY">
-                                                <rect key="frame" x="0.0" y="590" width="414" height="165"/>
+                                                <rect key="frame" x="0.0" y="590" width="414" height="225"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9kn-LT-1Oe">
                                                         <rect key="frame" x="57" y="0.0" width="300" height="85"/>
@@ -719,7 +719,7 @@ berada dalam kotak yang ditentukan</string>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aHC-HK-hXd">
-                                                        <rect key="frame" x="0.0" y="90" width="414" height="60"/>
+                                                        <rect key="frame" x="0.0" y="150" width="414" height="60"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ufQ-7I-fRy">
                                                                 <rect key="frame" x="72" y="6" width="270" height="48"/>
@@ -768,6 +768,56 @@ berada dalam kotak yang ditentukan</string>
                                                             <constraint firstItem="U2f-10-Yxi" firstAttribute="height" secondItem="Pfy-fK-SIN" secondAttribute="height" id="wyp-qc-Flc"/>
                                                         </constraints>
                                                     </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iss-Rw-V01" userLabel="IssueDateView">
+                                                        <rect key="frame" x="0.0" y="90" width="414" height="60"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iss-Bg-V02">
+                                                                <rect key="frame" x="72" y="6" width="270" height="48"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="270" id="Isc-01-c01"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iss-Tl-L03">
+                                                                <rect key="frame" x="108.5" y="21" width="37.5" height="18"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iss-Ph-L04" userLabel="IssueDateLabel">
+                                                                <rect key="frame" x="176" y="17.5" width="160" height="25"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="25" id="Isc-02-c02"/>
+                                                                    <constraint firstAttribute="width" constant="160" id="Isc-03-c03"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Iss-Tf-T05">
+                                                                <rect key="frame" x="176" y="17.5" width="160" height="25"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                <textInputTraits key="textInputTraits"/>
+                                                            </textField>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstItem="Iss-Tl-L03" firstAttribute="centerX" secondItem="Iss-Rw-V01" secondAttribute="centerX" constant="-80" id="Isc-04-c04"/>
+                                                            <constraint firstItem="Iss-Tl-L03" firstAttribute="centerY" secondItem="Iss-Rw-V01" secondAttribute="centerY" id="Isc-05-c05"/>
+                                                            <constraint firstItem="Iss-Bg-V02" firstAttribute="height" secondItem="Iss-Rw-V01" secondAttribute="height" multiplier="0.8" id="Isc-06-c06"/>
+                                                            <constraint firstItem="Iss-Tf-T05" firstAttribute="width" secondItem="Iss-Ph-L04" secondAttribute="width" id="Isc-07-c07"/>
+                                                            <constraint firstItem="Iss-Bg-V02" firstAttribute="centerY" secondItem="Iss-Rw-V01" secondAttribute="centerY" id="Isc-08-c08"/>
+                                                            <constraint firstItem="Iss-Ph-L04" firstAttribute="centerY" secondItem="Iss-Tl-L03" secondAttribute="centerY" id="Isc-09-c09"/>
+                                                            <constraint firstItem="Iss-Tf-T05" firstAttribute="top" secondItem="Iss-Ph-L04" secondAttribute="top" id="Isc-10-c10"/>
+                                                            <constraint firstAttribute="height" constant="60" id="Isc-11-c11"/>
+                                                            <constraint firstItem="Iss-Ph-L04" firstAttribute="leading" secondItem="Iss-Tl-L03" secondAttribute="trailing" constant="30" id="Isc-12-c12"/>
+                                                            <constraint firstItem="Iss-Tf-T05" firstAttribute="leading" secondItem="Iss-Ph-L04" secondAttribute="leading" id="Isc-13-c13"/>
+                                                            <constraint firstItem="Iss-Bg-V02" firstAttribute="centerX" secondItem="Iss-Rw-V01" secondAttribute="centerX" id="Isc-14-c14"/>
+                                                            <constraint firstItem="Iss-Tf-T05" firstAttribute="height" secondItem="Iss-Ph-L04" secondAttribute="height" id="Isc-15-c15"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -777,10 +827,13 @@ berada dalam kotak yang ditentukan</string>
                                                     <constraint firstAttribute="trailing" secondItem="Bm5-gp-Tx0" secondAttribute="trailing" id="EOU-Q5-VB5"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="top" secondItem="sTW-Ng-eHY" secondAttribute="top" id="LGb-AM-8UD"/>
                                                     <constraint firstAttribute="bottom" secondItem="aHC-HK-hXd" secondAttribute="bottom" constant="15" id="Lza-Ja-LlB"/>
+                                                    <constraint firstItem="aHC-HK-hXd" firstAttribute="top" secondItem="Iss-Rw-V01" secondAttribute="bottom" id="Iss-Cn-K01"/>
+                                                    <constraint firstItem="Iss-Rw-V01" firstAttribute="leading" secondItem="sTW-Ng-eHY" secondAttribute="leading" id="Iss-Cn-K02"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Iss-Rw-V01" secondAttribute="trailing" id="Iss-Cn-K03"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="centerX" secondItem="sTW-Ng-eHY" secondAttribute="centerX" id="WWL-52-uLV"/>
                                                     <constraint firstItem="4Bw-K6-Yde" firstAttribute="top" secondItem="sTW-Ng-eHY" secondAttribute="top" constant="10" id="YlE-2F-bMt"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="bottom" secondItem="Bm5-gp-Tx0" secondAttribute="bottom" constant="-10" id="cAB-bW-VuL"/>
-                                                    <constraint firstAttribute="height" constant="165" id="dR3-fJ-9F4"/>
+                                                    <constraint firstAttribute="height" constant="225" id="dR3-fJ-9F4"/>
                                                     <constraint firstItem="aHC-HK-hXd" firstAttribute="leading" secondItem="sTW-Ng-eHY" secondAttribute="leading" id="jIg-TS-ZjS"/>
                                                     <constraint firstAttribute="trailing" secondItem="aHC-HK-hXd" secondAttribute="trailing" id="mNB-sc-TGO"/>
                                                     <constraint firstItem="4Bw-K6-Yde" firstAttribute="leading" secondItem="sTW-Ng-eHY" secondAttribute="leading" id="pP4-Au-RCg"/>
@@ -910,6 +963,11 @@ berada dalam kotak yang ditentukan</string>
                         <outlet property="expiredPlaceholderL" destination="Pfy-fK-SIN" id="Uug-SS-8fW"/>
                         <outlet property="expiredTextfield" destination="U2f-10-Yxi" id="NRu-nx-A9l"/>
                         <outlet property="expiredView" destination="aHC-HK-hXd" id="514-TQ-VSZ"/>
+                        <outlet property="issueBackV" destination="Iss-Bg-V02" id="Iss-Ot-O01"/>
+                        <outlet property="issueIntroL" destination="Iss-Tl-L03" id="Iss-Ot-O02"/>
+                        <outlet property="issuePlaceholderL" destination="Iss-Ph-L04" id="Iss-Ot-O03"/>
+                        <outlet property="issueTextfield" destination="Iss-Tf-T05" id="Iss-Ot-O04"/>
+                        <outlet property="issueView" destination="Iss-Rw-V01" id="Iss-Ot-O05"/>
                         <outlet property="hasArcView" destination="Bm5-gp-Tx0" id="0Xq-Qw-wHN"/>
                         <outlet property="iconBtn" destination="k4l-EC-i0f" id="JP5-ME-ZtK"/>
                         <outlet property="inputArcView" destination="CtD-PI-kVi" id="CNh-c5-zRP"/>

@@ -42,9 +42,10 @@ let AppId = 1
 //正式
 // ---- 環境切換（由 CTO 維護；見 ../docs/工作流程.md）----
 // Debug build（開發、QA）打測試機；Release / Archive 打正式機。不要再用註解切換。
+// 要打「測試機版」上 TestFlight：用 scripts/archive-staging.sh（Release 加 -D TESTSERVER），不要手改這裡。
 let ProdServerURL = "https://govnprod.indogo.link"
 let TestServerURL = "https://test-govnprod.indogo.link"   // 測試機（後端 2026-10-16 提供）。上線 Archive 用 Release，自動走 ProdServerURL
-#if DEBUG
+#if DEBUG || TESTSERVER
 let ServerURL = TestServerURL
 #else
 let ServerURL = ProdServerURL

@@ -382,3 +382,4 @@ Bắt đầu bằng 09 (tổng cộng 10 chữ số)";
 //compliance-202610 匯款目的
 "Purpose Select Title" = "Purpose of Remittance";
 "Purpose Select default word" = "Please select";
+"Purpose Select Next Btn" = "Next";

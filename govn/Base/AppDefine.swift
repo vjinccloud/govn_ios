@@ -27,6 +27,7 @@ public let Color_Main_Bule = UtilityTool().hexStringToUIColor(hex: "#2a65ec")
 public let Color_Main_Red = UtilityTool().hexStringToUIColor(hex: "#b20808")
 public let Color_Main_LightGray = UtilityTool().hexStringToUIColor(hex: "#d6d7d8")
 public let Color_Main_DarkGray = UtilityTool().hexStringToUIColor(hex: "#3b3f47")
+public let Color_Fraud_Alert_Btn = UtilityTool().hexStringToUIColor(hex: "#1F2E5C")   //防詐提醒視窗按鈕（設計稿深藍，三款相同）
 
 let SecureSaltStr = "indo"
 let SecureIvStr = "indogoEncodeIv00"

@@ -434,9 +434,11 @@ class CustomAlertView: UIView {
     
     //內容可捲動、只有一顆確認鈕的視窗：內容過長時限制高度並可上下捲動（用於後台給的長段文字，如防詐提醒）
     //不能點背景關閉，只能按確認
+    //防詐提醒視窗，版型照設計稿 docs/design/compliance-202610/fraud-govn.png：
+    //視窗寬約螢幕 80%、色帶下方有警告圖示、內文置中、深藍窄版膠囊按鈕置中
     public func initScrollContentAlert(Title title:String, Content content:String, NextBtn1Str btnStr1:String) {
         self.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.8)
-        let divX:CGFloat = 30
+        let divX:CGFloat = (self.frame.size.width * 0.1).rounded()
         let centerY:CGFloat = self.frame.size.height/2
         
         //此視窗不允許點背景關閉，只能按按鈕
@@ -446,11 +448,11 @@ class CustomAlertView: UIView {
         let width = centerView.frame.size.width
         var startY:CGFloat = 0
         
-        let divX2:CGFloat = 20
+        let divX2:CGFloat = 24
         let labelTitleL = UILabel.init(frame: CGRect.init(x:divX2 , y: startY+12, width: width-2*divX2, height: 0))
         labelTitleL.textAlignment = .center
         labelTitleL.textColor = .white
-        labelTitleL.font = UIFont.systemFont(ofSize: 22)
+        labelTitleL.font = UIFont.boldSystemFont(ofSize: 20)
         labelTitleL.text = title
         labelTitleL.numberOfLines = 0
         labelTitleL.sizeToFit()
@@ -464,11 +466,21 @@ class CustomAlertView: UIView {
         barView.backgroundColor = Color_Main_Red
         centerView.addSubview(barView)
         
-        //內容（可捲動）
+        //警告圖示（fraud_alert_icon，三款共用同一張，換檔不需改程式）
         startY += 12
+        let iconSize = CGSize(width: 52, height: 54)
+        let iconV = UIImageView.init(frame: CGRect.init(x: (width-iconSize.width)/2, y: startY, width: iconSize.width, height: iconSize.height))
+        iconV.image = UIImage(named: "fraud_alert_icon")
+        iconV.contentMode = .scaleAspectFit
+        centerView.addSubview(iconV)
+        startY += iconSize.height
+        
+        //內容（置中、可捲動）
+        startY += 10
         let labelContentL = UILabel.init(frame: CGRect.init(x: 0, y: 0, width: width-2*divX2, height: 0))
         labelContentL.textColor = .black
-        labelContentL.font = UIFont.systemFont(ofSize: 15)
+        labelContentL.textAlignment = .center
+        labelContentL.font = UIFont.systemFont(ofSize: 14)
         labelContentL.text = content
         labelContentL.numberOfLines = 0
         labelContentL.sizeToFit()
@@ -485,22 +497,24 @@ class CustomAlertView: UIView {
             contentScrollV.flashScrollIndicators()
         }
         
-        //按鈕
-        startY += contentHeight + 20
-        let nextBtn = UIButton.init(frame: CGRect.init(x: divX2, y: startY, width: width-2*divX2, height: 35))
+        //按鈕：深藍、寬約視窗 55%、置中
+        startY += contentHeight + 22
+        let btnWidth = (width * 0.55).rounded()
+        let nextBtn = UIButton.init(frame: CGRect.init(x: (width-btnWidth)/2, y: startY, width: btnWidth, height: 32))
         nextBtn.setTitle(btnStr1, for: .normal)
-        nextBtn.backgroundColor = Color_Main_Red
+        nextBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        nextBtn.backgroundColor = Color_Fraud_Alert_Btn
         nextBtn.setTitleColor(.white, for: .normal)
         nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
         centerView.addSubview(nextBtn)
         nextBtn.addTarget(self, action: #selector(nextAction), for: .touchUpInside)
         
-        startY += nextBtn.frame.size.height + 20
+        startY += nextBtn.frame.size.height + 16
         
         //最後位置調整
         centerView.frame = CGRect.init(x: 0, y: 0, width: self.frame.size.width-2*divX, height: startY)
         centerView.center = CGPoint(x: self.frame.size.width/2, y: centerY-20)
-        centerView.layer.cornerRadius = 15
+        centerView.layer.cornerRadius = 12
         centerView.clipsToBounds = true
     }
     

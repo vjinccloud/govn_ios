@@ -33,7 +33,9 @@ class TransferPurposeEmbededVC: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let cellData = AppDelegate.shared().purposeObj[indexPath.row]
-        cell.textLabel?.text = cellData.name
+        //設計稿：每列前面加圓點 bullet、字級 14
+        cell.textLabel?.text = "\u{2022}  " + (cellData.name ?? "")
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 14)
         cell.textLabel?.numberOfLines = 0
         if indexPath.row == chosePurposeIdx {
             cell.backgroundColor = .white
@@ -74,12 +76,14 @@ class TransferPurposeEmbededVC: UIViewController, UITableViewDelegate, UITableVi
         resultL.text = NSLocalizedString("Purpose Select default word", comment: "")
         purposeListTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         purposeListTableView.separatorStyle = .none
+        purposeListTableView.rowHeight = 32
         purposeListTableView.delegate = self
         purposeListTableView.dataSource = self
         
         purposeBgV.layer.cornerRadius = purposeBgV.frame.size.height/2
         nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
-        nextBtn.setTitle(NSLocalizedString("ok", comment: ""), for: .normal)
+        //設計稿按鈕文字「Tiếp theo ›」，不是全大寫的「TIẾP TỤC」
+        nextBtn.setTitle(NSLocalizedString("Purpose Select Next Btn", comment: "") + "   \u{203A}", for: .normal)
         nextBtn.layer.borderWidth = 0.5
         nextBtn.layer.borderColor = Color_Main_Red.cgColor
         checkBtnState()

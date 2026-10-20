@@ -20,6 +20,7 @@ class TransferPurposeEmbededVC: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var nextBtn: UIButton!
     @IBOutlet weak var purposeListTableView: UITableView!
     @IBOutlet weak var dimBgV: UIView!
+    @IBOutlet weak var arrowImgV: UIImageView!
     var chosePurposeIdx = -1
     
     //選好匯款目的、按確認後要做的事（進交易確認頁）
@@ -81,6 +82,9 @@ class TransferPurposeEmbededVC: UIViewController, UITableViewDelegate, UITableVi
         purposeListTableView.dataSource = self
         
         purposeBgV.layer.cornerRadius = purposeBgV.frame.size.height/2
+        //設計稿下拉箭頭是深藍（與防詐按鈕同色），不是主色紅；圖檔本身是紅的，用 template 著色
+        arrowImgV.image = arrowImgV.image?.withRenderingMode(.alwaysTemplate)
+        arrowImgV.tintColor = Color_Fraud_Alert_Btn
         nextBtn.layer.cornerRadius = nextBtn.frame.size.height/2
         //設計稿按鈕文字「Tiếp theo ›」，不是全大寫的「TIẾP TỤC」
         nextBtn.setTitle(NSLocalizedString("Purpose Select Next Btn", comment: "") + "   \u{203A}", for: .normal)

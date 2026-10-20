@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransferPurposeEmbededVC" customModule="govn" customModuleProvider="target">
             <connections>
                 <outlet property="dimBgV" destination="aMo-ST-EMQ" id="dmB-gV-o01"/>
+                <outlet property="arrowImgV" destination="AXX-wO-umE" id="arr-Im-o02"/>
                 <outlet property="nameBgV" destination="h37-eJ-6aw" id="hZL-IO-BDa"/>
                 <outlet property="nameL" destination="hcS-En-4kE" id="etC-1d-MAE"/>
                 <outlet property="nextBtn" destination="tE5-p4-dg8" id="DR5-p7-u4K"/>

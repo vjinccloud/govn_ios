@@ -812,8 +812,7 @@ berada dalam kotak yang ditentukan</string>
                                                             <constraint firstItem="Iss-Ph-L04" firstAttribute="centerY" secondItem="Iss-Tl-L03" secondAttribute="centerY" id="Isc-09-c09"/>
                                                             <constraint firstItem="Iss-Tf-T05" firstAttribute="top" secondItem="Iss-Ph-L04" secondAttribute="top" id="Isc-10-c10"/>
                                                             <constraint firstAttribute="height" constant="60" id="Isc-11-c11"/>
-                                                            <constraint firstItem="Iss-Ph-L04" firstAttribute="leading" secondItem="Iss-Tl-L03" secondAttribute="trailing" constant="30" id="Isc-12-c12"/>
-                                                            <constraint firstItem="Iss-Tf-T05" firstAttribute="leading" secondItem="Iss-Ph-L04" secondAttribute="leading" id="Isc-13-c13"/>
+                                                                                                                        <constraint firstItem="Iss-Tf-T05" firstAttribute="leading" secondItem="Iss-Ph-L04" secondAttribute="leading" id="Isc-13-c13"/>
                                                             <constraint firstItem="Iss-Bg-V02" firstAttribute="centerX" secondItem="Iss-Rw-V01" secondAttribute="centerX" id="Isc-14-c14"/>
                                                             <constraint firstItem="Iss-Tf-T05" firstAttribute="height" secondItem="Iss-Ph-L04" secondAttribute="height" id="Isc-15-c15"/>
                                                         </constraints>
@@ -828,6 +827,7 @@ berada dalam kotak yang ditentukan</string>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="top" secondItem="sTW-Ng-eHY" secondAttribute="top" id="LGb-AM-8UD"/>
                                                     <constraint firstAttribute="bottom" secondItem="aHC-HK-hXd" secondAttribute="bottom" constant="15" id="Lza-Ja-LlB"/>
                                                     <constraint firstItem="aHC-HK-hXd" firstAttribute="top" secondItem="Iss-Rw-V01" secondAttribute="bottom" id="Iss-Cn-K01"/>
+                                                    <constraint firstItem="Iss-Ph-L04" firstAttribute="leading" secondItem="Pfy-fK-SIN" secondAttribute="leading" id="Iss-Cn-K05"/>
                                                     <constraint firstItem="Iss-Rw-V01" firstAttribute="leading" secondItem="sTW-Ng-eHY" secondAttribute="leading" id="Iss-Cn-K02"/>
                                                     <constraint firstAttribute="trailing" secondItem="Iss-Rw-V01" secondAttribute="trailing" id="Iss-Cn-K03"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="centerX" secondItem="sTW-Ng-eHY" secondAttribute="centerX" id="WWL-52-uLV"/>

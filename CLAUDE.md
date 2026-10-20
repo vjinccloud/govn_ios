@@ -28,6 +28,10 @@
 
 前三輪都已通過。新增需求 4，規格在 `../docs/spec/三國合規更新.md` 的「需求 4」一節，請完整照做：`RegisterInputVC` 送 `register_step_1` → 簡訊頁 → 拍照、簽名 → `RegisterIDSignVC` 送 `register_step_2`，自拍欄位名改 `self`，移除舊 `API_Register`。來源照 GoPadala。做完更新 handoff（加「第四輪」段落與新流程的截圖），回 CTO 訊息「GoVN 第四輪已交付」。
 
+## 第五輪：UI 對齊設計稿（2026-10-20）
+
+簡報前三頁附的畫面是設計稿，第一輪沒照做。規格 `../docs/spec/三國合規更新.md` 的「需求 5」列了 GoVN 要改的：5-1（只改佔位文字樣式）、5-2、5-3。設計稿圖檔在 `../docs/design/compliance-202610/`，用它並排比對，做到肉眼看不出差異為止。功能邏輯不動。做完更新 handoff（加「第五輪」段落，每個改動畫面附「設計稿 vs 實作」截圖），回 CTO 訊息「GoVN 第五輪已交付」。
+
 ## 專案結構
 
 - 開 `govn.xcworkspace`，scheme `govn`。CocoaPods 的 `Pods/` 已進版控，**不要跑 `pod install`**。Podfile 用的是舊的 `Firebase/Core` 寫法，本輪不要升級套件。

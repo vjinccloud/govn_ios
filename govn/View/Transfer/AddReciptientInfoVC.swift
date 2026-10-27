@@ -14,6 +14,7 @@ import KingfisherWebP
 class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBOutlet weak var topScrollView: UIScrollView!
+    var keyboardAvoider: KeyboardAvoider!
     
     @IBOutlet weak var hideTextBtn: UIButton!
     @IBOutlet weak var backL: UILabel!
@@ -270,21 +271,12 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         hideTextBtn.isHidden = false
-        if textField == field1 {
-            //hideTextBtn.isHidden = false
-            //topScrollView.contentOffset = CGPoint.init(x: 0, y: allV1.frame.origin.y)
-        } else if textField == field2 {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: allV2.frame.origin.y)
-        } else if textField == field3 {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: allV3.frame.origin.y)
-        } else if textField == field4 {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: allV4.frame.origin.y)
-        }
+        //需求 7：被鍵盤蓋住才小幅捲動，不再捲到頂；收鍵盤也不捲回頂端
+        keyboardAvoider.fieldDidBeginEditing(textField)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         hideTextBtn.isHidden = true
-        topScrollView.contentOffset = CGPoint.init(x: 0, y: 0)
         if textField == field1 {
             selectTable.isHidden = true
             if !checkLeagleCharacter() {
@@ -589,6 +581,14 @@ class AddReciptientInfoVC: UIViewController, UITextFieldDelegate, UITableViewDel
         field2.delegate = self
         field3.delegate = self
         field4.delegate = self
+        keyboardAvoider = KeyboardAvoider(scrollView: topScrollView, hostView: view) { [weak self] field in
+            guard let self = self else { return field }
+            if field == self.field1 { return self.allV1 }
+            if field == self.field2 { return self.allV2 }
+            if field == self.field3 { return self.allV3 }
+            if field == self.field4 { return self.allV4 }
+            return field
+        }
         
         selectTable.backgroundColor = .clear
         selectTable.separatorStyle = .none

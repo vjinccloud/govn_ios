@@ -316,43 +316,35 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        inputMoreSpaceView.isHidden = false
         if textField == accountTextfield {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: accountView.frame.origin.y)
             accountBtn.backgroundColor = Color_Main_LightGray
             accountTextfield.textColor = .black
         } else if textField == birthTextfield {
             nowTextIdx = 0
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: birthView.frame.origin.y)
             birthBtn.backgroundColor = Color_Main_LightGray
             birthTextfield.textColor = .black
         } else if textField == phoneTextfield {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: phoneView.frame.origin.y)
             phoneBtn.backgroundColor = Color_Main_LightGray
             phoneTextfield.textColor = .black
         } else if textField == passTextField {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: passView.frame.origin.y)
             passBtn.backgroundColor = Color_Main_LightGray
             passTextField.textColor = .black
         } else if textField == rePassTextField {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: rePassView.frame.origin.y)
             rePassBtn.backgroundColor = Color_Main_LightGray
             rePassTextField.textColor = .black
         } else if textField == expiredTextfield {
             nowTextIdx = 1
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
         } else if textField == issueTextfield {
             nowTextIdx = 2
-            //issueView 包在容器裡，frame 是相對座標，要換算成捲動區座標，讓欄位停在日期選擇器上方
-            let fieldY = issueView.convert(CGPoint.zero, to: topScrollView).y
-            let maxOffsetY = max(0, topScrollView.contentSize.height - topScrollView.bounds.size.height + 300)
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: min(max(0, fieldY - 200), maxOffsetY))
+        }
+        //鍵盤已經在畫面上（例如按 Next 換欄位、鍵盤高度沒變時系統不一定再發 keyboardWillShow），
+        //這裡補一次「被蓋住才捲」的檢查；鍵盤還沒出現時由 keyboardWillShow 處理
+        if let keyboardTop = keyboardTopInView {
+            scrollFieldIntoViewIfCovered(textField, keyboardTopInView: keyboardTop, duration: 0.25)
         }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        inputMoreSpaceView.isHidden = true
-        
         if textField == accountTextfield {
             if textField.text!.count == 0 {
                 accountBtn.backgroundColor = Color_Main_DarkGray
@@ -398,13 +390,84 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         checkNextBtnState(CheckText: true)
     }
     
-    /*
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if !accountTextfield.isFirstResponder, !phoneTextfield.isFirstResponder, !passTextField.isFirstResponder, !rePassTextField.isFirstResponder, !arcTextfield.isFirstResponder {
-            topScrollView.contentOffset = CGPoint(x: 0, y: 0)
+    //MARK: - Keyboard（需求 7：標準鍵盤避讓，不再把欄位捲到頂）
+    ///鍵盤（含日期選擇器 inputView）頂端在 self.view 座標的 y；nil 表示鍵盤沒顯示
+    var keyboardTopInView:CGFloat? = nil
+    ///欄位下緣與鍵盤頂端至少留的距離
+    let keyboardFieldGap:CGFloat = 12
+    
+    func registerKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    ///目前是第一回應者的欄位
+    func currentEditingTextField() -> UITextField? {
+        let fields:[UITextField?] = [accountTextfield, birthTextfield, phoneTextfield, passTextField, rePassTextField, expiredTextfield, issueTextfield, arcTextfield]
+        return fields.compactMap { $0 }.first { $0.isFirstResponder }
+    }
+    
+    ///欄位所在的整列容器，捲動時以整列為準
+    func containerView(for textField: UITextField) -> UIView {
+        if textField == accountTextfield { return accountView }
+        if textField == birthTextfield { return birthView }
+        if textField == phoneTextfield { return phoneView }
+        if textField == passTextField { return passView }
+        if textField == rePassTextField { return rePassView }
+        if textField == expiredTextfield { return expiredView }
+        if textField == issueTextfield { return issueView }
+        return textField
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard let info = notification.userInfo,
+              let frameValue = info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval) ?? 0.25
+        //鍵盤 frame 是螢幕座標，換成 self.view 座標；高度用通知的值，日期選擇器 inputView 高度不同也適用
+        let keyboardFrame = view.convert(frameValue.cgRectValue, from: nil)
+        let scrollFrame = topScrollView.convert(topScrollView.bounds, to: view)
+        //捲動區底部已由 safe area 自動加了 inset（adjustedContentInset），只補鍵盤多蓋住的部分
+        let overlap = max(0, scrollFrame.maxY - keyboardFrame.minY - topScrollView.safeAreaInsets.bottom)
+        keyboardTopInView = keyboardFrame.minY
+        
+        topScrollView.contentInset.bottom = overlap
+        topScrollView.verticalScrollIndicatorInsets.bottom = overlap
+        
+        if let field = currentEditingTextField() {
+            scrollFieldIntoViewIfCovered(field, keyboardTopInView: keyboardFrame.minY, duration: duration)
         }
-        return true
-    }*/
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        let duration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval) ?? 0.25
+        keyboardTopInView = nil
+        //只把 inset 歸零，不捲回頂端；offset 超出範圍時交給 UIScrollView 自己夾回
+        UIView.animate(withDuration: duration) {
+            self.topScrollView.contentInset.bottom = 0
+            self.topScrollView.verticalScrollIndicatorInsets.bottom = 0
+        }
+    }
+    
+    ///只有欄位（整列）會被鍵盤蓋住時才用 scrollRectToVisible 捲最小幅度；沒被蓋住完全不捲
+    func scrollFieldIntoViewIfCovered(_ textField: UITextField, keyboardTopInView keyboardTop: CGFloat, duration: TimeInterval) {
+        let container = containerView(for: textField)
+        let rectInView = container.convert(container.bounds, to: view)
+        let scrollFrame = topScrollView.convert(topScrollView.bounds, to: view)
+        let visibleBottom = min(scrollFrame.maxY, keyboardTop)
+        //欄位下緣 + 間距 仍在鍵盤上方就不動；欄位上緣被捲動區頂端遮住也不處理（使用者自己捲上去的）
+        guard rectInView.maxY + keyboardFieldGap > visibleBottom else { return }
+        
+        var rectInScroll = container.convert(container.bounds, to: topScrollView)
+        rectInScroll.size.height += keyboardFieldGap
+        topScrollView.layoutIfNeeded()
+        UIView.animate(withDuration: duration) {
+            self.topScrollView.scrollRectToVisible(rectInScroll, animated: false)
+        }
+    }
     
     //MARK: - Date Picker
     func addDatePicker() {
@@ -815,6 +878,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         birthBtn.backgroundColor = .clear
         birthTextfield.textColor = .white
         addDatePicker()
+        registerKeyboardObservers()
     }
     
     func setArcText(Text text:String) {

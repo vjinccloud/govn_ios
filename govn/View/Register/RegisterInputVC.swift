@@ -316,43 +316,32 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        inputMoreSpaceView.isHidden = false
         if textField == accountTextfield {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: accountView.frame.origin.y)
             accountBtn.backgroundColor = Color_Main_LightGray
             accountTextfield.textColor = .black
         } else if textField == birthTextfield {
             nowTextIdx = 0
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: birthView.frame.origin.y)
             birthBtn.backgroundColor = Color_Main_LightGray
             birthTextfield.textColor = .black
         } else if textField == phoneTextfield {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: phoneView.frame.origin.y)
             phoneBtn.backgroundColor = Color_Main_LightGray
             phoneTextfield.textColor = .black
         } else if textField == passTextField {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: passView.frame.origin.y)
             passBtn.backgroundColor = Color_Main_LightGray
             passTextField.textColor = .black
         } else if textField == rePassTextField {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: rePassView.frame.origin.y)
             rePassBtn.backgroundColor = Color_Main_LightGray
             rePassTextField.textColor = .black
         } else if textField == expiredTextfield {
             nowTextIdx = 1
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: expiredView.frame.origin.y)
         } else if textField == issueTextfield {
             nowTextIdx = 2
-            //issueView 包在容器裡，frame 是相對座標，要換算成捲動區座標，讓欄位停在日期選擇器上方
-            let fieldY = issueView.convert(CGPoint.zero, to: topScrollView).y
-            let maxOffsetY = max(0, topScrollView.contentSize.height - topScrollView.bounds.size.height + 300)
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: min(max(0, fieldY - 200), maxOffsetY))
         }
+        //被鍵盤蓋住才小幅捲動；鍵盤還沒出現時由 KeyboardAvoider 的 keyboardWillShow 處理
+        keyboardAvoider.fieldDidBeginEditing(textField)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        inputMoreSpaceView.isHidden = true
-        
         if textField == accountTextfield {
             if textField.text!.count == 0 {
                 accountBtn.backgroundColor = Color_Main_DarkGray
@@ -398,13 +387,23 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         checkNextBtnState(CheckText: true)
     }
     
-    /*
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if !accountTextfield.isFirstResponder, !phoneTextfield.isFirstResponder, !passTextField.isFirstResponder, !rePassTextField.isFirstResponder, !arcTextfield.isFirstResponder {
-            topScrollView.contentOffset = CGPoint(x: 0, y: 0)
+    //MARK: - Keyboard（需求 7：標準鍵盤避讓，共用 Base/KeyboardAvoider）
+    var keyboardAvoider: KeyboardAvoider!
+    
+    func setupKeyboardAvoider() {
+        keyboardAvoider = KeyboardAvoider(scrollView: topScrollView, hostView: view) { [weak self] field in
+            guard let self = self else { return field }
+            //欄位所在的整列容器，捲動時以整列為準
+            if field == self.accountTextfield { return self.accountView }
+            if field == self.birthTextfield { return self.birthView }
+            if field == self.phoneTextfield { return self.phoneView }
+            if field == self.passTextField { return self.passView }
+            if field == self.rePassTextField { return self.rePassView }
+            if field == self.expiredTextfield { return self.expiredView }
+            if field == self.issueTextfield { return self.issueView }
+            return field
         }
-        return true
-    }*/
+    }
     
     //MARK: - Date Picker
     func addDatePicker() {
@@ -815,6 +814,7 @@ class RegisterInputVC: UIViewController, UITextFieldDelegate,UIImagePickerContro
         birthBtn.backgroundColor = .clear
         birthTextfield.textColor = .white
         addDatePicker()
+        setupKeyboardAvoider()
     }
     
     func setArcText(Text text:String) {

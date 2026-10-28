@@ -14,6 +14,7 @@ import KingfisherWebP
 class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     @IBOutlet weak var topScrollView: UIScrollView!
+    var keyboardAvoider: KeyboardAvoider!
     
     @IBOutlet weak var backL: UILabel!
     @IBOutlet weak var titleL1: UILabel!
@@ -212,19 +213,15 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         if textField == field1 {
             choseTag = 0
             pickerView.reloadAllComponents()
-            //topScrollView.contentOffset = CGPoint.init(x: 0, y: allV1.frame.origin.y)
         } else if textField == field2 {
             choseTag = 1
             pickerView.reloadAllComponents()
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: allV2.frame.origin.y)
-        } else if textField == field3 {
-            topScrollView.contentOffset = CGPoint.init(x: 0, y: allV3.frame.origin.y)
         }
+        //需求 7：被鍵盤蓋住才小幅捲動，不再捲到頂；收鍵盤也不捲回頂端
+        keyboardAvoider.fieldDidBeginEditing(textField)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        topScrollView.contentOffset = CGPoint.init(x: 0, y: 0)
-        
         if textField == field3 {
             Dlog("check now")
             if !checkLeagleCharacter() {
@@ -547,6 +544,13 @@ class AddReciptientAddressVC: UIViewController, UITextFieldDelegate, UIPickerVie
         field2.delegate = self
         field3.delegate = self
         field3.autocorrectionType = .no
+        keyboardAvoider = KeyboardAvoider(scrollView: topScrollView, hostView: view) { [weak self] field in
+            guard let self = self else { return field }
+            if field == self.field1 { return self.allV1 }
+            if field == self.field2 { return self.allV2 }
+            if field == self.field3 { return self.allV3 }
+            return field
+        }
         
         let tempWindow = UIApplication.shared.keyWindow
         pickBackView = UIView(frame: CGRect(x: 0, y: (tempWindow?.frame.height)!, width: view.frame.width, height: 260))

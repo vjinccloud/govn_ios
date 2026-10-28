@@ -334,6 +334,7 @@
 		0496880024B8D03C005EF74A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0496880224B8D03C005EF74A /* Localizable.strings */; };
 		0496880D24B8D61E005EF74A /* RootNavVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496880724B8D61E005EF74A /* RootNavVC.swift */; };
 		0496880E24B8D61E005EF74A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496880824B8D61E005EF74A /* Log.swift */; };
+		81127EE05E4BB24317880065 /* KeyboardAvoider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E65ED33D91B8B9D5B9B832 /* KeyboardAvoider.swift */; };
 		0496880F24B8D61E005EF74A /* AppDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496880924B8D61E005EF74A /* AppDefine.swift */; };
 		0496881024B8D61E005EF74A /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496880A24B8D61E005EF74A /* BaseVC.swift */; };
 		0496881124B8D61E005EF74A /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0496880B24B8D61E005EF74A /* UIView+constraints.swift */; };
@@ -901,6 +902,7 @@
 		0496880124B8D03C005EF74A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0496880724B8D61E005EF74A /* RootNavVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootNavVC.swift; sourceTree = "<group>"; };
 		0496880824B8D61E005EF74A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		93E65ED33D91B8B9D5B9B832 /* KeyboardAvoider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardAvoider.swift; sourceTree = "<group>"; };
 		0496880924B8D61E005EF74A /* AppDefine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDefine.swift; sourceTree = "<group>"; };
 		0496880A24B8D61E005EF74A /* BaseVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		0496880B24B8D61E005EF74A /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
@@ -1632,6 +1634,7 @@
 				0496884324BCDDF2005EF74A /* UIViewController+TapToDissmiss.swift */,
 				0496880724B8D61E005EF74A /* RootNavVC.swift */,
 				0496880824B8D61E005EF74A /* Log.swift */,
+				93E65ED33D91B8B9D5B9B832 /* KeyboardAvoider.swift */,
 				0496880924B8D61E005EF74A /* AppDefine.swift */,
 				0496880A24B8D61E005EF74A /* BaseVC.swift */,
 				0496880B24B8D61E005EF74A /* UIView+constraints.swift */,
@@ -2490,6 +2493,7 @@
 				0496884724BE2942005EF74A /* ForgotPassMainVC.swift in Sources */,
 				018DC5B6296C671300EAA8D1 /* SpecialPageVC.swift in Sources */,
 				0496880E24B8D61E005EF74A /* Log.swift in Sources */,
+				81127EE05E4BB24317880065 /* KeyboardAvoider.swift in Sources */,
 				043AE11924E14BC600E0892E /* MemberMainVC.swift in Sources */,
 				0496881024B8D61E005EF74A /* BaseVC.swift in Sources */,
 				04AC3EEE25013D7900E48622 /* TransactionResultVC.swift in Sources */,

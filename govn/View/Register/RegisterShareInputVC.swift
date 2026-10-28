@@ -26,6 +26,7 @@ class RegisterShareInputVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var inputMoreSpaceView: UIView!
     @IBOutlet weak var textBackV: UIView!
     @IBOutlet weak var topScrollView: UIScrollView!
+    var keyboardAvoider: KeyboardAvoider!
     @IBOutlet weak var bottomL: UILabel!
     
     var parentVC:RegisterInputVC!
@@ -71,12 +72,10 @@ class RegisterShareInputVC: UIViewController, UITextFieldDelegate {
     
     //MARK: - Text Delegate
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        topScrollView.contentOffset = CGPoint.init(x: 0, y: textBackV.frame.origin.y)
-        inputMoreSpaceView.isHidden = false
+        keyboardAvoider.fieldDidBeginEditing(textField)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        inputMoreSpaceView.isHidden = true
         checkBtnState()
     }
     
@@ -120,6 +119,10 @@ class RegisterShareInputVC: UIViewController, UITextFieldDelegate {
         
         inputTextField.delegate = self
         inputTextField.keyboardType = .numberPad
+        //需求 7：標準鍵盤避讓，欄位被鍵盤蓋住才小幅捲動，不再捲到頂
+        keyboardAvoider = KeyboardAvoider(scrollView: topScrollView, hostView: view) { [weak self] field in
+            self?.textBackV ?? field
+        }
         //inputTextField.attributedPlaceholder = NSAttributedString(string: "MID", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
     }
 

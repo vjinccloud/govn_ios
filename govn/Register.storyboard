@@ -642,7 +642,7 @@ berada dalam kotak yang ditentukan</string>
                                                         <rect key="frame" x="0.0" y="10" width="414" height="85"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7fh-af-9zf">
-                                                                <rect key="frame" x="73" y="31.5" width="268" height="22"/>
+                                                                <rect key="frame" x="73" y="21.5" width="268" height="22"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
@@ -655,7 +655,7 @@ berada dalam kotak yang ditentukan</string>
                                                                 </constraints>
                                                             </imageView>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKF-1g-2g9">
-                                                                <rect key="frame" x="73" y="31.5" width="268" height="22"/>
+                                                                <rect key="frame" x="73" y="21.5" width="268" height="22"/>
                                                                 <connections>
                                                                     <action selector="callScanArcActon:" destination="WK1-X2-jt9" eventType="touchUpInside" id="jqS-sc-XGr"/>
                                                                 </connections>
@@ -667,11 +667,9 @@ berada dalam kotak yang ditentukan</string>
                                                             <constraint firstItem="KKF-1g-2g9" firstAttribute="centerY" secondItem="7fh-af-9zf" secondAttribute="centerY" id="Trf-pZ-AKl"/>
                                                             <constraint firstItem="7fh-af-9zf" firstAttribute="height" secondItem="eJU-Th-6yg" secondAttribute="height" multiplier="0.308824" constant="0.94999999999999996" id="W2Q-mE-N2e"/>
                                                             <constraint firstItem="eJU-Th-6yg" firstAttribute="centerY" secondItem="Bm5-gp-Tx0" secondAttribute="centerY" id="WBn-dQ-K5h"/>
-                                                            <constraint firstItem="7fh-af-9zf" firstAttribute="centerX" secondItem="eJU-Th-6yg" secondAttribute="centerX" id="Zgo-Zp-d9o"/>
                                                             <constraint firstItem="KKF-1g-2g9" firstAttribute="width" secondItem="7fh-af-9zf" secondAttribute="width" id="ZwQ-Yj-TOX"/>
                                                             <constraint firstItem="KKF-1g-2g9" firstAttribute="centerX" secondItem="7fh-af-9zf" secondAttribute="centerX" id="jVg-zD-Fb8"/>
                                                             <constraint firstItem="eJU-Th-6yg" firstAttribute="centerX" secondItem="Bm5-gp-Tx0" secondAttribute="centerX" id="lXi-IT-6n0"/>
-                                                            <constraint firstItem="7fh-af-9zf" firstAttribute="centerY" secondItem="eJU-Th-6yg" secondAttribute="centerY" id="m8t-4X-9AQ"/>
                                                             <constraint firstItem="KKF-1g-2g9" firstAttribute="height" secondItem="7fh-af-9zf" secondAttribute="height" id="pt2-uW-qOG"/>
                                                             <constraint firstItem="7fh-af-9zf" firstAttribute="width" secondItem="eJU-Th-6yg" secondAttribute="width" multiplier="0.95" id="zbw-tx-aSt"/>
                                                         </constraints>
@@ -829,6 +827,8 @@ berada dalam kotak yang ditentukan</string>
                                                     <constraint firstAttribute="trailing" secondItem="Iss-Rw-V01" secondAttribute="trailing" id="Iss-Cn-K03"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="centerX" secondItem="sTW-Ng-eHY" secondAttribute="centerX" id="WWL-52-uLV"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="width" secondItem="ufQ-7I-fRy" secondAttribute="width" id="Arc-Wd-Eq1"/>
+                                                    <constraint firstItem="7fh-af-9zf" firstAttribute="centerX" secondItem="9kn-LT-1Oe" secondAttribute="centerX" id="Zgo-Zp-d9o"/>
+                                                    <constraint firstItem="7fh-af-9zf" firstAttribute="centerY" secondItem="9kn-LT-1Oe" secondAttribute="centerY" id="m8t-4X-9AQ"/>
                                                     <constraint firstItem="4Bw-K6-Yde" firstAttribute="top" secondItem="sTW-Ng-eHY" secondAttribute="top" constant="10" id="YlE-2F-bMt"/>
                                                     <constraint firstItem="9kn-LT-1Oe" firstAttribute="bottom" secondItem="Bm5-gp-Tx0" secondAttribute="bottom" constant="-10" id="cAB-bW-VuL"/>
                                                     <constraint firstAttribute="height" constant="225" id="dR3-fJ-9F4"/>
